@@ -1,0 +1,107 @@
+{
+  "date": "2026-01-04",
+  "publishedAt": "2026-01-04T01:46:32.120Z",
+  "language": "en",
+  "news": [
+    {
+      "id": "news-1767491163434-0",
+      "title": "Tech Executives Cash Out $16 Billion Amid Record Stock Surge in 2025",
+      "highlights": [
+        "Tech billionaires sold over $16 billion in stock as tech stocks reached new highs in 2025.",
+        "Jeff Bezos led the sales, offloading 25 million shares for $5.7 billion.",
+        "Oracle's Safra Catz and Michael Dell followed with $2.5 billion and $2.2 billion in sales, respectively."
+      ],
+      "keyInfo": [
+        "Nvidia's Jensen Huang sold $1 billion in stock as his company became the world's first $5 trillion business.",
+        "Arista Networks CEO Jayshree Ullal cashed out nearly $1 billion, boosting her net worth to over $6 billion.",
+        "Mark Zuckerberg sold $945 million through his foundation."
+      ],
+      "context": "In 2025, tech stocks experienced a significant surge, driven largely by advancements in artificial intelligence. This rally prompted tech executives to convert their paper wealth into cash, with many of them utilizing pre-arranged trading plans to execute their sales strategically.",
+      "impact": "The mass sell-off of stocks by tech billionaires reflects a pivotal moment in the tech industry, where executives are capitalizing on unprecedented stock valuations. The total of $16 billion in sales signals confidence in the market's current state, yet it may also raise concerns about potential market corrections. As companies like Nvidia achieve record valuations, the actions of these executives could influence investor sentiment and market dynamics moving forward. The trend of cashing out could suggest that insiders believe their stocks are at peak value, which might lead to increased volatility as more executives follow suit. Additionally, the significant amounts involved indicate a robust financial landscape for tech companies, yet the sustainability of this growth remains to be seen.",
+      "source": {
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/2026/01/03/tech-billionaires-cashed-out-16-billion-in-2025-as-stocks-soared/",
+        "language": "en",
+        "readTime": "3 min"
+      },
+      "originalTitle": "Tech billionaires cashed out $16 billion in 2025 as stocks soared",
+      "pubDate": "Sat, 03 Jan 2026 23:45:07 +0000"
+    },
+    {
+      "id": "news-1767491170279-1",
+      "title": "California Launches DROP Tool for Residents to Easily Demand Data Deletion from Brokers",
+      "highlights": [
+        "California residents can now use a new tool to request the deletion of their personal data from over 500 data brokers.",
+        "The Delete Requests and Opt-Out Platform (DROP) simplifies the process, allowing a single request for multiple brokers.",
+        "Data brokers will start processing deletion requests in August 2026, with a 90-day window to respond."
+      ],
+      "keyInfo": [
+        "The Delete Act, passed in 2023, empowers residents to manage their data privacy more effectively.",
+        "Brokers who fail to comply with deletion requests face penalties of $200 per day, plus enforcement costs."
+      ],
+      "context": "Since 2020, California residents have had the right to opt-out of data collection and sales by companies. However, the process was cumbersome, requiring individual requests to each data broker. The 2023 Delete Act aims to streamline this process with the introduction of the DROP platform, enabling a more straightforward approach to data privacy.",
+      "impact": "The introduction of the DROP tool represents a significant advancement in consumer data privacy rights in California. By allowing residents to make a single deletion request to multiple data brokers, the state is addressing long-standing concerns about data security and privacy. The tool is expected to reduce the volume of unsolicited communications, such as spam calls and emails, and mitigate risks associated with identity theft and data breaches. However, the delayed implementation, with brokers starting to process requests only in August 2026, raises questions about immediate effectiveness. The penalties for non-compliance may also incentivize brokers to adhere to the new regulations, ultimately fostering a safer digital environment for consumers.",
+      "source": {
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/2026/01/03/california-residents-can-use-new-tool-to-demand-brokers-delete-their-personal-data/",
+        "language": "en",
+        "readTime": "3 min"
+      },
+      "originalTitle": "California residents can use new tool to demand brokers delete their personal data",
+      "pubDate": "Sat, 03 Jan 2026 22:25:34 +0000"
+    },
+    {
+      "id": "news-1767491182113-2",
+      "title": "Meta's Quest 3S VR Headset Available for $249.99 with $50 Gift Card Promotion",
+      "highlights": [
+        "Meta's Quest 3S VR headset is currently discounted to $249.99 from its original price of $299.99.",
+        "Amazon is offering a $50 digital account credit with the purchase of the Quest 3S.",
+        "The headset features the same chipset as the more expensive Quest 3, enhancing its performance.",
+        "The Quest 3S can play games from the Meta Store and connect to PCs for Steam VR games.",
+        "Apple's AirTags are also on sale, with a four-pack priced at $64.98, down from $99."
+      ],
+      "keyInfo": [
+        "$249.99 is the current sale price of the Meta Quest 3S, down from $299.99.",
+        "The Quest 3S includes a $50 digital gift card exclusively at Amazon.",
+        "The AirTags are available for $64.98 for a four-pack, reducing the price per unit to $16.25."
+      ],
+      "context": "Meta's Quest 3S is a standalone virtual reality headset designed for both beginners and experienced users. It builds upon the success of the Quest 2 while providing enhanced performance through its powerful chipset, making it a competitive option in the VR market. The device's ability to connect to gaming PCs broadens its appeal, allowing users to access a wider range of VR content. The ongoing promotion at Amazon adds further incentive for potential buyers, making it a timely opportunity for holiday shoppers.",
+      "impact": "The price reduction and promotional offer for the Meta Quest 3S could significantly boost sales, especially among first-time VR users looking for an affordable entry point into the virtual reality space. By aligning the headset's price with consumer expectations while adding value through the gift card, Meta aims to capture a larger market share amidst growing competition from other VR devices. Furthermore, this move may encourage existing Quest 2 users to upgrade, leveraging the enhanced capabilities of the new model. As VR technology continues to evolve, promotions like this could help sustain consumer interest and drive adoption rates, particularly during peak shopping seasons.",
+      "source": {
+        "name": "The Verge",
+        "url": "https://www.theverge.com/gadgets/853151/meta-quest-3s-apple-airtag-steam-winter-sale-deal",
+        "language": "en",
+        "readTime": "6 min"
+      },
+      "originalTitle": "Meta’s Quest 3S is still $50 off and comes with a $50 gift card",
+      "pubDate": "2026-01-03T17:00:00.000Z"
+    },
+    {
+      "id": "news-1767491190286-3",
+      "title": "CES 2026 Unveils Innovative Gadgets Including AI Art Canvas and Smart Home Solutions",
+      "highlights": [
+        "CES 2026 showcases groundbreaking tech including Starlink's inaugural flight and AI-generated art.",
+        "The Fraimic Smart Canvas, available for preorder at $399 and $999, displays art based on voice prompts.",
+        "GE's new smart fridge features a barcode scanner and an interior camera, priced at $4,899.",
+        "LG teases the world's lightest 17-inch RTX laptop, the Gram Pro 17, with advanced materials.",
+        "Clicks introduces a Power Keyboard that doubles as a 2150mAh battery for phones."
+      ],
+      "keyInfo": [
+        "The Fraimic Smart Canvas is priced at $399 for standard size and $999 for large, with deliveries in June.",
+        "GE's Profile Smart 4-Door Refrigerator costs $4,899, which is $500 more than its non-Kitchen Assistant model.",
+        "LG's Gram Pro 17 laptop will feature a 2,560 x 1600 display and Nvidia's RTX 5050 GPU, weight details are not yet disclosed.",
+        "The Clicks Power Keyboard includes a 2150mAh battery and connects via Bluetooth, accommodating various phone sizes."
+      ],
+      "context": "CES 2026 is a major technology showcase where companies unveil their latest innovations in consumer electronics. This year's event features a range of products from AI-driven art displays to advanced smart home appliances, highlighting the ongoing trend of integrating technology into everyday life.",
+      "impact": "The innovations showcased at CES 2026 reflect significant advancements in consumer technology, particularly in smart home solutions and AI applications. The introduction of products like the Fraimic Smart Canvas and GE's smart fridge indicates a growing market for personalized and automated home experiences. The emphasis on lightweight, powerful laptops like LG's Gram Pro 17 suggests a shift towards portability without sacrificing performance, appealing to professionals and gamers alike. Additionally, Clicks' Power Keyboard demonstrates the convergence of utility and convenience, catering to mobile users who seek multifunctional devices. Overall, these trends indicate a future where technology increasingly enhances daily living, making tasks simpler and more efficient.",
+      "source": {
+        "name": "The Verge",
+        "url": "https://www.theverge.com/tech/836627/ces-2026-news-gadgets-announcements",
+        "language": "en",
+        "readTime": "19 min"
+      },
+      "originalTitle": "CES 2026: all the news, gadgets, and innovations from the biggest tech show",
+      "pubDate": "2026-01-03T13:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "updatedAt": "2026-01-07T05:51:00.588Z",
+  "sources": [
+    {
+      "id": "36kr",
+      "name": "36氪",
+      "url": "https://36kr.com/feed",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": "huxiu",
+      "name": "虎嗅",
+      "url": "https://www.huxiu.com/rss/0.xml",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": "vox",
+      "name": "Vox",
+      "url": "https://www.vox.com/rss/index.xml",
+      "language": "en",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-04T14:19:39.257Z"
+    },
+    {
+      "id": "geekpark",
+      "name": "极客公园",
+      "url": "https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-04T14:22:23.110Z"
+    },
+    {
+      "id": "sspai",
+      "name": "少数派",
+      "url": "rsshub://sspai/index",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-04T15:29:19.482Z"
+    },
+    {
+      "id": "fortune-fortune",
+      "name": "Fortune | FORTUNE",
+      "url": "https://fortune.com/feed",
+      "language": "en",
+      "category": "finance",
+      "enabled": true,
+      "addedAt": "2026-01-05T03:04:31.367Z"
+    },
+    {
+      "id": "all-content-from-business-insider",
+      "name": "Business Insider",
+      "url": "https://feeds.businessinsider.com/custom/all",
+      "language": "en",
+      "category": "finance",
+      "enabled": true,
+      "addedAt": "2026-01-05T03:15:50.894Z"
+    },
+    {
+      "id": "量子位",
+      "name": "量子位",
+      "url": "https://wechat2rss.xlab.app/feed/7131b577c61365cb47e81000738c10d872685908.xml",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-07T04:08:29.778Z"
+    },
+    {
+      "id": "新智元",
+      "name": "新智元",
+      "url": "https://wechat2rss.xlab.app/feed/ede30346413ea70dbef5d485ea5cbb95cca446e7.xml",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-07T04:11:26.684Z"
+    },
+    {
+      "id": "mit-科技评论-本周热榜",
+      "name": "MIT 科技评论 - 本周热榜",
+      "url": "https://plink.anyfeeder.com/mittrchina/hot",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-07T05:31:18.236Z"
+    },
+    {
+      "id": "cryptoslate",
+      "name": "CryptoSlate",
+      "url": "https://cryptoslate.com/feed/",
+      "language": "en",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-07T05:37:28.245Z"
+    },
+    {
+      "id": "财富中文网",
+      "name": "财富中文网",
+      "url": "https://plink.anyfeeder.com/fortunechina",
+      "language": "zh",
+      "category": "finance",
+      "enabled": true,
+      "addedAt": "2026-01-07T05:41:26.399Z"
+    },
+    {
+      "id": "财富中文网-商业",
+      "name": "财富中文网 - 商业",
+      "url": "https://plink.anyfeeder.com/fortunechina/shangye",
+      "language": "zh",
+      "category": "finance",
+      "enabled": true,
+      "addedAt": "2026-01-07T05:42:23.073Z"
+    },
+    {
+      "id": "财富中文网-科技",
+      "name": "财富中文网 - 科技",
+      "url": "https://plink.anyfeeder.com/fortunechina/keji",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-07T05:42:38.041Z"
+    },
+    {
+      "id": "知识分子",
+      "name": "知识分子",
+      "url": "https://plink.anyfeeder.com/weixin/The-Intellectual",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-07T05:44:40.587Z"
+    },
+    {
+      "id": "虎嗅网公众号",
+      "name": "虎嗅网公众号",
+      "url": "https://plink.anyfeeder.com/weixin/huxiu_com",
+      "language": "zh",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-07T05:46:26.905Z"
+    },
+    {
+      "id": "time",
+      "name": "TIME",
+      "url": "https://plink.anyfeeder.com/time",
+      "language": "en",
+      "category": "tech",
+      "enabled": true,
+      "addedAt": "2026-01-07T05:48:27.132Z"
+    }
+  ]
+}

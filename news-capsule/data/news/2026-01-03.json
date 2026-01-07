@@ -1,0 +1,47 @@
+{
+  "date": "2026-01-03",
+  "publishedAt": "2026-01-03T04:36:20.786Z",
+  "language": "zh",
+  "news": [
+    {
+      "id": "news-1767414960177-0",
+      "title": "特斯拉年销量下降9%，被比亚迪超越成为全球电动车领导者",
+      "highlights": [
+        "特斯拉连续第二年销量下滑，年降幅达9%。",
+        "美国联邦税收抵免的取消影响了特斯拉的销售业绩。",
+        "中国汽车制造商的竞争加剧，进一步压缩特斯拉的市场份额。",
+        "特斯拉2025年全球交付汽车163.6万辆。",
+        "比亚迪首次在电动车销量上超越特斯拉，成为全球第一。"
+      ],
+      "context": "特斯拉作为电动车市场的先行者，近年来面临日益严峻的竞争环境，尤其是来自中国品牌的挑战，以及美国政府政策的变化。这一事件反映了全球电动车市场的动态变化，尤其是中国品牌的崛起。",
+      "impact": "特斯拉销量下滑可能导致其市场份额进一步减少，影响投资者信心，并迫使公司加速创新和调整定价策略。同时，竞争对手如比亚迪的崛起可能改变全球电动车市场的格局，促使更多消费者选择更具性价比的电动车。长远来看，这将推动整个行业向更高效和环保的方向发展。",
+      "relatedLinks": [],
+      "source": {
+        "name": "TechCrunch / Ars Technica / Wired / 36氪",
+        "url": "https://techcrunch.com/2026/01/02/tesla-annual-sales-decline-9-as-its-overtaken-by-byd-as-global-ev-leader/",
+        "language": "en"
+      },
+      "originalTitle": "Tesla annual sales decline 9% as it's overtaken by BYD as global EV leader",
+      "pubDate": "Fri, 02 Jan 2026 16:17:47 +0000"
+    },
+    {
+      "id": "news-1767414965561-1",
+      "title": "OpenAI重组团队开发音频AI硬件，欲提升语音技术应用",
+      "highlights": [
+        "OpenAI正在重组内部团队，专注于音频AI硬件产品的开发。",
+        "该举措旨在加速语音技术的应用，弥补其在屏幕技术后面的滞后。",
+        "OpenAI希望通过硬件产品提升用户与AI的互动体验。"
+      ],
+      "context": "随着语音技术的逐渐成熟，OpenAI意识到需要加大对音频产品的投入，以满足市场需求并提升用户体验。",
+      "impact": "OpenAI的这一重组可能会引发语音技术的快速发展，推动更多企业关注音频AI硬件市场。用户将享受到更高效、更自然的语音交互体验，可能改变人们使用AI的方式。此外，这也可能加剧市场竞争，促使其他科技公司加快相关产品的研发。",
+      "relatedLinks": [],
+      "source": {
+        "name": "Ars Technica",
+        "url": "https://arstechnica.com/ai/2026/01/openai-plans-new-voice-model-in-early-2026-audio-based-hardware-in-2027/",
+        "language": "en"
+      },
+      "originalTitle": "OpenAI reorganizes some teams to build audio-based AI hardware products",
+      "pubDate": "Fri, 02 Jan 2026 21:27:06 +0000"
+    }
+  ]
+}

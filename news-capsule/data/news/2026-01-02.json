@@ -1,0 +1,82 @@
+{
+  "date": "2026-01-02",
+  "publishedAt": "2026-01-02T15:48:59.578Z",
+  "language": "zh",
+  "news": [
+    {
+      "id": "news-1767368925418-0",
+      "title": "2026年AI行业将从炒作走向实用化",
+      "highlights": [
+        "新架构和更小的模型将出现",
+        "将开发可靠的智能体和物理AI",
+        "产品将专注于现实世界的应用"
+      ],
+      "impact": "这一转变将推动AI技术的实际应用，可能改变多个行业的运作方式。",
+      "source": {
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/2026/01/02/in-2026-ai-will-move-from-hype-to-pragmatism/",
+        "language": "en"
+      }
+    },
+    {
+      "id": "news-1767368928921-1",
+      "title": "欧洲银行因人工智能崛起计划裁员20万人",
+      "highlights": [
+        "裁员主要集中在后台运营、风险管理和合规部门",
+        "人工智能技术的应用加速了人力资源的减少",
+        "银行业面临转型压力，需适应新技术"
+      ],
+      "impact": "这一裁员潮将显著改变银行业的就业结构，推动行业向数字化转型。",
+      "source": {
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/2026/01/01/european-banks-plan-to-cut-200000-jobs-as-ai-takes-hold/",
+        "language": "en"
+      }
+    },
+    {
+      "id": "news-1767368932132-2",
+      "title": "微软CEO纳德拉开博客谈AI发展与挑战",
+      "highlights": [
+        "纳德拉任命新CEO，腾出时间进行博客创作",
+        "博客中讨论AI的发展与未来方向",
+        "呼吁超越AI的争论，强调技术进步的重要性"
+      ],
+      "impact": "纳德拉的博客可能会影响公众对AI技术的理解和期待，同时为微软在AI领域的战略方向提供指导。",
+      "source": {
+        "name": "The Verge",
+        "url": "https://www.theverge.com/news/852630/microsoft-ceo-satya-nadella-scratchpad-blog-ai-slop-comments",
+        "language": "en"
+      }
+    },
+    {
+      "id": "news-1767368935702-3",
+      "title": "特斯拉电动车销量下滑，BYD成为全球销量冠军",
+      "highlights": [
+        "2025年电动车销量数据显示特斯拉销量下降",
+        "中国品牌比亚迪（BYD）成为全球电动车销量第一",
+        "市场竞争加剧，特斯拉面临更大压力"
+      ],
+      "impact": "特斯拉失去市场领导地位可能影响其品牌形象和投资者信心，同时加剧电动车市场的竞争格局。",
+      "source": {
+        "name": "Wired",
+        "url": "https://www.wired.com/story/byd-trounces-tesla-in-ev-sales-for-the-first-time/",
+        "language": "en"
+      }
+    },
+    {
+      "id": "news-1767368939278-4",
+      "title": "印度政府批准4186.3亿卢比电子元件制造投资计划",
+      "highlights": [
+        "印度政府批准电子元件制造计划",
+        "投资金额达到4186.3亿卢比",
+        "旨在推动国内电子产业发展"
+      ],
+      "impact": "该投资将促进印度电子元件制造业的增长，增强其在全球市场的竞争力。",
+      "source": {
+        "name": "36氪",
+        "url": "https://36kr.com/newsflashes/3622021472961797?f=rss",
+        "language": "zh"
+      }
+    }
+  ]
+}

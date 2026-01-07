@@ -1,0 +1,19 @@
+{
+  "sourceId": "bbc-technology",
+  "items": [
+    {
+      "title": "Watch: BBC reporter tests AI anti-shoplifting tech",
+      "link": "https://www.bbc.com/news/videos/c98p1jg3p58o?at_medium=RSS&at_campaign=rss",
+      "content": "Some major retailers and independent stores have introduced AI body scans, CCTV or facial recognition equipment to identify crimes like shoplifting.",
+      "pubDate": "Mon, 05 Jan 2026 00:01:31 GMT",
+      "wordCount": 148,
+      "sourceName": "BBC Technology",
+      "sourceLanguage": "en",
+      "id": "8ce20b331634",
+      "status": "pending",
+      "syncedAt": "2026-01-05T02:31:27.656Z"
+    }
+  ],
+  "lastSync": "2026-01-05T02:31:27.656Z",
+  "totalItems": 1
+}
