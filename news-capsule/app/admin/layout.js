@@ -14,6 +14,7 @@ export default function AdminLayout({ children }) {
         { href: '/admin/articles', label: '📄 文章内容', exact: true },
         { href: '/admin/prompt-debugger', label: '🧪 Prompt 调试' },
         { href: '/admin/settings', label: '⚙️ 设置' },
+        { href: '/admin/feedback', label: '💬 用户反馈' },
     ];
 
     const isActive = (item) => {

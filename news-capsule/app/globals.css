@@ -1138,10 +1138,7 @@ p {
 .news-card-source {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--accent);
-  background: var(--accent-light);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
 }
 
 .news-card-time {
@@ -1243,6 +1240,77 @@ p {
   color: var(--text-muted);
 }
 
+/* ===========================================
+   简化版营养区块（NewsCardLab）
+   =========================================== */
+
+/* 简化版营养区块 - 单一浅色背景 */
+.news-card-nutrition-simple {
+  background: #f9fafb;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+/* 标题行：原文剩余营养 + 苹果评分 */
+.nutrition-header-simple {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-divider);
+}
+
+.nutrition-title-simple {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+.nutrition-score-simple {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  line-height: 1;
+}
+
+.nutrition-score-simple .apple-filled,
+.nutrition-score-simple .apple-empty {
+  font-size: 0.875rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* 子项目样式 - 无独立背景 */
+.nutrition-item-simple {
+  margin-bottom: var(--space-md);
+}
+
+.nutrition-item-simple:last-child {
+  margin-bottom: 0;
+}
+
+.nutrition-item-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: var(--space-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.nutrition-item-simple p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
 /* 响应式调整 */
 @media (max-width: 640px) {
   .news-card {
@@ -1264,4 +1332,357 @@ p {
     align-items: flex-start;
     gap: var(--space-sm);
   }
+}
+
+/* ===========================================
+   UI Lab - 固定顶栏版本
+   =========================================== */
+
+/* 固定顶栏 */
+.lab-sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-divider);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.lab-header-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* 左侧：Logo + 日期 */
+.lab-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.lab-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.lab-logo-icon {
+  font-size: 1.25rem;
+}
+
+.lab-logo-text {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.lab-header-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-light);
+}
+
+.lab-date-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.lab-date {
+  color: var(--text-secondary);
+}
+
+.lab-count {
+  padding: 2px 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* 右侧：操作按钮 */
+.lab-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.lab-btn {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lab-btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.lab-btn-ghost:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.lab-btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.lab-btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+/* 主内容区 - 顶部留出固定栏高度 */
+.lab-main {
+  padding-top: 80px;
+  min-height: calc(100vh - 80px);
+}
+
+/* 左右箭头日期选择器 */
+.lab-date-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+}
+
+.lab-date-arrow {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.lab-date-arrow:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.lab-date-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.lab-date-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lab-date-icon:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+/* 日期下拉菜单 */
+.lab-date-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 120px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+}
+
+.lab-date-option {
+  display: block;
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.lab-date-option:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.lab-date-option.active {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .lab-header-container {
+    flex-direction: row;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    justify-content: space-between;
+  }
+
+  .lab-header-left {
+    width: auto;
+    justify-content: flex-start;
+    gap: var(--space-sm);
+  }
+
+  /* 移动端隐藏中间分割线和日期文字，保持极简 */
+  .lab-header-divider {
+    display: block;
+    height: 16px;
+    margin: 0 4px;
+  }
+
+  /* 移动端只显示简短的日期 */
+  .lab-date-info {
+    width: auto;
+    font-size: 0.8125rem;
+  }
+
+  .lab-header-right {
+    width: auto;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  /* 调整移动端按钮大小 */
+  .lab-date-arrow {
+    width: 24px;
+    height: 24px;
+  }
+
+  .lab-date-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 0.875rem;
+  }
+
+  .lab-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  .lab-main {
+    padding-top: 60px;
+    /* 减少顶部留白 */
+  }
+}
+
+
+
+/* ===========================================
+   主题：极简文学风（ui-lab 专用）
+   =========================================== */
+
+.lab-theme-minimal {
+  --bg-primary: #FEFEFE;
+  --bg-secondary: #F5F5F5;
+  --bg-hover: #EEEEEE;
+  --text-primary: #2D2D2D;
+  --text-secondary: #5A5A5A;
+  --text-muted: #999999;
+  --accent: #2D2D2D;
+  --accent-hover: #1A1A1A;
+  --border-light: #D4D4D4;
+  --border-divider: #EFEFEF;
+}
+
+.lab-theme-minimal .lab-sticky-header {
+  background: #FEFEFE;
+  border-bottom-color: #E5E5E5;
+}
+
+.lab-theme-minimal .news-card {
+  background: #FEFEFE;
+  border-bottom-color: #D4D4D4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.lab-theme-minimal .news-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-color: #A3A3A3;
+}
+
+.lab-theme-minimal .news-card-index {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8125rem;
+  color: #CCCCCC;
+  margin-bottom: 8px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.lab-theme-minimal .news-card-source {
+  color: #5A5A5A;
+}
+
+.lab-theme-minimal .news-card-note {
+  border-left: 2px solid #2D2D2D;
+  background: transparent;
+  padding-left: 12px;
+}
+
+.lab-theme-minimal .news-card-note p {
+  font-style: normal;
+  color: #4A4A4A;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  border-left: none;
+  padding-left: 0;
+}
+
+.lab-theme-minimal .news-card-link {
+  color: #2D2D2D;
+  text-decoration: underline;
+}
+
+.lab-theme-minimal .news-card-link:hover {
+  color: #1A1A1A;
+}
+
+.lab-theme-minimal .lab-btn-primary {
+  background: #2D2D2D;
+}
+
+.lab-theme-minimal .lab-btn-primary:hover {
+  background: #1A1A1A;
+}
+
+.lab-theme-minimal .page-footer {
+  margin-top: 0;
+  padding-top: 16px;
+  border-top: 1px solid #E5E5E5;
+  padding-bottom: 24px;
 }

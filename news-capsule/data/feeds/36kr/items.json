@@ -29,7 +29,7 @@
       "sourceName": "36氪",
       "sourceLanguage": "zh",
       "id": "145fa12cedc4",
-      "status": "new",
+      "status": "queued",
       "syncedAt": "2026-01-08T01:06:20.186Z",
       "qualityFlags": {
         "skipSummary": false,
