@@ -361,6 +361,13 @@ export default function AdminPage() {
         return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
     }
 
+    // 格式化出版日期（始终显示绝对日期）
+    function formatPublishDate(dateStr) {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        return `${date.getMonth() + 1}月${date.getDate()}日`;
+    }
+
     // 统计（五种状态）
     const totalSources = data?.sources?.length || 0;
     const enabledSources = data?.sources?.filter(s => s.enabled).length || 0;
@@ -730,7 +737,7 @@ export default function AdminPage() {
                                                                             {item.status === 'new' ? '🆕 新增' :
                                                                                 item.status === 'pending' ? '⏳ 待审' :
                                                                                     item.status === 'queued' ? '📋 待出版' :
-                                                                                        item.status === 'published' ? '✅ 已出版' :
+                                                                                        item.status === 'published' ? `✅ 已出版${item.publishedAt ? ' (' + formatPublishDate(item.publishedAt) + ')' : ''}` :
                                                                                             item.status === 'archived' ? '📦 存档' : item.status}
                                                                         </span>
                                                                     </div>

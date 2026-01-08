@@ -1,0 +1,27 @@
+{
+  "sourceId": "all-content-from-business-insider",
+  "date": "2026-01-08",
+  "language": "zh",
+  "publishedAt": "2026-01-08T02:15:40.650Z",
+  "items": [
+    {
+      "id": "bf90856ebb23",
+      "editorNote": "前Facebook高管Molly Graham勇于冒险参与手机项目，虽经历失败但实现职业“J曲线”成长，后成为多家亿级企业领导。",
+      "keyPoints": [
+        "25岁时Molly Graham从稳定HR岗位转向手机开发，尽管无相关经验",
+        "该项目失败导致职业短期下滑，但带来长期领导力提升",
+        "她提出“J-curve”职业路径理论，强调风险带来超额回报",
+        "Chamath Palihapitiya亲自邀请她参与手机项目并用白板画出J曲线"
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "原文包含Molly Graham对失败过程的细节描述和心理感受，以及她在播客和Substack上的详细阐述",
+        "whoShouldRead": "关注职业规划、领导力发展及风险管理的职场人士和管理者"
+      },
+      "originalTitle": "A Facebook veteran took a big career risk that resulted in a 'giant failure' &mdash; but embracing a 'J-curve' career path paid off",
+      "link": "https://www.businessinsider.com/molly-graham-j-shape-career-path-facebook-chamath-palihapitiya-2026-1",
+      "pubDate": "2026-01-07T10:59:01.000Z",
+      "wordCount": 830
+    }
+  ]
+}

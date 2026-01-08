@@ -680,13 +680,14 @@
       "sourceName": "36氪",
       "sourceLanguage": "zh",
       "id": "04e6f1142c74",
-      "status": "pending",
+      "status": "published",
       "syncedAt": "2026-01-08T01:06:20.186Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
         "checkedAt": "2026-01-08T01:07:47.090Z"
-      }
+      },
+      "publishedAt": "2026-01-08T02:23:59.059Z"
     },
     {
       "title": "央行今日开展286亿元7天逆回购操作",

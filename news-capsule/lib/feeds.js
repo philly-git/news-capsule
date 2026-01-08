@@ -322,6 +322,7 @@ export function batchUpdateItemsStatus(itemIds, newStatus) {
 
     let totalUpdated = 0;
     const itemIdSet = new Set(itemIds);
+    const now = new Date().toISOString();
 
     for (const sourceId of dirs) {
         const data = getSourceItems(sourceId);
@@ -330,6 +331,9 @@ export function batchUpdateItemsStatus(itemIds, newStatus) {
         for (const item of data.items) {
             if (itemIdSet.has(item.id)) {
                 item.status = newStatus;
+                if (newStatus === 'published') {
+                    item.publishedAt = now;
+                }
                 updated++;
             }
         }

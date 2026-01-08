@@ -1,0 +1,27 @@
+{
+  "sourceId": "新智元",
+  "date": "2026-01-08",
+  "language": "zh",
+  "publishedAt": "2026-01-08T02:15:52.726Z",
+  "items": [
+    {
+      "id": "de5c345d3acf",
+      "editorNote": "NVIDIA发布Rubin架构GPU，6芯设计带来最高5倍算力提升，标志显卡技术新阶段。",
+      "keyPoints": [
+        "Rubin GPU采用6颗芯片组合，算力提升约5倍",
+        "新架构聚焦高性能计算与AI推理应用",
+        "预计2026年内量产并推向市场",
+        "显著提升能效比，优化多芯片协同处理能力"
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "原文提供了Rubin架构的技术细节和芯片设计理念，以及对比传统单芯片方案的优势，补充了产品定位和应用场景分析",
+        "whoShouldRead": "关注GPU技术革新、AI硬件加速及高性能计算方案的研发人员与技术决策者"
+      },
+      "originalTitle": "今夜无显卡！老黄引爆Rubin时代，6颗芯狂飙5倍算力",
+      "link": "https://mp.weixin.qq.com/s?__biz=MzI3MTA0MTk1MA==&mid=2652661287&idx=1&sn=cd23c82dab944f74d2f3e48fa9a3d702",
+      "pubDate": "Tue, 06 Jan 2026 09:47:00 +0800",
+      "wordCount": 5961
+    }
+  ]
+}

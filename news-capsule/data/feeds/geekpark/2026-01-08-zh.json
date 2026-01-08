@@ -2,7 +2,7 @@
   "sourceId": "geekpark",
   "date": "2026-01-08",
   "language": "zh",
-  "publishedAt": "2026-01-08T01:10:37.040Z",
+  "publishedAt": "2026-01-08T02:15:49.010Z",
   "items": [
     {
       "id": "5cacb13726b3",
@@ -22,6 +22,25 @@
       "link": "https://mp.weixin.qq.com/s?__biz=MTMwNDMwODQ0MQ==&mid=2653096637&idx=1&sn=7a80b43c21f4a167cdec6a04b1ab7099",
       "pubDate": "Wed, 07 Jan 2026 15:17:00 +0800",
       "wordCount": 6069
+    },
+    {
+      "id": "e75d0ec945de",
+      "editorNote": "极客公园报道百元级AI硬件产品AI ONE，定位普通人入门AI时代的实用工具。",
+      "keyPoints": [
+        "AI ONE售价在百元级，面向普通消费者",
+        "产品设计简洁，强调解决信息焦虑问题",
+        "通过硬件形式普及AI应用，降低使用门槛",
+        "发布于2026年初，代表AI普及新趋势"
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "原文包含产品设计理念与用户场景描述，补充了AI ONE如何缓解信息焦虑的具体案例和使用体验",
+        "whoShouldRead": "关注AI产品用户体验、市场趋势及普通消费者数字生活改善的编辑和产品经理"
+      },
+      "originalTitle": "百元级的 AI ONE，普通人 AI 时代的第一块「敲门砖」",
+      "link": "https://mp.weixin.qq.com/s?__biz=MTMwNDMwODQ0MQ==&mid=2653096493&idx=1&sn=a89af95e5257a332c5fb5ed10798ed50",
+      "pubDate": "Tue, 06 Jan 2026 19:22:00 +0800",
+      "wordCount": 3561
     }
   ]
 }

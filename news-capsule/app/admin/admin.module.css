@@ -2040,3 +2040,10 @@
 .langBtnActive:hover {
     background: #ddd6fe;
 }
+
+/* 新增操作区域样式 */
+.actionArea {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
