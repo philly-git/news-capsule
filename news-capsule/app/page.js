@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
-import SourceGroup from '@/components/SourceGroup';
+import NewsCard from '@/components/NewsCard';
 import SubscribeModal from '@/components/SubscribeModal';
 import Footer from '@/components/Footer';
 import DatePicker from '@/components/DatePicker';
@@ -108,13 +108,26 @@ export default function Home() {
   const sources = feedsData?.sources || [];
   const date = feedsData?.date || selectedDate || new Date().toISOString().split('T')[0];
 
-  // 计算总条目数
-  const totalItems = sources.reduce((acc, src) => acc + (src.items?.length || 0), 0);
+  // 合并所有新闻并按时间排序（从新到旧）
+  const allNews = sources.flatMap(source =>
+    (source.items || []).map(item => ({
+      ...item,
+      sourceName: source.name,
+      sourceId: source.id
+    }))
+  ).sort((a, b) => {
+    // 按发布时间降序排列
+    const dateA = new Date(a.pubDate || 0);
+    const dateB = new Date(b.pubDate || 0);
+    return dateB - dateA;
+  });
+
+  const totalItems = allNews.length;
 
   // 文案翻译
   const t = {
     newsCount: language === 'zh' ? '条资讯' : 'articles',
-    doneMessage: language === 'zh' ? '更新完毕' : "That's all",
+    doneMessage: language === 'zh' ? '更新完毕 — 期待你的阅读和发现' : "That's all — enjoy your reading!",
     loading: language === 'zh' ? '加载中...' : 'Loading...',
     noNews: language === 'zh' ? '暂无新闻' : 'No news available',
   };
@@ -141,25 +154,24 @@ export default function Home() {
           />
         </div>
 
-        {/* 按源分组的新闻列表 */}
+        {/* 按时间排序的新闻列表 */}
         {loading ? (
           <div className="loading-state">
             <p>{t.loading}</p>
           </div>
-        ) : sources.length === 0 ? (
+        ) : allNews.length === 0 ? (
           <div className="empty-state">
             <p>{t.noNews}</p>
           </div>
         ) : (
           <>
-            <div className="sources-list">
-              {sources.map((source, index) => (
-                <SourceGroup
-                  key={source.id}
-                  source={source}
-                  items={source.items || []}
+            <div className="news-list">
+              {allNews.map((item) => (
+                <NewsCard
+                  key={item.id}
+                  item={item}
+                  sourceName={item.sourceName}
                   language={language}
-                  defaultExpanded={index === 0}
                 />
               ))}
             </div>

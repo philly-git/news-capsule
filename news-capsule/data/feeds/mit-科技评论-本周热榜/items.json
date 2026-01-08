@@ -10,12 +10,12 @@
       "sourceName": "MIT 科技评论 - 本周热榜",
       "sourceLanguage": "zh",
       "id": "1e6981b35a69",
-      "status": "pending",
+      "status": "published",
       "syncedAt": "2026-01-07T05:51:54.508Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-07T07:30:27.100Z"
+        "checkedAt": "2026-01-08T01:07:47.141Z"
       }
     },
     {
@@ -32,7 +32,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-07T07:30:27.100Z"
+        "checkedAt": "2026-01-08T01:07:47.141Z"
       }
     },
     {
@@ -44,16 +44,16 @@
       "sourceName": "MIT 科技评论 - 本周热榜",
       "sourceLanguage": "zh",
       "id": "24937c4792ca",
-      "status": "pending",
+      "status": "published",
       "syncedAt": "2026-01-07T05:51:54.508Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-07T07:30:27.100Z"
+        "checkedAt": "2026-01-08T01:07:47.141Z"
       }
     }
   ],
-  "lastSync": "2026-01-07T05:51:54.508Z",
+  "lastSync": "2026-01-08T01:06:18.850Z",
   "totalItems": 3,
-  "qualityCheckedAt": "2026-01-07T07:30:27.100Z"
+  "qualityCheckedAt": "2026-01-08T01:07:47.141Z"
 }

@@ -1,0 +1,27 @@
+{
+  "sourceId": "time",
+  "date": "2026-01-08",
+  "language": "zh",
+  "publishedAt": "2026-01-08T01:10:28.287Z",
+  "items": [
+    {
+      "id": "0d752c3777b0",
+      "editorNote": "美国民调显示，约三分之一民众支持美军抓捕委内瑞拉总统Maduro，政党立场分歧明显",
+      "keyPoints": [
+        "路透/Ipsos民调显示33%美国人支持此次军事行动，72%担心美方过度介入委内瑞拉",
+        "共和党中约65%支持行动，民主党和独立派支持率分别仅为11%和23%",
+        "YouGov调查显示36%成年人支持，39%反对，25%不确定",
+        "34%受访者认为行动会改善委内瑞拉局势，35%认为会恶化"
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "原文包含不同民调的具体时间节点和政党支持率细节，以及对美国政治氛围和国际反应的背景描述",
+        "whoShouldRead": "关注美拉关系、美国内政影响及国际政治动态的政策分析师和国际关系研究者"
+      },
+      "originalTitle": "How Do Americans Feel About the U.S. Capturing Venezuela’s Maduro? Here’s What Early Polls Show",
+      "link": "https://time.com/7344514/maduro-venezuela-trump-polls/",
+      "pubDate": "Wed, 07 Jan 2026 20:47:12 +0000",
+      "wordCount": 671
+    }
+  ]
+}

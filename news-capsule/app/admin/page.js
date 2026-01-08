@@ -31,8 +31,11 @@ export default function AdminPage() {
     const ITEMS_PER_PAGE = 10;
 
     // 筛选器状态
-    const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'new', 'pending', 'queued', 'published', 'archived'
+    const [statusFilter, setStatusFilter] = useState([]); // 多选: ['new', 'pending', 'queued', 'published', 'archived']，空数组表示全部
     const [timeFilter, setTimeFilter] = useState('all'); // 'all', '24h', '48h', '7d'
+
+    // 信息源排序状态
+    const [sourceSort, setSourceSort] = useState('activity'); // 'activity' | 'added'
 
     useEffect(() => {
         fetchSources();
@@ -410,18 +413,30 @@ export default function AdminPage() {
                             </div>
                             <div className={styles.filterGroup}>
                                 <label>状态：</label>
-                                <select
-                                    value={statusFilter}
-                                    onChange={(e) => setStatusFilter(e.target.value)}
-                                    className={styles.filterSelect}
-                                >
-                                    <option value="all">全部</option>
-                                    <option value="new">🆕 新增</option>
-                                    <option value="pending">⏳ 待审</option>
-                                    <option value="queued">📋 待出版</option>
-                                    <option value="published">✅ 已出版</option>
-                                    <option value="archived">📦 存档</option>
-                                </select>
+                                <div className={styles.statusCheckboxGroup}>
+                                    {[
+                                        { value: 'new', label: '🆕 新增' },
+                                        { value: 'pending', label: '⏳ 待审' },
+                                        { value: 'queued', label: '📋 待出版' },
+                                        { value: 'published', label: '✅ 已出版' },
+                                        { value: 'archived', label: '📦 存档' }
+                                    ].map(status => (
+                                        <label key={status.value} className={styles.statusCheckbox}>
+                                            <input
+                                                type="checkbox"
+                                                checked={statusFilter.includes(status.value)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setStatusFilter(prev => [...prev, status.value]);
+                                                    } else {
+                                                        setStatusFilter(prev => prev.filter(s => s !== status.value));
+                                                    }
+                                                }}
+                                            />
+                                            <span>{status.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -433,7 +448,7 @@ export default function AdminPage() {
                             onClick={() => setFilterPanelOpen(!filterPanelOpen)}
                         >
                             <span className={styles.qualityFilterTitle}>
-                                🔍 内容质量过滤规则
+                                📦 自动存档规则
                             </span>
                             <span>{filterPanelOpen ? '▼' : '▶'}</span>
                         </div>
@@ -445,7 +460,7 @@ export default function AdminPage() {
                                         1. 最小字数阈值
                                     </label>
                                     <p className={styles.filterRuleDesc}>
-                                        低于此字数的内容将被标记为「内容太短」
+                                        低于此字数的内容将被自动存档
                                     </p>
                                     <div className={styles.inputRow}>
                                         <input
@@ -469,7 +484,7 @@ export default function AdminPage() {
                                         2. 信息合集关键词（标题匹配）
                                     </label>
                                     <p className={styles.filterRuleDesc}>
-                                        标题包含以下关键词的内容将被标记为「信息合集」
+                                        标题包含以下关键词的内容将被自动存档
                                     </p>
                                     <div className={styles.patternList}>
                                         {filterConfig.rules.aggregationPatterns?.map((p, i) => (
@@ -484,7 +499,7 @@ export default function AdminPage() {
                                         3. 视频为主检测
                                     </label>
                                     <p className={styles.filterRuleDesc}>
-                                        包含视频且文字少于 {filterConfig.rules.videoMinWordCount} 字的内容将被标记
+                                        包含视频且文字少于 {filterConfig.rules.videoMinWordCount} 字的内容将被自动存档
                                     </p>
                                 </div>
 
@@ -495,7 +510,7 @@ export default function AdminPage() {
                                         disabled={filterRunning}
                                         className={styles.qualityBtn}
                                     >
-                                        {filterRunning ? '检测中...' : '🔍 执行质量检测'}
+                                        {filterRunning ? '筛选中...' : '📦 执行存档筛选'}
                                     </button>
                                 </div>
 
@@ -506,10 +521,10 @@ export default function AdminPage() {
                                             总条目: <span className={styles.filterStatValue}>{filterResult.summary.totalItems}</span>
                                         </span>
                                         <span className={styles.filterStat}>
-                                            已标记: <span className={styles.filterStatValue}>{filterResult.summary.totalFlagged}</span>
+                                            已存档: <span className={styles.filterStatValue}>{filterResult.summary.totalFlagged}</span>
                                         </span>
                                         <span className={styles.filterStat}>
-                                            通过率: <span className={styles.filterStatValue}>
+                                            保留率: <span className={styles.filterStatValue}>
                                                 {((1 - filterResult.summary.totalFlagged / filterResult.summary.totalItems) * 100).toFixed(1)}%
                                             </span>
                                         </span>
@@ -524,94 +539,136 @@ export default function AdminPage() {
                         <div className={styles.sectionHeader}>
                             <h2>📋 信息源列表</h2>
                             <div className={styles.headerActions}>
-                                <select
-                                    value={timeWindow}
-                                    onChange={(e) => setTimeWindow(Number(e.target.value))}
-                                    className={styles.timeWindowSelect}
-                                >
-                                    <option value={24}>过去 24 小时</option>
-                                    <option value={48}>过去 48 小时</option>
-                                    <option value={168}>过去 1 周</option>
-                                </select>
-                                <button
-                                    onClick={handleFetchAll}
-                                    disabled={fetchingAll}
-                                    className={styles.primaryBtn}
-                                >
-                                    {fetchingAll ? '同步中...' : '🔄 全部同步'}
-                                </button>
+                                {/* 复合同步按钮 */}
+                                <div className={styles.syncButtonGroup}>
+                                    <button
+                                        onClick={handleFetchAll}
+                                        disabled={fetchingAll}
+                                        className={styles.syncMainBtn}
+                                    >
+                                        {fetchingAll ? '同步中...' : '🔄 同步'}
+                                    </button>
+                                    <select
+                                        value={timeWindow}
+                                        onChange={(e) => setTimeWindow(Number(e.target.value))}
+                                        className={styles.syncTimeSelect}
+                                        disabled={fetchingAll}
+                                    >
+                                        <option value={24}>过去 24 小时</option>
+                                        <option value={48}>过去 48 小时</option>
+                                        <option value={168}>过去 1 周</option>
+                                    </select>
+                                </div>
                                 <Link href="/admin/sources/add" className={styles.addBtn}>
                                     + 添加新源
                                 </Link>
                             </div>
                         </div>
-                        <div className={styles.sourceList}>
-                            {data.sources.map((source) => (
+                        {/* 排序选择器 */}
+                        <div className={styles.sortBar}>
+                            <span className={styles.sortLabel}>排序：</span>
+                            <select
+                                value={sourceSort}
+                                onChange={(e) => setSourceSort(e.target.value)}
+                                className={styles.sortSelect}
+                            >
+                                <option value="activity">🔥 按活跃度</option>
+                                <option value="added">➕ 按添加时间</option>
+                            </select>
+                        </div>
+
+                        {/* 按语言分组渲染 */}
+                        {(() => {
+                            // 分组
+                            const zhSources = data.sources.filter(s => s.language === 'zh');
+                            const enSources = data.sources.filter(s => s.language === 'en');
+
+                            // 排序函数
+                            const sortSources = (sources) => {
+                                if (sourceSort === 'activity') {
+                                    return [...sources].sort((a, b) => {
+                                        const aActivity = (a.stats?.newCount || 0) + (a.stats?.pendingCount || 0);
+                                        const bActivity = (b.stats?.newCount || 0) + (b.stats?.pendingCount || 0);
+                                        return bActivity - aActivity;
+                                    });
+                                }
+                                // 默认按添加时间（保持原顺序）
+                                return sources;
+                            };
+
+                            // 渲染单个信息源卡片
+                            const renderSourceCard = (source) => (
                                 <div key={source.id} className={`${styles.sourceCard} ${!source.enabled ? styles.disabled : ''}`}>
                                     <div
                                         className={styles.sourceHeader}
                                         onClick={() => toggleSource(source.id)}
                                     >
-                                        <span className={styles.sourceName}>
-                                            {source.name}
-                                            <span className={`${styles.langBadge} ${styles[source.language]}`}>
-                                                {source.language === 'en' ? 'EN' : 'ZH'}
+                                        {/* 第一行：名称 + 操作按钮 */}
+                                        <div className={styles.sourceHeaderRow}>
+                                            <span className={styles.sourceName}>
+                                                {source.name}
                                             </span>
-                                        </span>
-                                        {/* 状态统计 */}
-                                        {source.stats?.totalItems > 0 && (
+                                            <div className={styles.sourceActions}>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); handleToggle(source.id); }}
+                                                    className={`${styles.toggleBtn} ${source.enabled ? styles.enabled : styles.disabled}`}
+                                                    title={source.enabled ? '点击禁用' : '点击启用'}
+                                                >
+                                                    {source.enabled ? '✓' : '○'}
+                                                </button>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); handleFetchSingle(source.name, source.id); }}
+                                                    disabled={fetchingSource === source.name || fetchingAll || !source.enabled}
+                                                    className={styles.fetchBtn}
+                                                >
+                                                    {fetchingSource === source.name ? '...' : '🔄'}
+                                                </button>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); handleDelete(source.id, source.name); }}
+                                                    className={styles.deleteBtn}
+                                                    title="删除"
+                                                >
+                                                    🗑
+                                                </button>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); handleEdit(source); }}
+                                                    className={styles.editBtn}
+                                                    title="编辑"
+                                                >
+                                                    ✏️
+                                                </button>
+                                                <span className={styles.expandIcon}>
+                                                    {expandedSource === source.id ? '▼' : '▶'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {/* 第二行：状态统计 + 同步时间 */}
+                                        <div className={styles.sourceMetaRow}>
                                             <div className={styles.sourceStats}>
-                                                {source.stats.newCount > 0 && (
-                                                    <span className={`${styles.statBadge} ${styles.statNew}`}>🆕 {source.stats.newCount}</span>
-                                                )}
-                                                {source.stats.pendingCount > 0 && (
-                                                    <span className={`${styles.statBadge} ${styles.statPending}`}>⏳ {source.stats.pendingCount}</span>
-                                                )}
-                                                {source.stats.queuedCount > 0 && (
-                                                    <span className={`${styles.statBadge} ${styles.statQueued}`}>📋 {source.stats.queuedCount}</span>
-                                                )}
-                                                {source.stats.publishedCount > 0 && (
-                                                    <span className={`${styles.statBadge} ${styles.statPublished}`}>✅ {source.stats.publishedCount}</span>
-                                                )}
-                                                {source.stats.archivedCount > 0 && (
-                                                    <span className={`${styles.statBadge} ${styles.statArchived}`}>📦 {source.stats.archivedCount}</span>
+                                                {source.stats?.totalItems > 0 ? (
+                                                    <>
+                                                        {source.stats.newCount > 0 && (
+                                                            <span className={`${styles.statBadge} ${styles.statNew}`}>🆕 {source.stats.newCount}</span>
+                                                        )}
+                                                        {source.stats.pendingCount > 0 && (
+                                                            <span className={`${styles.statBadge} ${styles.statPending}`}>⏳ {source.stats.pendingCount}</span>
+                                                        )}
+                                                        {source.stats.queuedCount > 0 && (
+                                                            <span className={`${styles.statBadge} ${styles.statQueued}`}>📋 {source.stats.queuedCount}</span>
+                                                        )}
+                                                        {source.stats.publishedCount > 0 && (
+                                                            <span className={`${styles.statBadge} ${styles.statPublished}`}>✅ {source.stats.publishedCount}</span>
+                                                        )}
+                                                        {source.stats.archivedCount > 0 && (
+                                                            <span className={`${styles.statBadge} ${styles.statArchived}`}>📦 {source.stats.archivedCount}</span>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <span className={styles.noStats}>暂无数据</span>
                                                 )}
                                             </div>
-                                        )}
-                                        <div className={styles.sourceActions}>
                                             <span className={styles.syncTime}>
-                                                {source.stats?.lastSync ? formatTime(source.stats.lastSync) : '未同步'}
-                                            </span>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleToggle(source.id); }}
-                                                className={`${styles.toggleBtn} ${source.enabled ? styles.enabled : styles.disabled}`}
-                                                title={source.enabled ? '点击禁用' : '点击启用'}
-                                            >
-                                                {source.enabled ? '✓' : '○'}
-                                            </button>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleFetchSingle(source.name, source.id); }}
-                                                disabled={fetchingSource === source.name || fetchingAll || !source.enabled}
-                                                className={styles.fetchBtn}
-                                            >
-                                                {fetchingSource === source.name ? '...' : '🔄'}
-                                            </button>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleDelete(source.id, source.name); }}
-                                                className={styles.deleteBtn}
-                                                title="删除"
-                                            >
-                                                🗑
-                                            </button>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleEdit(source); }}
-                                                className={styles.editBtn}
-                                                title="编辑"
-                                            >
-                                                ✏️
-                                            </button>
-                                            <span className={styles.expandIcon}>
-                                                {expandedSource === source.id ? '▼' : '▶'}
+                                                🕐 {source.stats?.lastSync ? formatTime(source.stats.lastSync) + '同步' : '未同步'}
                                             </span>
                                         </div>
                                     </div>
@@ -621,8 +678,8 @@ export default function AdminPage() {
                                         // 筛选逻辑
                                         const now = new Date();
                                         const filteredItems = (sourceItems[source.id] || []).filter(item => {
-                                            // 状态筛选
-                                            if (statusFilter !== 'all' && item.status !== statusFilter) return false;
+                                            // 状态筛选（多选）
+                                            if (statusFilter.length > 0 && !statusFilter.includes(item.status)) return false;
                                             // 时间筛选
                                             if (timeFilter !== 'all' && item.pubDate) {
                                                 const pubTime = new Date(item.pubDate);
@@ -758,8 +815,32 @@ export default function AdminPage() {
                                         </a>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            );
+
+                            return (
+                                <>
+                                    {/* 中文源 */}
+                                    {zhSources.length > 0 && (
+                                        <div className={styles.sourceGroup}>
+                                            <h3 className={styles.sourceGroupTitle}>🇨🇳 中文源 ({zhSources.length})</h3>
+                                            <div className={styles.sourceList}>
+                                                {sortSources(zhSources).map(renderSourceCard)}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* 英文源 */}
+                                    {enSources.length > 0 && (
+                                        <div className={styles.sourceGroup}>
+                                            <h3 className={styles.sourceGroupTitle}>🌐 英文源 ({enSources.length})</h3>
+                                            <div className={styles.sourceList}>
+                                                {sortSources(enSources).map(renderSourceCard)}
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
+                            );
+                        })()}
                     </section>
 
                     {/* 删除确认模态框 */}

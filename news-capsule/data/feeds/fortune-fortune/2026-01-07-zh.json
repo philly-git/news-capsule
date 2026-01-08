@@ -1,0 +1,27 @@
+{
+  "sourceId": "fortune-fortune",
+  "date": "2026-01-07",
+  "language": "zh",
+  "publishedAt": "2026-01-07T13:42:23.478Z",
+  "items": [
+    {
+      "id": "8bb03c872152",
+      "editorNote": "Fortune 文章指出2026年及以后商业环境高度不确定，领导者需以适应性为核心重塑战略思维",
+      "keyPoints": [
+        "过去依赖历史数据的长期预测模式已失效，商业环境进入结构性波动期",
+        "疫情、黑天鹅事件和AI、量子计算等技术加速了不确定性和变化速度",
+        "盲目信任预测带来风险，领导者应避免等待完美时机，强调快速决策",
+        "领导者需同时兼顾速度与责任、自动化与员工参与、创新与监管平衡"
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "原文包含作者个人职业经历反思与具体领导力应对矛盾的案例，补充理解预测失效背后的情感与管理挑战",
+        "whoShouldRead": "企业高管、战略规划人员及关注未来商业趋势的管理者"
+      },
+      "originalTitle": "The most honest prediction for 2026: nobody knows what’s next",
+      "link": "https://fortune.com/2026/01/07/sap-ceo-christian-klein-2026-prediction-nobody-knows-whats-next/",
+      "pubDate": "Wed, 07 Jan 2026 10:00:00 +0000",
+      "wordCount": 811
+    }
+  ]
+}

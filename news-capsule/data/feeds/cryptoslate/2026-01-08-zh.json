@@ -1,0 +1,27 @@
+{
+  "sourceId": "cryptoslate",
+  "date": "2026-01-08",
+  "language": "zh",
+  "publishedAt": "2026-01-08T01:10:33.141Z",
+  "items": [
+    {
+      "id": "387c8984f14f",
+      "editorNote": "摩根士丹利向美国SEC申请比特币和Solana加密货币ETF，首次以母公司名义发行，彰显其加密资产布局决心。",
+      "keyPoints": [
+        "摩根士丹利申请两只ETF，分别跟踪比特币和Solana价格",
+        "这将是摩根士丹利旗下仅有的第三和第四只以母公司名义发行的ETF",
+        "Solana ETF创新纳入质押奖励机制，区别于纯被动跟踪的比特币ETF",
+        "两只基金均为被动投资工具，不使用杠杆或主动交易策略"
+      ],
+      "readOriginal": {
+        "score": 2,
+        "reason": "原文包含SEC官方招股说明书链接，详细披露基金运作机制与风险提示；同时提供Solana质押奖励的设计细节和潜在费用处理方案",
+        "whoShouldRead": "加密资产基金经理、合规官及机构投资者需了解基金具体结构与监管文件细节"
+      },
+      "originalTitle": "Morgan Stanley just filed for two crypto ETFs, but one massive omission sends a brutal signal",
+      "link": "https://cryptoslate.com/morgan-stanley-files-for-bitcoin-and-solana-etfs-neglects-ethereum-and-xrp/",
+      "pubDate": "Wed, 07 Jan 2026 20:45:37 +0000",
+      "wordCount": 1168
+    }
+  ]
+}

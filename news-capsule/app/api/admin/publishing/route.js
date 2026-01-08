@@ -20,12 +20,12 @@ export async function GET() {
     }
 }
 
-// POST: 发布待出版条目（调用 LLM 总结并更新状态）
+// POST: 发布待出版条目（支持多语言选择）
 export async function POST(request) {
     try {
-        const { itemIds, publishDate } = await request.json();
+        const { items: itemsWithLang, publishDate } = await request.json();
 
-        if (!itemIds || itemIds.length === 0) {
+        if (!itemsWithLang || itemsWithLang.length === 0) {
             return NextResponse.json(
                 { error: '没有选择要发布的条目' },
                 { status: 400 }
@@ -34,6 +34,7 @@ export async function POST(request) {
 
         // 1. 获取待出版的条目详情
         const allQueued = getAllQueuedItems();
+        const itemIds = itemsWithLang.map(item => item.id);
         const itemsToPublish = allQueued.filter(item => itemIds.includes(item.id));
 
         if (itemsToPublish.length === 0) {
@@ -43,33 +44,72 @@ export async function POST(request) {
             );
         }
 
-        // 2. 调用现有的新闻生成逻辑（动态导入避免循环依赖）
-        // 这里我们直接调用 generate-news API
-        const generateRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/generate-news`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                items: itemsToPublish,
-                date: publishDate || new Date().toISOString().split('T')[0]
-            })
+        // 2. 按目标语言分组
+        const langMap = {};
+        itemsWithLang.forEach(item => {
+            langMap[item.id] = item.targetLang || 'both';
         });
 
-        if (!generateRes.ok) {
-            const errorData = await generateRes.json();
-            return NextResponse.json(
-                { error: errorData.error || '生成失败' },
-                { status: 500 }
-            );
+        const zhItems = itemsToPublish.filter(item => {
+            const lang = langMap[item.id];
+            return lang === 'zh' || lang === 'both';
+        });
+
+        const enItems = itemsToPublish.filter(item => {
+            const lang = langMap[item.id];
+            return lang === 'en' || lang === 'both';
+        });
+
+        const date = publishDate || new Date().toISOString().split('T')[0];
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+        // 3. 分别调用生成 API（中文和英文）
+        let zhResult = null;
+        let enResult = null;
+
+        if (zhItems.length > 0) {
+            const zhRes = await fetch(`${baseUrl}/api/generate-news`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    items: zhItems,
+                    date,
+                    language: 'zh'
+                })
+            });
+            if (zhRes.ok) {
+                zhResult = await zhRes.json();
+            } else {
+                console.error('Failed to generate zh news:', await zhRes.text());
+            }
         }
 
-        const generateResult = await generateRes.json();
+        if (enItems.length > 0) {
+            const enRes = await fetch(`${baseUrl}/api/generate-news`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    items: enItems,
+                    date,
+                    language: 'en'
+                })
+            });
+            if (enRes.ok) {
+                enResult = await enRes.json();
+            } else {
+                console.error('Failed to generate en news:', await enRes.text());
+            }
+        }
 
-        // 3. 更新条目状态为 published
+        // 4. 更新条目状态为 published
         const updateResult = batchUpdateItemsStatus(itemIds, 'published');
 
         return NextResponse.json({
             success: true,
-            generated: generateResult,
+            zhCount: zhItems.length,
+            enCount: enItems.length,
+            zhResult,
+            enResult,
             updated: updateResult.totalUpdated,
             publishedItems: itemsToPublish.length
         });

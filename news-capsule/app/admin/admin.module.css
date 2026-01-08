@@ -169,6 +169,53 @@
     margin-top: 0.5rem;
 }
 
+/* 排序栏 */
+.sortBar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+}
+
+.sortLabel {
+    font-size: 0.85rem;
+    color: #6b6b6b;
+}
+
+.sortSelect {
+    padding: 0.4rem 0.75rem;
+    border: 1px solid #e3e2de;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background: #fff;
+    cursor: pointer;
+    color: #37352f;
+}
+
+.sortSelect:focus {
+    outline: none;
+    border-color: #2383e2;
+}
+
+/* 语言分组 */
+.sourceGroup {
+    margin-bottom: 1.5rem;
+}
+
+.sourceGroup:last-child {
+    margin-bottom: 0;
+}
+
+.sourceGroupTitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #37352f;
+    margin: 0 0 0.75rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ebebea;
+}
+
 /* 分渠道列表 */
 .sourceList {
     display: flex;
@@ -185,7 +232,8 @@
 
 .sourceHeader {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 0.5rem;
     padding: 1rem 1.25rem;
     cursor: pointer;
     transition: background 0.15s ease;
@@ -195,8 +243,14 @@
     background: #f7f6f3;
 }
 
+/* 第一行：名称 + 操作按钮 */
+.sourceHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .sourceName {
-    flex: 1;
     font-weight: 600;
     color: #37352f;
     display: flex;
@@ -222,10 +276,30 @@
     color: #b45309;
 }
 
+/* 第二行：状态统计 + 同步时间 */
+.sourceMetaRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
 .sourceStats {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.noStats {
+    color: #9b9a97;
+    font-size: 0.8rem;
+}
+
+.syncTime {
+    color: #9b9a97;
+    font-size: 0.8rem;
+    white-space: nowrap;
 }
 
 .sourceCount {
@@ -714,6 +788,65 @@
     border-color: #2383e2;
 }
 
+/* 复合同步按钮组 */
+.syncButtonGroup {
+    display: flex;
+    align-items: stretch;
+}
+
+.syncMainBtn {
+    padding: 0.6rem 1rem;
+    background: #2383e2;
+    color: #fff;
+    border: none;
+    border-radius: 6px 0 0 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    white-space: nowrap;
+}
+
+.syncMainBtn:hover {
+    background: #1a6fc4;
+}
+
+.syncMainBtn:disabled {
+    background: #9b9a97;
+    cursor: not-allowed;
+}
+
+.syncTimeSelect {
+    padding: 0.6rem 0.5rem;
+    background: #1a6fc4;
+    color: #fff;
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.85rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    padding-right: 1.5rem;
+}
+
+.syncTimeSelect:focus {
+    outline: none;
+}
+
+.syncTimeSelect:disabled {
+    background: #78716c;
+    cursor: not-allowed;
+}
+
+.syncTimeSelect option {
+    background: #fff;
+    color: #37352f;
+}
+
 .sourceActions {
     display: flex;
     gap: 0.5rem;
@@ -866,6 +999,47 @@
     background: #fff;
     font-size: 0.9rem;
     cursor: pointer;
+}
+
+/* 状态多选复选框组 */
+.statusCheckboxGroup {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.statusCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    padding: 0.3rem 0.6rem;
+    background: #fff;
+    border: 1px solid #e3e2de;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: all 0.15s ease;
+}
+
+.statusCheckbox:hover {
+    background: #f7f6f3;
+    border-color: #d6d3d1;
+}
+
+.statusCheckbox:has(input:checked) {
+    background: #dbeafe;
+    border-color: #93c5fd;
+}
+
+.statusCheckbox input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.statusCheckbox span {
+    color: #37352f;
 }
 
 /* ========== 信息源状态统计 ========== */
@@ -1790,4 +1964,79 @@
 
 .goToEditorial:hover {
     background: #ebebea;
+}
+
+/* ========== 印刷厂 - 语言选择 ========== */
+.langPreview {
+    color: #8b5cf6;
+    font-weight: 500;
+}
+
+.batchLangSetter {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: #f7f6f3;
+    border-radius: 8px;
+}
+
+.batchLabel {
+    color: #6b6b6b;
+    font-size: 0.9rem;
+}
+
+.langBtnGroup {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.langSetBtn {
+    padding: 0.4rem 0.75rem;
+    background: #fff;
+    border: 1px solid #e3e2de;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.langSetBtn:hover {
+    background: #ede9fe;
+    border-color: #c4b5fd;
+}
+
+.langSelector {
+    display: flex;
+    gap: 0.25rem;
+    margin-right: 0.75rem;
+}
+
+.langBtn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid #e3e2de;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.langBtn:hover {
+    background: #f7f6f3;
+}
+
+.langBtnActive {
+    background: #ede9fe;
+    border-color: #8b5cf6;
+}
+
+.langBtnActive:hover {
+    background: #ddd6fe;
 }

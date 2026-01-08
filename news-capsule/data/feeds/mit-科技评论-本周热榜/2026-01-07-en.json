@@ -1,0 +1,27 @@
+{
+  "sourceId": "mit-科技评论-本周热榜",
+  "date": "2026-01-07",
+  "language": "en",
+  "publishedAt": "2026-01-07T10:15:11.239Z",
+  "items": [
+    {
+      "id": "1e6981b35a69",
+      "editorNote": "Arm Holdings, without manufacturing chips, dominates global computing by licensing its chip designs to power 99% of smartphones and over 300 billion chips worldwide.",
+      "keyPoints": [
+        "Founded in 1990 as a spinoff from Acorn Computers, Arm started with only 12 engineers and £1.5 million funding.",
+        "Arm pioneered a licensing model charging upfront fees plus royalties per chip, avoiding costly chip fabrication.",
+        "The 1993 deal with Texas Instruments to supply Nokia phones validated Arm’s IP licensing and fueled global adoption.",
+        "Arm’s RISC architecture emphasizes power efficiency, enabling its designs to be used in devices from smartphones to electric cars."
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "The original article contains detailed historical context on Arm’s founding, founder Robin Saxby’s strategic decisions, and early partnership specifics not fully captured in the summary.",
+        "whoShouldRead": "Technology strategists and semiconductor industry analysts interested in Arm’s business model evolution and historical impact."
+      },
+      "originalTitle": "不造一颗芯片的Arm如何统治了世界？",
+      "link": "https://www.mittrchina.com/news/detail/15737",
+      "pubDate": "Mon, 05 Jan 2026 09:09:06 GMT",
+      "wordCount": 2655
+    }
+  ]
+}

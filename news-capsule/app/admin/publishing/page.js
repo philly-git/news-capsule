@@ -9,6 +9,8 @@ export default function PublishingPage() {
     const [loading, setLoading] = useState(true);
     const [publishing, setPublishing] = useState(false);
     const [result, setResult] = useState(null);
+    // 每个条目的目标语言: { itemId: 'zh' | 'en' | 'both' }
+    const [itemLangs, setItemLangs] = useState({});
 
     useEffect(() => {
         fetchQueuedItems();
@@ -20,12 +22,32 @@ export default function PublishingPage() {
             const json = await res.json();
             if (json.success) {
                 setItems(json.items);
+                // 初始化所有条目的默认语言为 'both'
+                const defaultLangs = {};
+                json.items.forEach(item => {
+                    defaultLangs[item.id] = 'both';
+                });
+                setItemLangs(defaultLangs);
             }
         } catch (error) {
             console.error('Fetch queued items error:', error);
         } finally {
             setLoading(false);
         }
+    }
+
+    // 设置单个条目的目标语言
+    function setItemLang(itemId, lang) {
+        setItemLangs(prev => ({ ...prev, [itemId]: lang }));
+    }
+
+    // 批量设置所有条目的目标语言
+    function setAllLangs(lang) {
+        const newLangs = {};
+        items.forEach(item => {
+            newLangs[item.id] = lang;
+        });
+        setItemLangs(newLangs);
     }
 
     async function handlePublish() {
@@ -35,11 +57,18 @@ export default function PublishingPage() {
         setResult(null);
 
         try {
+            // 构建带语言选择的条目列表
+            const itemsWithLang = items.map(item => ({
+                id: item.id,
+                sourceId: item.sourceId,
+                targetLang: itemLangs[item.id] || 'both'
+            }));
+
             const res = await fetch('/api/admin/publishing', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    itemIds: items.map(item => item.id),
+                    items: itemsWithLang,
                     publishDate: new Date().toISOString().split('T')[0]
                 })
             });
@@ -49,10 +78,11 @@ export default function PublishingPage() {
             if (json.success) {
                 setResult({
                     success: true,
-                    message: `成功发布 ${json.publishedItems} 条新闻！`
+                    message: `成功发布！中文版 ${json.zhCount || 0} 条，英文版 ${json.enCount || 0} 条`
                 });
                 // 清空列表
                 setItems([]);
+                setItemLangs({});
             } else {
                 setResult({
                     success: false,
@@ -78,6 +108,11 @@ export default function PublishingPage() {
                 body: JSON.stringify({ itemId, status: 'pending' })
             });
             setItems(prev => prev.filter(item => item.id !== itemId));
+            setItemLangs(prev => {
+                const newLangs = { ...prev };
+                delete newLangs[itemId];
+                return newLangs;
+            });
         } catch (error) {
             console.error('Remove item error:', error);
         }
@@ -92,6 +127,12 @@ export default function PublishingPage() {
             minute: '2-digit'
         });
     }
+
+    // 统计各语言数量
+    const langCounts = {
+        zh: Object.values(itemLangs).filter(l => l === 'zh' || l === 'both').length,
+        en: Object.values(itemLangs).filter(l => l === 'en' || l === 'both').length
+    };
 
     return (
         <div className={styles.container}>
@@ -112,7 +153,12 @@ export default function PublishingPage() {
                             <div>
                                 <h2>📋 待出版列表</h2>
                                 <p className={styles.hint}>
-                                    共 {items.length} 条新闻待出版，点击"确认发布"将进行 AI 总结并添加到今日新闻
+                                    共 {items.length} 条新闻待出版
+                                    {items.length > 0 && (
+                                        <span className={styles.langPreview}>
+                                            （中文版 {langCounts.zh} 条，英文版 {langCounts.en} 条）
+                                        </span>
+                                    )}
                                 </p>
                             </div>
                             <button
@@ -123,6 +169,33 @@ export default function PublishingPage() {
                                 {publishing ? '发布中...' : `🚀 确认发布 (${items.length})`}
                             </button>
                         </div>
+
+                        {/* 批量设置语言 */}
+                        {items.length > 0 && (
+                            <div className={styles.batchLangSetter}>
+                                <span className={styles.batchLabel}>批量设置：</span>
+                                <div className={styles.langBtnGroup}>
+                                    <button
+                                        onClick={() => setAllLangs('zh')}
+                                        className={styles.langSetBtn}
+                                    >
+                                        全部 🇨🇳 中文
+                                    </button>
+                                    <button
+                                        onClick={() => setAllLangs('en')}
+                                        className={styles.langSetBtn}
+                                    >
+                                        全部 🇺🇸 英文
+                                    </button>
+                                    <button
+                                        onClick={() => setAllLangs('both')}
+                                        className={styles.langSetBtn}
+                                    >
+                                        全部 📢 两者
+                                    </button>
+                                </div>
+                            </div>
+                        )}
 
                         {/* 发布结果 */}
                         {result && (
@@ -152,6 +225,30 @@ export default function PublishingPage() {
                                                 <span className={styles.wordCount}>{item.wordCount?.toLocaleString()} 字</span>
                                                 <span className={styles.pubDate}>{formatTime(item.pubDate)}</span>
                                             </div>
+                                        </div>
+                                        {/* 语言选择按钮组 */}
+                                        <div className={styles.langSelector}>
+                                            <button
+                                                onClick={() => setItemLang(item.id, 'zh')}
+                                                className={`${styles.langBtn} ${itemLangs[item.id] === 'zh' ? styles.langBtnActive : ''}`}
+                                                title="只发布到中文版"
+                                            >
+                                                🇨🇳
+                                            </button>
+                                            <button
+                                                onClick={() => setItemLang(item.id, 'en')}
+                                                className={`${styles.langBtn} ${itemLangs[item.id] === 'en' ? styles.langBtnActive : ''}`}
+                                                title="只发布到英文版"
+                                            >
+                                                🇺🇸
+                                            </button>
+                                            <button
+                                                onClick={() => setItemLang(item.id, 'both')}
+                                                className={`${styles.langBtn} ${itemLangs[item.id] === 'both' ? styles.langBtnActive : ''}`}
+                                                title="发布到两个版本"
+                                            >
+                                                📢
+                                            </button>
                                         </div>
                                         <button
                                             onClick={() => handleRemoveItem(item.id, item.sourceId)}

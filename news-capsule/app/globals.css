@@ -941,3 +941,327 @@ p {
   padding: var(--space-3xl) var(--space-lg);
   color: var(--text-muted);
 }
+
+/* ===========================================
+   FeedItem - Enhanced Display Styles
+   =========================================== */
+
+.feed-item-keypoints {
+  margin-bottom: var(--space-md);
+}
+
+.feed-item-keypoints ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.feed-item-keypoints li {
+  position: relative;
+  padding-left: var(--space-lg);
+  margin-bottom: var(--space-sm);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.feed-item-keypoints li::before {
+  content: "•";
+  position: absolute;
+  left: var(--space-sm);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.feed-item-highlights {
+  margin-bottom: var(--space-md);
+}
+
+.feed-item-highlights ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.feed-item-highlights li {
+  position: relative;
+  padding-left: var(--space-lg);
+  margin-bottom: var(--space-sm);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.feed-item-highlights li::before {
+  content: "•";
+  position: absolute;
+  left: var(--space-sm);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.feed-item-impact {
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.feed-item-impact p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* 阅读原文推荐 - 营养展示 */
+.feed-item-read-original {
+  background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 100%);
+  border: 1px solid #fed7aa;
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.read-original-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.nutrition-score {
+  font-size: 1.25rem;
+  display: flex;
+  gap: 2px;
+}
+
+.apple-filled {
+  display: inline-block;
+}
+
+.apple-empty {
+  display: inline-block;
+  filter: grayscale(100%) opacity(0.4);
+}
+
+.nutrition-label {
+  font-size: 0.8125rem;
+  color: #92400e;
+  font-weight: 500;
+}
+
+.nutrition-reason {
+  background: rgba(255, 255, 255, 0.6);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+}
+
+.nutrition-reason .reason-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #c2410c;
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.nutrition-reason p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #9a3412;
+  line-height: 1.5;
+}
+
+.who-should-read {
+  background: rgba(16, 185, 129, 0.1);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.who-should-read .who-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #047857;
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.who-should-read p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #065f46;
+  line-height: 1.5;
+}
+
+/* ===========================================
+   NewsCard - Complete News Card Styles
+   =========================================== */
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.news-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.news-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.news-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin: 0 0 var(--space-sm);
+}
+
+.news-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-divider);
+}
+
+.news-card-source {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.news-card-time {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.news-card-note {
+  margin-bottom: var(--space-md);
+}
+
+.news-card-note p {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+  padding-left: var(--space-sm);
+  border-left: 3px solid var(--accent);
+}
+
+.news-card-keypoints {
+  margin-bottom: var(--space-md);
+}
+
+.news-card-keypoints ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.news-card-keypoints li {
+  position: relative;
+  padding-left: var(--space-lg);
+  margin-bottom: var(--space-sm);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.news-card-keypoints li::before {
+  content: "•";
+  position: absolute;
+  left: var(--space-sm);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.news-card-keypoints li:last-child {
+  margin-bottom: 0;
+}
+
+.news-card-impact {
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.news-card-impact p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* NewsCard 阅读原文推荐样式 */
+.news-card-read-original {
+  background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 100%);
+  border: 1px solid #fed7aa;
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.news-card-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border-divider);
+}
+
+.news-card-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--accent);
+  transition: color 0.15s ease;
+}
+
+.news-card-link:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.news-card-readtime,
+.news-card-wordcount {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+  .news-card {
+    padding: var(--space-md);
+  }
+
+  .news-card-title {
+    font-size: 1rem;
+  }
+
+  .news-card-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+
+  .news-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+}

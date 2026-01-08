@@ -1,0 +1,27 @@
+{
+  "sourceId": "量子位",
+  "date": "2026-01-08",
+  "language": "zh",
+  "publishedAt": "2026-01-08T01:10:43.085Z",
+  "items": [
+    {
+      "id": "39e3b3c2be92",
+      "editorNote": "潞晨云推出兼容Tinker范式的强化学习微调平台，实现8元跑通全流程，极大提升算法团队效率。",
+      "keyPoints": [
+        "平台兼容国内首个Tinker范式，支持全面开放使用",
+        "一次强化学习微调成本仅8元，显著降低研发门槛",
+        "1名算法工程师即可等效1支基础设施团队工作效率",
+        "强化学习成为大模型后训练阶段的关键技术突破"
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "原文包含对Tinker范式兼容细节和具体应用场景的说明，以及算法工程师与Infra团队效率对比的具体案例",
+        "whoShouldRead": "AI研发团队负责人、算法工程师及云基础设施管理者关注效率提升与成本控制"
+      },
+      "originalTitle": "8块钱跑通一次强化学习全流程，潞晨云重塑微调赛道：1名算法工程师=1支Infra团队",
+      "link": "https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&mid=2247860414&idx=1&sn=9c444f49ba7b5b442106a459169eddbb",
+      "pubDate": "Wed, 07 Jan 2026 13:15:00 +0800",
+      "wordCount": 4016
+    }
+  ]
+}
