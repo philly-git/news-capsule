@@ -315,22 +315,26 @@ export default function HomePage() {
                           className="lab-headline-item"
                           onClick={(e) => {
                             e.stopPropagation();
-                            const element = document.getElementById(`news-${item.id}`);
-                            if (element) {
-                              const headerOffset = 100;
-                              const elementPosition = element.getBoundingClientRect().top;
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            // 先收起目录
+                            setIsSummaryExpanded(false);
 
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: 'smooth'
-                              });
+                            // 等待 DOM 更新后再计算滚动位置
+                            setTimeout(() => {
+                              const element = document.getElementById(`news-${item.id}`);
+                              if (element) {
+                                const headerOffset = 80;
+                                const elementPosition = element.getBoundingClientRect().top;
+                                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-                              element.classList.add('highlight-card');
-                              setTimeout(() => element.classList.remove('highlight-card'), 2000);
+                                window.scrollTo({
+                                  top: offsetPosition,
+                                  behavior: 'smooth'
+                                });
 
-                              setIsSummaryExpanded(false);
-                            }
+                                element.classList.add('highlight-card');
+                                setTimeout(() => element.classList.remove('highlight-card'), 2000);
+                              }
+                            }, 100); // 等待 100ms 让目录收起动画完成
                           }}
                         >
                           <span className="headline-index">{String(index + 1).padStart(2, '0')}</span>

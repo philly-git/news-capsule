@@ -1,3 +1,5 @@
+import OpenAI from 'openai';
+import { readJSON, writeJSON, readSettings } from './storage.js';
 import { DEFAULT_PROMPT_ZH, DEFAULT_PROMPT_EN } from './prompts.js';
 
 /**
