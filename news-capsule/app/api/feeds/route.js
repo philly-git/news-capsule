@@ -16,12 +16,15 @@ async function getAvailableDates(lang) {
     const dates = new Set();
 
     const sourceDirs = await listFiles('feeds');
-    for (const sourceId of sourceDirs) {
-        if (sourceId.includes('.')) continue; // 跳过非目录
+    const validDirs = sourceDirs.filter(d => !d.includes('.'));
 
-        const files = await listFiles(`feeds/${sourceId}`);
+    // 并行获取所有源目录的文件列表
+    const filesPerSource = await Promise.all(
+        validDirs.map(sourceId => listFiles(`feeds/${sourceId}`))
+    );
+
+    for (const files of filesPerSource) {
         for (const file of files) {
-            // 匹配格式: 2026-01-05-zh.json
             const match = file.match(/^(\d{4}-\d{2}-\d{2})-(\w+)\.json$/);
             if (match && match[2] === lang) {
                 dates.add(match[1]);
@@ -38,22 +41,24 @@ async function getAvailableDates(lang) {
 async function readFeedsForDate(date, lang) {
     const sources = await readSources();
     const enabledSources = sources.filter(s => s.enabled);
-    const result = [];
 
-    for (const source of enabledSources) {
-        const data = await readJSON(`feeds/${source.id}/${date}-${lang}.json`);
+    // 并行读取所有源数据
+    const results = await Promise.all(
+        enabledSources.map(async (source) => {
+            const data = await readJSON(`feeds/${source.id}/${date}-${lang}.json`);
+            if (data) {
+                return {
+                    id: source.id,
+                    name: source.name,
+                    language: source.language,
+                    items: data.items || []
+                };
+            }
+            return null;
+        })
+    );
 
-        if (data) {
-            result.push({
-                id: source.id,
-                name: source.name,
-                language: source.language,
-                items: data.items || []
-            });
-        }
-    }
-
-    return result;
+    return results.filter(Boolean);
 }
 
 export async function GET(request) {

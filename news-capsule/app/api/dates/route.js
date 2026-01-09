@@ -10,10 +10,15 @@ export async function GET(request) {
 
         // 从 feeds 目录结构读取
         const sourceDirs = await listFiles('feeds');
-        for (const sourceId of sourceDirs) {
-            if (sourceId.includes('.')) continue; // 跳过非目录
+        const validDirs = sourceDirs.filter(d => !d.includes('.'));
 
-            const files = await listFiles(`feeds/${sourceId}`);
+        // 并行获取所有源目录的文件列表
+        const [filesPerSource, newsFiles] = await Promise.all([
+            Promise.all(validDirs.map(sourceId => listFiles(`feeds/${sourceId}`))),
+            listFiles('news')
+        ]);
+
+        for (const files of filesPerSource) {
             for (const file of files) {
                 const match = file.match(/^(\d{4}-\d{2}-\d{2})-(\w+)\.json$/);
                 if (match && match[2] === lang) {
@@ -23,7 +28,6 @@ export async function GET(request) {
         }
 
         // 兼容旧的 news 目录
-        const newsFiles = await listFiles('news');
         for (const file of newsFiles) {
             const matchNew = file.match(/^(\d{4}-\d{2}-\d{2})-(\w+)\.json$/);
             if (matchNew && matchNew[2] === lang) {
