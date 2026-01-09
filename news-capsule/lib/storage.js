@@ -241,3 +241,23 @@ async function existsInBlob(relativePath) {
         return false;
     }
 }
+
+// ==================== 便捷函数 ====================
+
+/**
+ * 读取 settings.json
+ * @returns {Promise<object>}
+ */
+export async function readSettings() {
+    const data = await readJSON('settings.json');
+    return data || {};
+}
+
+/**
+ * 写入 settings.json
+ * @param {object} settings - 要写入的设置对象
+ * @returns {Promise<void>}
+ */
+export async function writeSettings(settings) {
+    await writeJSON('settings.json', settings);
+}

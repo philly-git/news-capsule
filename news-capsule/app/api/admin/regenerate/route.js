@@ -1,25 +1,16 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import OpenAI from 'openai';
 import { convert } from 'html-to-text';
-
-const FEEDS_DIR = path.join(process.cwd(), 'data', 'feeds');
-const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
+import { readSettings, readJSON, writeJSON } from '@/lib/storage';
+import { getSourceItems } from '@/lib/feeds';
 
 /**
  * 获取 API Key
  */
-function getApiKey() {
-    if (fs.existsSync(SETTINGS_PATH)) {
-        try {
-            const settings = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf-8'));
-            if (settings.openai?.apiKey) {
-                return settings.openai.apiKey;
-            }
-        } catch (e) {
-            // ignore
-        }
+async function getApiKey() {
+    const settings = await readSettings();
+    if (settings.openai?.apiKey) {
+        return settings.openai.apiKey;
     }
     return process.env.OPENAI_API_KEY;
 }
@@ -27,13 +18,11 @@ function getApiKey() {
 /**
  * 获取 Prompt 配置
  */
-function getPromptConfig(lang) {
+async function getPromptConfig(lang) {
     try {
-        if (fs.existsSync(SETTINGS_PATH)) {
-            const settings = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf-8'));
-            if (settings.promptConfig && settings.promptConfig[lang]) {
-                return settings.promptConfig[lang];
-            }
+        const settings = await readSettings();
+        if (settings.promptConfig && settings.promptConfig[lang]) {
+            return settings.promptConfig[lang];
         }
     } catch (e) {
         console.error('Error reading prompt config:', e);
@@ -59,13 +48,9 @@ function normalizeContent(htmlContent) {
 /**
  * 从 items.json 中查找原始文章
  */
-function findOriginalItem(sourceId, itemId, originalTitle) {
-    const itemsPath = path.join(FEEDS_DIR, sourceId, 'items.json');
-    if (!fs.existsSync(itemsPath)) {
-        return null;
-    }
+async function findOriginalItem(sourceId, itemId, originalTitle) {
     try {
-        const data = JSON.parse(fs.readFileSync(itemsPath, 'utf-8'));
+        const data = await getSourceItems(sourceId);
         const items = data.items || [];
 
         // 通过 ID 或标题匹配
@@ -82,15 +67,15 @@ function findOriginalItem(sourceId, itemId, originalTitle) {
 /**
  * 更新已出版内容
  */
-function updatePublishedItem(sourceId, date, lang, itemId, newData) {
-    const filePath = path.join(FEEDS_DIR, sourceId, `${date}-${lang}.json`);
-
-    if (!fs.existsSync(filePath)) {
-        return false;
-    }
+async function updatePublishedItem(sourceId, date, lang, itemId, newData) {
+    const filePath = `feeds/${sourceId}/${date}-${lang}.json`;
 
     try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        const data = await readJSON(filePath);
+        if (!data) {
+            return false;
+        }
+
         const items = data.items || [];
 
         // 找到并更新对应条目
@@ -112,7 +97,7 @@ function updatePublishedItem(sourceId, date, lang, itemId, newData) {
         data.items = items;
         data.lastModified = new Date().toISOString();
 
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        await writeJSON(filePath, data);
         return true;
     } catch (e) {
         console.error('Error updating published item:', e);
@@ -135,7 +120,7 @@ export async function POST(request) {
         }
 
         // 1. 从 items.json 获取原始内容
-        const originalItem = findOriginalItem(sourceId, itemId, originalTitle);
+        const originalItem = await findOriginalItem(sourceId, itemId, originalTitle);
         if (!originalItem) {
             return NextResponse.json({
                 error: `Original article not found in items.json for source: ${sourceId}`
@@ -143,7 +128,7 @@ export async function POST(request) {
         }
 
         // 2. 获取 Prompt 配置
-        const promptConfig = getPromptConfig(language);
+        const promptConfig = await getPromptConfig(language);
         if (!promptConfig || !promptConfig.prompt) {
             return NextResponse.json({
                 error: `No prompt config found for language: ${language}`
@@ -158,7 +143,7 @@ export async function POST(request) {
             .replace('{source}', sourceId);
 
         // 4. 获取 API Key
-        const apiKey = getApiKey();
+        const apiKey = await getApiKey();
         if (!apiKey) {
             return NextResponse.json({
                 error: 'OpenAI API Key not configured'
@@ -190,7 +175,7 @@ export async function POST(request) {
         }
 
         // 6. 更新已出版内容
-        const updated = updatePublishedItem(sourceId, date, language, itemId, parsedResult);
+        const updated = await updatePublishedItem(sourceId, date, language, itemId, parsedResult);
         if (!updated) {
             return NextResponse.json({
                 error: 'Failed to update published item'

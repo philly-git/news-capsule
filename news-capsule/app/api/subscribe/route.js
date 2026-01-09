@@ -1,23 +1,17 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { readJSON, writeJSON } from '@/lib/storage';
 
-const SUBSCRIBERS_FILE = path.join(process.cwd(), 'data', 'subscribers.json');
-
-function getSubscribers() {
+async function getSubscribers() {
     try {
-        if (fs.existsSync(SUBSCRIBERS_FILE)) {
-            const content = fs.readFileSync(SUBSCRIBERS_FILE, 'utf-8');
-            return JSON.parse(content);
-        }
-        return { subscribers: [], count: 0 };
+        const data = await readJSON('subscribers.json');
+        return data || { subscribers: [], count: 0 };
     } catch (error) {
         return { subscribers: [], count: 0 };
     }
 }
 
-function saveSubscribers(data) {
-    fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify(data, null, 2));
+async function saveSubscribers(data) {
+    await writeJSON('subscribers.json', data);
 }
 
 export async function POST(request) {
@@ -33,7 +27,7 @@ export async function POST(request) {
             );
         }
 
-        const data = getSubscribers();
+        const data = await getSubscribers();
 
         // 检查是否已订阅
         if (data.subscribers.some(sub => sub.email === email)) {
@@ -50,7 +44,7 @@ export async function POST(request) {
         });
         data.count = data.subscribers.length;
 
-        saveSubscribers(data);
+        await saveSubscribers(data);
 
         return NextResponse.json({
             success: true,
@@ -67,6 +61,6 @@ export async function POST(request) {
 }
 
 export async function GET() {
-    const data = getSubscribers();
+    const data = await getSubscribers();
     return NextResponse.json({ count: data.count });
 }

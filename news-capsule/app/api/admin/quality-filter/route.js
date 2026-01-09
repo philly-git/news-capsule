@@ -1,81 +1,18 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { readSettings, writeSettings, readJSON, writeJSON } from '@/lib/storage';
+import { getEnabledSources } from '@/lib/sources';
+import { getSourceItems, saveSourceItems } from '@/lib/feeds';
 import {
     DEFAULT_QUALITY_RULES,
     checkItemsQuality
 } from '@/lib/qualityFilter';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const SETTINGS_PATH = path.join(DATA_DIR, 'settings.json');
-const FEEDS_DIR = path.join(DATA_DIR, 'feeds');
-const SOURCES_PATH = path.join(DATA_DIR, 'sources.json');
-
-/**
- * 读取设置
- */
-function readSettings() {
-    if (!fs.existsSync(SETTINGS_PATH)) {
-        return {};
-    }
-    try {
-        return JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf-8'));
-    } catch {
-        return {};
-    }
-}
-
-/**
- * 保存设置
- */
-function saveSettings(settings) {
-    fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
-}
-
 /**
  * 获取质量过滤规则
  */
-function getQualityRules() {
-    const settings = readSettings();
+async function getQualityRules() {
+    const settings = await readSettings();
     return settings.qualityFilter?.rules || DEFAULT_QUALITY_RULES;
-}
-
-/**
- * 读取源的条目数据
- */
-function readSourceItems(sourceId) {
-    const itemsPath = path.join(FEEDS_DIR, sourceId, 'items.json');
-    if (!fs.existsSync(itemsPath)) {
-        return null;
-    }
-    try {
-        return JSON.parse(fs.readFileSync(itemsPath, 'utf-8'));
-    } catch {
-        return null;
-    }
-}
-
-/**
- * 保存源的条目数据
- */
-function saveSourceItems(sourceId, data) {
-    const itemsPath = path.join(FEEDS_DIR, sourceId, 'items.json');
-    fs.writeFileSync(itemsPath, JSON.stringify(data, null, 2));
-}
-
-/**
- * 获取所有启用的源
- */
-function getEnabledSources() {
-    if (!fs.existsSync(SOURCES_PATH)) {
-        return [];
-    }
-    try {
-        const data = JSON.parse(fs.readFileSync(SOURCES_PATH, 'utf-8'));
-        return data.sources || [];
-    } catch {
-        return [];
-    }
 }
 
 /**
@@ -83,7 +20,7 @@ function getEnabledSources() {
  */
 export async function GET() {
     try {
-        const settings = readSettings();
+        const settings = await readSettings();
         const rules = settings.qualityFilter?.rules || DEFAULT_QUALITY_RULES;
         const enabled = settings.qualityFilter?.enabled ?? true;
 
@@ -111,14 +48,14 @@ export async function PUT(request) {
         const body = await request.json();
         const { enabled, rules } = body;
 
-        const settings = readSettings();
+        const settings = await readSettings();
         settings.qualityFilter = {
             enabled: enabled ?? settings.qualityFilter?.enabled ?? true,
             rules: rules ? { ...DEFAULT_QUALITY_RULES, ...rules } : settings.qualityFilter?.rules || DEFAULT_QUALITY_RULES,
             updatedAt: new Date().toISOString()
         };
 
-        saveSettings(settings);
+        await writeSettings(settings);
 
         return NextResponse.json({
             success: true,
@@ -141,8 +78,8 @@ export async function POST(request) {
         const body = await request.json();
         const { sourceIds, dryRun = false } = body;
 
-        const rules = getQualityRules();
-        const allSources = getEnabledSources();
+        const rules = await getQualityRules();
+        const allSources = await getEnabledSources();
 
         // 确定要处理的源
         let sourcesToProcess;
@@ -155,7 +92,7 @@ export async function POST(request) {
         const results = {};
 
         for (const source of sourcesToProcess) {
-            const sourceData = readSourceItems(source.id);
+            const sourceData = await getSourceItems(source.id);
             if (!sourceData || !sourceData.items) {
                 results[source.id] = {
                     total: 0,
@@ -196,7 +133,7 @@ export async function POST(request) {
                 }
                 sourceData.items = checkedItems;
                 sourceData.qualityCheckedAt = new Date().toISOString();
-                saveSourceItems(source.id, sourceData);
+                await saveSourceItems(source.id, sourceData);
             }
         }
 

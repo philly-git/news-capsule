@@ -34,7 +34,7 @@ export async function getSourceItems(sourceId) {
 /**
  * 保存源的条目
  */
-async function saveSourceItems(sourceId, data) {
+export async function saveSourceItems(sourceId, data) {
     await writeJSON(getItemsPath(sourceId), data);
 }
 

@@ -1,29 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
-
-/**
- * 读取设置
- */
-function readSettings() {
-    if (!fs.existsSync(SETTINGS_PATH)) {
-        return {};
-    }
-    try {
-        return JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf-8'));
-    } catch (e) {
-        return {};
-    }
-}
-
-/**
- * 保存设置
- */
-function saveSettings(settings) {
-    fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
-}
+import { readSettings, writeSettings } from '@/lib/storage';
 
 /**
  * GET - 获取当前 Prompt 配置
@@ -32,7 +8,7 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang');
 
-    const settings = readSettings();
+    const settings = await readSettings();
     const promptConfig = settings.promptConfig || {};
 
     if (lang) {
@@ -69,7 +45,7 @@ export async function POST(request) {
             }, { status: 400 });
         }
 
-        const settings = readSettings();
+        const settings = await readSettings();
 
         if (!settings.promptConfig) {
             settings.promptConfig = {};
@@ -81,7 +57,7 @@ export async function POST(request) {
             updatedAt: new Date().toISOString()
         };
 
-        saveSettings(settings);
+        await writeSettings(settings);
 
         return NextResponse.json({
             success: true,
@@ -109,11 +85,11 @@ export async function DELETE(request) {
         }, { status: 400 });
     }
 
-    const settings = readSettings();
+    const settings = await readSettings();
 
     if (settings.promptConfig && settings.promptConfig[lang]) {
         delete settings.promptConfig[lang];
-        saveSettings(settings);
+        await writeSettings(settings);
     }
 
     return NextResponse.json({ success: true });

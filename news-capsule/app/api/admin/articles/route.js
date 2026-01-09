@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const RAW_DATA_DIR = path.join(process.cwd(), 'data', 'raw');
+import { readJSON, listFiles } from '@/lib/storage';
 
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
@@ -13,17 +10,16 @@ export async function GET(request) {
     }
 
     try {
-        const articlesDir = path.join(RAW_DATA_DIR, date, 'articles');
-        const rssPath = path.join(RAW_DATA_DIR, date, 'rss.json');
-
         const articles = [];
 
         // 首先尝试从 articles 目录读取（爬虫获取的完整正文）
-        if (fs.existsSync(articlesDir)) {
-            const files = fs.readdirSync(articlesDir).filter(f => f.endsWith('.json'));
-            for (const file of files) {
-                try {
-                    const data = JSON.parse(fs.readFileSync(path.join(articlesDir, file), 'utf-8'));
+        const articleFiles = await listFiles(`raw/${date}/articles`);
+        const jsonFiles = articleFiles.filter(f => f.endsWith('.json'));
+
+        for (const file of jsonFiles) {
+            try {
+                const data = await readJSON(`raw/${date}/articles/${file}`);
+                if (data) {
                     articles.push({
                         index: data.index,
                         title: data.title,
@@ -33,26 +29,28 @@ export async function GET(request) {
                         contentPreview: data.content?.substring(0, 500) || '',
                         fetchedAt: data.fetchedAt
                     });
-                } catch (e) {
-                    // 跳过无法解析的文件
                 }
+            } catch (e) {
+                // 跳过无法解析的文件
             }
         }
 
         // 如果没有爬虫数据，从 RSS 数据中读取
-        if (articles.length === 0 && fs.existsSync(rssPath)) {
-            const rssData = JSON.parse(fs.readFileSync(rssPath, 'utf-8'));
-            (rssData.items || []).forEach((item, idx) => {
-                articles.push({
-                    index: idx,
-                    title: item.originalTitle || item.title,
-                    url: item.link || item.source?.url,
-                    source: item.source?.name || 'Unknown',
-                    contentLength: item.content?.length || 0,
-                    contentPreview: item.content?.replace(/<[^>]*>/g, '').substring(0, 500) || '',
-                    fetchedAt: rssData.fetchedAt
+        if (articles.length === 0) {
+            const rssData = await readJSON(`raw/${date}/rss.json`);
+            if (rssData?.items) {
+                rssData.items.forEach((item, idx) => {
+                    articles.push({
+                        index: idx,
+                        title: item.originalTitle || item.title,
+                        url: item.link || item.source?.url,
+                        source: item.source?.name || 'Unknown',
+                        contentLength: item.content?.length || 0,
+                        contentPreview: item.content?.replace(/<[^>]*>/g, '').substring(0, 500) || '',
+                        fetchedAt: rssData.fetchedAt
+                    });
                 });
-            });
+            }
         }
 
         // 按 index 排序

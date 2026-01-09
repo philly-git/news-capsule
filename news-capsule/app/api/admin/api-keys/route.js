@@ -1,29 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
-
-/**
- * 读取设置
- */
-function readSettings() {
-    if (!fs.existsSync(SETTINGS_PATH)) {
-        return { openai: { apiKey: '' } };
-    }
-    try {
-        return JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf-8'));
-    } catch (e) {
-        return { openai: { apiKey: '' } };
-    }
-}
-
-/**
- * 保存设置
- */
-function saveSettings(settings) {
-    fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
-}
+import { readSettings, writeSettings } from '@/lib/storage';
 
 /**
  * 掩码显示 API Key
@@ -84,7 +60,7 @@ async function fetchModelsFromOpenAI(apiKey) {
  * GET - 获取 API Key 状态和可用模型
  */
 export async function GET() {
-    const settings = readSettings();
+    const settings = await readSettings();
     const apiKey = settings.openai?.apiKey || process.env.OPENAI_API_KEY || '';
 
     const result = {
@@ -141,12 +117,12 @@ export async function POST(request) {
         }
 
         // 保存到 settings.json
-        const settings = readSettings();
+        const settings = await readSettings();
         settings.openai = {
             apiKey,
             updatedAt: new Date().toISOString()
         };
-        saveSettings(settings);
+        await writeSettings(settings);
 
         return NextResponse.json({
             success: true,
@@ -164,9 +140,9 @@ export async function POST(request) {
  */
 export async function DELETE() {
     try {
-        const settings = readSettings();
+        const settings = await readSettings();
         delete settings.openai?.apiKey;
-        saveSettings(settings);
+        await writeSettings(settings);
 
         return NextResponse.json({ success: true });
     } catch (error) {

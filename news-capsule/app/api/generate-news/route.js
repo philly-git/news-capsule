@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import Parser from 'rss-parser';
 import OpenAI from 'openai';
-import fs from 'fs';
-import path from 'path';
+import { readSettings, readJSON, writeJSON, exists } from '@/lib/storage';
 
 // RSS信息源配置
 const RSS_SOURCES = [
@@ -17,10 +16,6 @@ const parser = new Parser({
     timeout: 10000,
     headers: { 'User-Agent': 'Mozilla/5.0 (compatible; NewsCapsule/1.0)' }
 });
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
 
 const FILTER_PROMPT = `你是科技新闻筛选专家。从以下新闻中选出最重要的7-10条。
 筛选标准：大公司动向、重大产品发布、大额融资、AI突破、行业政策。
@@ -106,15 +101,22 @@ News content: {content}
 Source: {source}`;
 
 /**
+ * 获取 OpenAI 客户端
+ */
+async function getOpenAIClient() {
+    const settings = await readSettings();
+    const apiKey = settings.openai?.apiKey || process.env.OPENAI_API_KEY;
+    return new OpenAI({ apiKey });
+}
+
+/**
  * 读取保存的 Prompt 配置
  */
-function getPromptConfig(lang) {
+async function getPromptConfig(lang) {
     try {
-        if (fs.existsSync(SETTINGS_PATH)) {
-            const settings = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf-8'));
-            if (settings.promptConfig && settings.promptConfig[lang]) {
-                return settings.promptConfig[lang];
-            }
+        const settings = await readSettings();
+        if (settings.promptConfig && settings.promptConfig[lang]) {
+            return settings.promptConfig[lang];
         }
     } catch (e) {
         console.error('Error reading prompt config:', e);
@@ -151,6 +153,7 @@ async function fetchAllNews() {
 }
 
 async function filterNews(allNews) {
+    const openai = await getOpenAIClient();
     const newsList = allNews.map((n, i) => `${i}. [${n.source.name}] ${n.originalTitle}`).join('\n');
 
     try {
@@ -170,7 +173,8 @@ async function filterNews(allNews) {
 }
 
 async function generateSummary(item, lang) {
-    const config = getPromptConfig(lang);
+    const openai = await getOpenAIClient();
+    const config = await getPromptConfig(lang);
     const prompt = config.prompt
         .replace('{title}', item.originalTitle)
         .replace('{content}', item.content.slice(0, 3000))
@@ -239,10 +243,8 @@ export async function GET(request) {
             news: newsWithSummary
         };
 
-        // 保存到文件（按日期+语言存储）
-        const dataDir = path.join(process.cwd(), 'data', 'news');
-        if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-        fs.writeFileSync(path.join(dataDir, `${today}-${lang}.json`), JSON.stringify(data, null, 2));
+        // 保存到存储（按日期+语言存储）
+        await writeJSON(`news/${today}-${lang}.json`, data);
 
         return NextResponse.json({
             success: true,
@@ -313,13 +315,8 @@ export async function POST(request) {
                 await new Promise(r => setTimeout(r, 300));
             }
 
-            // 保存到 data/feeds/{sourceId}/{date}-{lang}.json
-            const sourceDir = path.join(process.cwd(), 'data', 'feeds', sourceId);
-            if (!fs.existsSync(sourceDir)) {
-                fs.mkdirSync(sourceDir, { recursive: true });
-            }
-
-            const filePath = path.join(sourceDir, `${publishDate}-${lang}.json`);
+            // 保存到 feeds/{sourceId}/{date}-{lang}.json
+            const filePath = `feeds/${sourceId}/${publishDate}-${lang}.json`;
 
             const data = {
                 sourceId,
@@ -330,13 +327,13 @@ export async function POST(request) {
             };
 
             // 如果文件已存在，追加而不是覆盖
-            if (fs.existsSync(filePath)) {
-                const existingData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+            const existingData = await readJSON(filePath);
+            if (existingData) {
                 existingData.items = [...existingData.items, ...processedItems];
                 existingData.publishedAt = new Date().toISOString();
-                fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
+                await writeJSON(filePath, existingData);
             } else {
-                fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+                await writeJSON(filePath, data);
             }
 
             console.log(`Saved ${processedItems.length} items to ${filePath}`);

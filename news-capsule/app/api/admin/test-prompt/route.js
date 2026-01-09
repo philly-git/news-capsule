@@ -1,44 +1,19 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import OpenAI from 'openai';
 import { convert } from 'html-to-text';
-
-const DATA_DIR = path.join(process.cwd(), 'data', 'feeds');
-const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
+import { readSettings } from '@/lib/storage';
+import { getSourceItems } from '@/lib/feeds';
 
 /**
  * 获取 API Key
  */
-function getApiKey() {
+async function getApiKey() {
     // 优先使用 settings.json 中的 key
-    if (fs.existsSync(SETTINGS_PATH)) {
-        try {
-            const settings = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf-8'));
-            if (settings.openai?.apiKey) {
-                return settings.openai.apiKey;
-            }
-        } catch (e) {
-            // ignore
-        }
+    const settings = await readSettings();
+    if (settings.openai?.apiKey) {
+        return settings.openai.apiKey;
     }
     return process.env.OPENAI_API_KEY;
-}
-
-/**
- * 读取指定源的文章列表
- */
-function getSourceItems(sourceId) {
-    const itemsPath = path.join(DATA_DIR, sourceId, 'items.json');
-    if (!fs.existsSync(itemsPath)) {
-        return [];
-    }
-    try {
-        const data = JSON.parse(fs.readFileSync(itemsPath, 'utf-8'));
-        return data.items || [];
-    } catch (e) {
-        return [];
-    }
 }
 
 /**
@@ -71,7 +46,8 @@ export async function POST(request) {
         }
 
         // 获取文章
-        const items = getSourceItems(sourceId);
+        const sourceData = await getSourceItems(sourceId);
+        const items = sourceData.items || [];
         if (itemIndex < 0 || itemIndex >= items.length) {
             return NextResponse.json({
                 error: `Invalid itemIndex: ${itemIndex}. Available: 0-${items.length - 1}`
@@ -88,7 +64,7 @@ export async function POST(request) {
             .replace('{source}', sourceId);
 
         // 获取 API Key
-        const apiKey = getApiKey();
+        const apiKey = await getApiKey();
         if (!apiKey) {
             return NextResponse.json({
                 error: 'OpenAI API Key not configured'
