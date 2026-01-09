@@ -29,21 +29,23 @@ function getBlobPath(relativePath) {
 
 /**
  * 读取 JSON 数据
- * @param {string} relativePath - 相对于 data/ 的路径，如 'sources.json' 或 'feeds/36kr/items.json'
- * @returns {Promise<object|null>}
+ * 策略：在 Vercel 环境下，优先读取 Blob；如果 Blob 不存在，回退读取文件系统（初始数据）
  */
 export async function readJSON(relativePath) {
     if (isVercelEnvironment()) {
-        return readJSONFromBlob(relativePath);
+        const fromBlob = await readJSONFromBlob(relativePath);
+        if (fromBlob !== null) {
+            return fromBlob;
+        }
+        // Blob 中不存在，尝试读取本地文件（Layered Storage 模式）
+        return readJSONFromFile(relativePath);
     }
     return readJSONFromFile(relativePath);
 }
 
 /**
  * 写入 JSON 数据
- * @param {string} relativePath - 相对于 data/ 的路径
- * @param {object} data - 要写入的数据
- * @returns {Promise<void>}
+ * 策略：Vercel 环境只写入 Blob，本地只写入文件系统
  */
 export async function writeJSON(relativePath, data) {
     if (isVercelEnvironment()) {
@@ -54,8 +56,7 @@ export async function writeJSON(relativePath, data) {
 
 /**
  * 删除数据
- * @param {string} relativePath - 相对于 data/ 的路径
- * @returns {Promise<void>}
+ * 策略：Vercel 环境只从 Blob 删除
  */
 export async function deleteData(relativePath) {
     if (isVercelEnvironment()) {
@@ -66,24 +67,28 @@ export async function deleteData(relativePath) {
 
 /**
  * 列出目录下的文件
- * @param {string} relativePath - 相对于 data/ 的目录路径
- * @returns {Promise<string[]>} 文件名列表
+ * 策略：Vercel 环境下，合并 Blob 和本地文件系统的文件列表（并去重）
  */
 export async function listFiles(relativePath) {
     if (isVercelEnvironment()) {
-        return listFilesFromBlob(relativePath);
+        const [blobFiles, localFiles] = await Promise.all([
+            listFilesFromBlob(relativePath),
+            listFilesFromDir(relativePath)
+        ]);
+        return Array.from(new Set([...blobFiles, ...localFiles]));
     }
     return listFilesFromDir(relativePath);
 }
 
 /**
  * 检查文件是否存在
- * @param {string} relativePath - 相对于 data/ 的路径
- * @returns {Promise<boolean>}
+ * 策略：Vercel 环境下，只要 Blob 或本地文件系统任一存在即返回 true
  */
 export async function exists(relativePath) {
     if (isVercelEnvironment()) {
-        return existsInBlob(relativePath);
+        const inBlob = await existsInBlob(relativePath);
+        if (inBlob) return true;
+        return existsInFile(relativePath);
     }
     return existsInFile(relativePath);
 }
