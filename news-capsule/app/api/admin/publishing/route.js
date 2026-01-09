@@ -62,7 +62,19 @@ export async function POST(request) {
         });
 
         const date = publishDate || new Date().toISOString().split('T')[0];
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+        // 获取 Base URL
+        let baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+        if (!baseUrl) {
+            if (process.env.VERCEL_URL) {
+                baseUrl = `https://${process.env.VERCEL_URL}`;
+            } else {
+                baseUrl = 'http://localhost:3000';
+            }
+        }
+
+        console.log(`[Publish] Base URL: ${baseUrl}`);
+        console.log(`[Publish] Processing ${zhItems.length} ZH items and ${enItems.length} EN items`);
 
         // 3. 分别调用生成 API（中文和英文）
         let zhResult = null;
