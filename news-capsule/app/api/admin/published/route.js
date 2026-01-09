@@ -10,14 +10,15 @@ async function getPublishedDates(lang) {
 
     try {
         const sourceDirs = await listFiles('feeds');
+        const validDirs = sourceDirs.filter(d => !d.includes('.'));
 
-        for (const sourceId of sourceDirs) {
-            // 跳过非目录项
-            if (sourceId.includes('.')) continue;
+        // 并行获取所有源目录的文件列表
+        const filesPerSource = await Promise.all(
+            validDirs.map(sourceId => listFiles(`feeds/${sourceId}`))
+        );
 
-            const files = await listFiles(`feeds/${sourceId}`);
+        for (const files of filesPerSource) {
             for (const file of files) {
-                // 匹配格式: 2026-01-05-zh.json (已出版的文件，不是 items.json)
                 const match = file.match(/^(\d{4}-\d{2}-\d{2})-(\w+)\.json$/);
                 if (match && match[2] === lang) {
                     dates.add(match[1]);
@@ -37,31 +38,33 @@ async function getPublishedDates(lang) {
 async function readPublishedContent(date, lang) {
     const sources = await getAllSources();
     const enabledSources = sources.filter(s => s.enabled);
-    const result = [];
 
-    for (const source of enabledSources) {
-        try {
-            const data = await readJSON(`feeds/${source.id}/${date}-${lang}.json`);
-
-            if (data) {
-                result.push({
-                    sourceId: source.id,
-                    sourceName: source.name,
-                    sourceLanguage: source.language,
-                    publishedAt: data.publishedAt,
-                    items: (data.items || []).map(item => ({
-                        ...item,
+    // 并行读取所有源的已出版内容
+    const results = await Promise.all(
+        enabledSources.map(async (source) => {
+            try {
+                const data = await readJSON(`feeds/${source.id}/${date}-${lang}.json`);
+                if (data) {
+                    return {
                         sourceId: source.id,
-                        sourceName: source.name
-                    }))
-                });
+                        sourceName: source.name,
+                        sourceLanguage: source.language,
+                        publishedAt: data.publishedAt,
+                        items: (data.items || []).map(item => ({
+                            ...item,
+                            sourceId: source.id,
+                            sourceName: source.name
+                        }))
+                    };
+                }
+            } catch (e) {
+                console.error(`Failed to read ${source.id}/${date}-${lang}.json:`, e);
             }
-        } catch (e) {
-            console.error(`Failed to read ${source.id}/${date}-${lang}.json:`, e);
-        }
-    }
+            return null;
+        })
+    );
 
-    return result;
+    return results.filter(Boolean);
 }
 
 /**
