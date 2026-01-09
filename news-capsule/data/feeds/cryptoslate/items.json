@@ -11,13 +11,12 @@
       "sourceLanguage": "en",
       "id": "18a668830f2d",
       "status": "published",
-      "syncedAt": "2026-01-09T01:24:20.681Z",
+      "syncedAt": "2026-01-09T08:25:41.773Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
-      },
-      "publishedAt": "2026-01-09T01:27:15.088Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
+      }
     },
     {
       "title": "Trump could use Greenland for 10,000 EH/s Bitcoin mining hub from stranded energy if it becomes a part of the US",
@@ -28,12 +27,12 @@
       "sourceName": "CryptoSlate",
       "sourceLanguage": "en",
       "id": "241fad8cbcd1",
-      "status": "new",
-      "syncedAt": "2026-01-09T01:24:20.681Z",
+      "status": "pending",
+      "syncedAt": "2026-01-09T08:25:41.773Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
       }
     },
     {
@@ -45,12 +44,12 @@
       "sourceName": "CryptoSlate",
       "sourceLanguage": "en",
       "id": "b1ade02cfe93",
-      "status": "new",
-      "syncedAt": "2026-01-09T01:24:20.681Z",
+      "status": "pending",
+      "syncedAt": "2026-01-09T08:25:41.773Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
       }
     },
     {
@@ -62,12 +61,12 @@
       "sourceName": "CryptoSlate",
       "sourceLanguage": "en",
       "id": "a7fb159ba67a",
-      "status": "new",
-      "syncedAt": "2026-01-09T01:24:20.681Z",
+      "status": "pending",
+      "syncedAt": "2026-01-09T08:25:41.773Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
       }
     },
     {
@@ -79,12 +78,12 @@
       "sourceName": "CryptoSlate",
       "sourceLanguage": "en",
       "id": "18b062745b15",
-      "status": "new",
-      "syncedAt": "2026-01-09T01:24:20.681Z",
+      "status": "pending",
+      "syncedAt": "2026-01-09T08:25:41.773Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
       }
     },
     {
@@ -96,12 +95,12 @@
       "sourceName": "CryptoSlate",
       "sourceLanguage": "en",
       "id": "0523f54a801e",
-      "status": "new",
-      "syncedAt": "2026-01-09T01:24:20.681Z",
+      "status": "pending",
+      "syncedAt": "2026-01-09T08:25:41.773Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
       }
     },
     {
@@ -113,12 +112,12 @@
       "sourceName": "CryptoSlate",
       "sourceLanguage": "en",
       "id": "3c283be779bf",
-      "status": "new",
-      "syncedAt": "2026-01-09T01:24:20.681Z",
+      "status": "pending",
+      "syncedAt": "2026-01-09T08:25:41.773Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
       }
     },
     {
@@ -130,12 +129,12 @@
       "sourceName": "CryptoSlate",
       "sourceLanguage": "en",
       "id": "afbc418c66b0",
-      "status": "new",
+      "status": "pending",
       "syncedAt": "2026-01-09T01:24:20.681Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
       }
     },
     {
@@ -152,7 +151,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
       }
     },
     {
@@ -169,7 +168,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.297Z"
       }
     },
     {
@@ -186,7 +185,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -203,7 +202,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -220,7 +219,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -237,7 +236,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.141Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -254,7 +253,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -271,7 +270,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -288,7 +287,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -305,7 +304,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -322,7 +321,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -339,7 +338,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -356,7 +355,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -373,7 +372,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -390,7 +389,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -407,7 +406,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -424,7 +423,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     },
     {
@@ -441,11 +440,11 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.142Z"
+        "checkedAt": "2026-01-09T08:26:00.298Z"
       }
     }
   ],
-  "lastSync": "2026-01-09T01:24:20.681Z",
+  "lastSync": "2026-01-09T08:25:41.773Z",
   "totalItems": 26,
-  "qualityCheckedAt": "2026-01-09T01:24:31.142Z"
+  "qualityCheckedAt": "2026-01-09T08:26:00.298Z"
 }

@@ -15,7 +15,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -32,7 +32,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -44,11 +44,11 @@
       "sourceLanguage": "zh",
       "id": "870885fe9081",
       "status": "pending",
-      "syncedAt": "2026-01-09T01:24:19.441Z",
+      "syncedAt": "2026-01-09T08:25:40.763Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -60,11 +60,11 @@
       "sourceLanguage": "zh",
       "id": "9e673250cbc5",
       "status": "pending",
-      "syncedAt": "2026-01-09T01:24:19.441Z",
+      "syncedAt": "2026-01-09T08:25:40.763Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -82,7 +82,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -100,7 +100,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -118,7 +118,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -136,7 +136,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -154,7 +154,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -172,7 +172,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     },
     {
@@ -190,11 +190,65 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-09T01:24:31.146Z"
+        "checkedAt": "2026-01-09T08:26:00.308Z"
+      }
+    },
+    {
+      "title": "沪指站上4100点，两市成交额突破3万亿大关",
+      "link": "https://www.fortunechina.com/jingxuan/43501.htm",
+      "content": "0",
+      "wordCount": 1,
+      "sourceName": "财富中文网",
+      "sourceLanguage": "zh",
+      "id": "a74a595d094a",
+      "status": "archived",
+      "syncedAt": "2026-01-09T08:25:40.763Z",
+      "qualityFlags": {
+        "skipSummary": true,
+        "reasons": [
+          "content_too_short"
+        ],
+        "checkedAt": "2026-01-09T08:26:00.308Z"
+      }
+    },
+    {
+      "title": "MiniMax正式登陆港交所，市值超700亿港元",
+      "link": "https://www.fortunechina.com/jingxuan/43499.htm",
+      "content": "0",
+      "wordCount": 1,
+      "sourceName": "财富中文网",
+      "sourceLanguage": "zh",
+      "id": "5c6d032c692a",
+      "status": "archived",
+      "syncedAt": "2026-01-09T08:25:40.763Z",
+      "qualityFlags": {
+        "skipSummary": true,
+        "reasons": [
+          "content_too_short"
+        ],
+        "checkedAt": "2026-01-09T08:26:00.308Z"
+      }
+    },
+    {
+      "title": "12月CPI同比上涨0.8%",
+      "link": "https://www.fortunechina.com/jingxuan/43498.htm",
+      "content": "0",
+      "wordCount": 1,
+      "sourceName": "财富中文网",
+      "sourceLanguage": "zh",
+      "id": "c4b82996cd0b",
+      "status": "archived",
+      "syncedAt": "2026-01-09T08:25:40.763Z",
+      "qualityFlags": {
+        "skipSummary": true,
+        "reasons": [
+          "content_too_short"
+        ],
+        "checkedAt": "2026-01-09T08:26:00.308Z"
       }
     }
   ],
-  "lastSync": "2026-01-09T01:24:19.441Z",
-  "totalItems": 11,
-  "qualityCheckedAt": "2026-01-09T01:24:31.146Z"
+  "lastSync": "2026-01-09T08:25:40.763Z",
+  "totalItems": 14,
+  "qualityCheckedAt": "2026-01-09T08:26:00.308Z"
 }

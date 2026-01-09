@@ -15,7 +15,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.139Z"
+        "checkedAt": "2026-01-09T08:26:00.295Z"
       }
     },
     {
@@ -32,7 +32,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.139Z"
+        "checkedAt": "2026-01-09T08:26:00.295Z"
       }
     },
     {
@@ -49,11 +49,11 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.140Z"
+        "checkedAt": "2026-01-09T08:26:00.295Z"
       }
     }
   ],
-  "lastSync": "2026-01-09T01:24:19.480Z",
+  "lastSync": "2026-01-09T08:25:41.086Z",
   "totalItems": 3,
-  "qualityCheckedAt": "2026-01-09T01:24:31.140Z"
+  "qualityCheckedAt": "2026-01-09T08:26:00.295Z"
 }

@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const FEEDS_DIR = path.join(process.cwd(), 'data', 'feeds');
-const OLD_DATA_DIR = path.join(process.cwd(), 'data', 'news');
+import { listFiles } from '../../../lib/storage.js';
 
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
@@ -12,35 +8,30 @@ export async function GET(request) {
     try {
         const dates = new Set();
 
-        // 从新的 feeds 目录结构读取
-        if (fs.existsSync(FEEDS_DIR)) {
-            const sourceDirs = fs.readdirSync(FEEDS_DIR);
-            for (const sourceId of sourceDirs) {
-                const sourceDir = path.join(FEEDS_DIR, sourceId);
-                if (!fs.statSync(sourceDir).isDirectory()) continue;
+        // 从 feeds 目录结构读取
+        const sourceDirs = await listFiles('feeds');
+        for (const sourceId of sourceDirs) {
+            if (sourceId.includes('.')) continue; // 跳过非目录
 
-                const files = fs.readdirSync(sourceDir);
-                for (const file of files) {
-                    const match = file.match(/^(\d{4}-\d{2}-\d{2})-(\w+)\.json$/);
-                    if (match && match[2] === lang) {
-                        dates.add(match[1]);
-                    }
+            const files = await listFiles(`feeds/${sourceId}`);
+            for (const file of files) {
+                const match = file.match(/^(\d{4}-\d{2}-\d{2})-(\w+)\.json$/);
+                if (match && match[2] === lang) {
+                    dates.add(match[1]);
                 }
             }
         }
 
-        // 兼容旧的 news 目录（如果存在）
-        if (fs.existsSync(OLD_DATA_DIR)) {
-            const files = fs.readdirSync(OLD_DATA_DIR).filter(f => f.endsWith('.json'));
-            for (const file of files) {
-                const matchNew = file.match(/^(\d{4}-\d{2}-\d{2})-(\w+)\.json$/);
-                if (matchNew && matchNew[2] === lang) {
-                    dates.add(matchNew[1]);
-                }
-                const matchOld = file.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
-                if (matchOld) {
-                    dates.add(matchOld[1]);
-                }
+        // 兼容旧的 news 目录
+        const newsFiles = await listFiles('news');
+        for (const file of newsFiles) {
+            const matchNew = file.match(/^(\d{4}-\d{2}-\d{2})-(\w+)\.json$/);
+            if (matchNew && matchNew[2] === lang) {
+                dates.add(matchNew[1]);
+            }
+            const matchOld = file.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
+            if (matchOld) {
+                dates.add(matchOld[1]);
             }
         }
 

@@ -15,7 +15,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.149Z"
+        "checkedAt": "2026-01-09T08:26:00.311Z"
       }
     },
     {
@@ -34,7 +34,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-09T01:24:31.149Z"
+        "checkedAt": "2026-01-09T08:26:00.311Z"
       }
     },
     {
@@ -51,11 +51,11 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-09T01:24:31.149Z"
+        "checkedAt": "2026-01-09T08:26:00.311Z"
       }
     }
   ],
-  "lastSync": "2026-01-09T01:24:19.283Z",
+  "lastSync": "2026-01-09T08:25:40.719Z",
   "totalItems": 3,
-  "qualityCheckedAt": "2026-01-09T01:24:31.149Z"
+  "qualityCheckedAt": "2026-01-09T08:26:00.311Z"
 }
