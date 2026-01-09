@@ -6,10 +6,10 @@ import SubscribeModal from '@/components/SubscribeModal';
 import Footer from '@/components/Footer';
 
 /**
- * UI Lab - 固定顶部版本
+ * 新闻胶囊首页
  * 整合 Logo + 日期 + 日期选择器到一个固定的顶栏
  */
-export default function UILabPage() {
+export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subscriberCount, setSubscriberCount] = useState(0);
   const [feedsData, setFeedsData] = useState(null);
@@ -17,6 +17,7 @@ export default function UILabPage() {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
   const [availableDates, setAvailableDates] = useState([]);
+  const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
 
   // 获取可用日期列表
   const fetchAvailableDates = async (lang) => {
@@ -192,7 +193,6 @@ export default function UILabPage() {
             <div className="lab-header-divider"></div>
             <div className="lab-date-info">
               <span className="lab-date">{formatDate(date, language)}</span>
-              {/* <span className="lab-count">{totalItems} {t.newsCount}</span> */}
             </div>
           </div>
 
@@ -278,15 +278,88 @@ export default function UILabPage() {
             </div>
           ) : (
             <>
+              {/* Headlines Summary (Collapsible) */}
+              <div className={`lab-headlines-summary ${isSummaryExpanded ? 'expanded' : 'collapsed'}`}>
+                <div
+                  className="lab-summary-header"
+                  onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
+                >
+                  <span className="lab-summary-icon-container">
+                    {isSummaryExpanded ? (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    ) : (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                      </svg>
+                    )}
+                  </span>
+                  <span className="lab-summary-title-text">
+                    {language === 'zh' ? '内容目录' : 'Contents'}
+                  </span>
+                  <span className="lab-summary-count">
+                    ({allNews.length})
+                  </span>
+                </div>
+
+                {isSummaryExpanded && (
+                  <div className="lab-headlines-list-container">
+                    <div className="lab-headlines-list">
+                      {allNews.map((item, index) => (
+                        <button
+                          key={item.id}
+                          className="lab-headline-item"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const element = document.getElementById(`news-${item.id}`);
+                            if (element) {
+                              const headerOffset = 100;
+                              const elementPosition = element.getBoundingClientRect().top;
+                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                              window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                              });
+
+                              element.classList.add('highlight-card');
+                              setTimeout(() => element.classList.remove('highlight-card'), 2000);
+
+                              setIsSummaryExpanded(false);
+                            }
+                          }}
+                        >
+                          <span className="headline-index">{String(index + 1).padStart(2, '0')}</span>
+                          <span className="headline-text">{item.originalTitle}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="lab-summary-footer">
+                      <button
+                        className="lab-summary-collapse-btn"
+                        onClick={() => setIsSummaryExpanded(false)}
+                      >
+                        {language === 'zh' ? '收起' : 'Collapse'} ▲
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <div className="news-list">
                 {allNews.map((item, index) => (
-                  <NewsCardLab
-                    key={item.id}
-                    item={item}
-                    sourceName={item.sourceName}
-                    language={language}
-                    index={index}
-                  />
+                  <div key={item.id} id={`news-${item.id}`}>
+                    <NewsCardLab
+                      item={item}
+                      sourceName={item.sourceName}
+                      language={language}
+                      index={index}
+                    />
+                  </div>
                 ))}
               </div>
 
