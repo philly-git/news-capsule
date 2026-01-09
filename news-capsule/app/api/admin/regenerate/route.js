@@ -1,4 +1,9 @@
-import { DEFAULT_PROMPT_ZH, DEFAULT_PROMPT_EN } from '@/lib/prompts';
+import { NextResponse } from 'next/server';
+import OpenAI from 'openai';
+import { convert } from 'html-to-text';
+import { readSettings, readJSON, writeJSON } from '@/lib/storage';
+import { getSourceItems } from '@/lib/feeds';
+import { DEFAULT_PROMPT_ZH, DEFAULT_PROMPT_EN } from '@/lib/prompts.js';
 
 // ... (省略中间代码)
 
