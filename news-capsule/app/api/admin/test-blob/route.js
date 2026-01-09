@@ -12,7 +12,7 @@ export async function GET(request) {
         if (action === 'write') {
             const data = {
                 timestamp: Date.now(),
-                message: 'Hello from Vercel Blob!'
+                message: 'Hello from Cloudflare R2!'
             };
             await writeJSON(fileName, data);
             return NextResponse.json({ success: true, action: 'write', data });

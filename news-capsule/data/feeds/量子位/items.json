@@ -10,13 +10,9 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "6b7aeaeaf013",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.280Z"
-      }
+      "status": "published",
+      "syncedAt": "2026-01-09T13:43:26.875Z",
+      "publishedAt": "2026-01-09T14:07:52.758Z"
     },
     {
       "title": "清华AI找药登Science！一天筛选10万亿次，解决AlphaFold到药物发现的最后一公里",
@@ -27,13 +23,8 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "0d449900fcd1",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.280Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T13:43:26.875Z"
     },
     {
       "title": "让世界模型推理效率提升70倍：上海AI Lab用“恒算力”破解长时记忆与交互瓶颈",
@@ -44,13 +35,8 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "ea841340b695",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.280Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T13:43:26.875Z"
     },
     {
       "title": "「AI 100」榜单启动招募，AI产品“年会”不能停丨量子位智库",
@@ -61,13 +47,8 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "c488182d07a2",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.280Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T13:43:26.875Z"
     },
     {
       "title": "量子位编辑作者招聘",
@@ -78,13 +59,8 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "a83db2626741",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.281Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T13:43:26.875Z"
     },
     {
       "title": "开源“裸考”真实世界，国产具身智能基座模型拿下全球第二！",
@@ -95,13 +71,8 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "eadcdf46bbfa",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.281Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T13:43:26.875Z"
     },
     {
       "title": "智元首发SOP系统：打破离线训练瓶颈，让具身智能在“干中学”",
@@ -112,13 +83,8 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "14a42b0168eb",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.281Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T13:43:26.875Z"
     },
     {
       "title": "AI精准编辑门槛大降：开源框架提升编辑一致性，即插即用",
@@ -129,13 +95,8 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "854827805dc1",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.281Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T13:43:26.875Z"
     },
     {
       "title": "「AI 100」榜单启动招募，AI产品“年会”不能停丨量子位智库",
@@ -146,13 +107,8 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "de445d0adf19",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.281Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T13:43:26.875Z"
     },
     {
       "title": "量子位编辑作者招聘",
@@ -163,13 +119,8 @@
       "sourceName": "量子位",
       "sourceLanguage": "zh",
       "id": "0ebf4400788f",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.885Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.281Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T13:43:26.875Z"
     },
     {
       "title": "8块钱跑通一次强化学习全流程，潞晨云重塑微调赛道：1名算法工程师=1支Infra团队",
@@ -376,7 +327,7 @@
       }
     }
   ],
-  "lastSync": "2026-01-09T08:25:40.885Z",
+  "lastSync": "2026-01-09T13:43:26.875Z",
   "totalItems": 22,
   "qualityCheckedAt": "2026-01-09T08:26:00.282Z"
 }

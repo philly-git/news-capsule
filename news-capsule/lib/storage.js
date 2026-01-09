@@ -1,30 +1,50 @@
 /**
  * 存储抽象层
- * 本地开发使用文件系统，Vercel 部署使用 Blob 存储
+ * 本地开发使用文件系统，云端部署使用 Cloudflare R2
  * 
  * 环境检测：
  * - 本地开发：使用 fs 读写 data/ 目录
- * - Vercel 部署：使用 @vercel/blob
+ * - 云端部署：使用 Cloudflare R2 (S3 兼容 API)
  */
 
 import fs from 'fs';
 import path from 'path';
-import { put, list, del, head } from '@vercel/blob';
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command, HeadObjectCommand } from '@aws-sdk/client-s3';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 
+// R2 客户端（懒加载）
+let r2Client = null;
+
 /**
- * 检测是否在 Vercel 环境运行
+ * 获取 R2 客户端实例
  */
-function isVercelEnvironment() {
-    return process.env.VERCEL === '1' || process.env.BLOB_READ_WRITE_TOKEN;
+function getR2Client() {
+    if (!r2Client) {
+        r2Client = new S3Client({
+            region: 'auto',
+            endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+            credentials: {
+                accessKeyId: process.env.R2_ACCESS_KEY_ID,
+                secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+            },
+        });
+    }
+    return r2Client;
 }
 
 /**
- * 获取 Blob 存储路径前缀
+ * 检测是否使用云端存储
+ */
+function isCloudEnvironment() {
+    return process.env.VERCEL === '1' || process.env.R2_ACCESS_KEY_ID;
+}
+
+/**
+ * 获取 R2 存储路径（Key）
  * 对路径进行编码，处理中文文件名
  */
-function getBlobPath(relativePath) {
+function getR2Key(relativePath) {
     // 保持斜杠不被编码，但编码其他特殊字符
     const encodedPath = relativePath.split('/').map(encodeURIComponent).join('/');
     return `news-capsule/${encodedPath}`;
@@ -34,13 +54,13 @@ function getBlobPath(relativePath) {
  * 读取 JSON 数据
  */
 export async function readJSON(relativePath) {
-    if (isVercelEnvironment()) {
-        const fromBlob = await readJSONFromBlob(relativePath);
-        if (fromBlob !== null) {
-            console.log(`[Storage] Read from Blob: ${relativePath}`);
-            return fromBlob;
+    if (isCloudEnvironment()) {
+        const fromR2 = await readJSONFromR2(relativePath);
+        if (fromR2 !== null) {
+            console.log(`[Storage] Read from R2: ${relativePath}`);
+            return fromR2;
         }
-        console.log(`[Storage] Blob miss, reading from file: ${relativePath}`);
+        console.log(`[Storage] R2 miss, reading from file: ${relativePath}`);
         return readJSONFromFile(relativePath);
     }
     return readJSONFromFile(relativePath);
@@ -50,9 +70,9 @@ export async function readJSON(relativePath) {
  * 写入 JSON 数据
  */
 export async function writeJSON(relativePath, data) {
-    console.log(`[Storage] Writing to ${relativePath}, isVercel=${isVercelEnvironment()}`);
-    if (isVercelEnvironment()) {
-        return writeJSONToBlob(relativePath, data);
+    console.log(`[Storage] Writing to ${relativePath}, isCloud=${isCloudEnvironment()}`);
+    if (isCloudEnvironment()) {
+        return writeJSONToR2(relativePath, data);
     }
     return writeJSONToFile(relativePath, data);
 }
@@ -62,35 +82,35 @@ export async function writeJSON(relativePath, data) {
  */
 export async function deleteData(relativePath) {
     console.log(`[Storage] Deleting ${relativePath}`);
-    if (isVercelEnvironment()) {
-        return deleteFromBlob(relativePath);
+    if (isCloudEnvironment()) {
+        return deleteFromR2(relativePath);
     }
     return deleteFromFile(relativePath);
 }
 
 /**
  * 列出目录下的文件
- * 策略：Vercel 环境下，合并 Blob 和本地文件系统的文件列表（并去重）
+ * 策略：云端环境下，合并 R2 和本地文件系统的文件列表（并去重）
  */
 export async function listFiles(relativePath) {
-    if (isVercelEnvironment()) {
-        const [blobFiles, localFiles] = await Promise.all([
-            listFilesFromBlob(relativePath),
+    if (isCloudEnvironment()) {
+        const [r2Files, localFiles] = await Promise.all([
+            listFilesFromR2(relativePath),
             listFilesFromDir(relativePath)
         ]);
-        return Array.from(new Set([...blobFiles, ...localFiles]));
+        return Array.from(new Set([...r2Files, ...localFiles]));
     }
     return listFilesFromDir(relativePath);
 }
 
 /**
  * 检查文件是否存在
- * 策略：Vercel 环境下，只要 Blob 或本地文件系统任一存在即返回 true
+ * 策略：云端环境下，只要 R2 或本地文件系统任一存在即返回 true
  */
 export async function exists(relativePath) {
-    if (isVercelEnvironment()) {
-        const inBlob = await existsInBlob(relativePath);
-        if (inBlob) return true;
+    if (isCloudEnvironment()) {
+        const inR2 = await existsInR2(relativePath);
+        if (inR2) return true;
         return existsInFile(relativePath);
     }
     return existsInFile(relativePath);
@@ -153,83 +173,85 @@ function existsInFile(relativePath) {
     return fs.existsSync(filePath);
 }
 
-// ==================== Vercel Blob 实现 ====================
+// ==================== Cloudflare R2 实现 ====================
 
-async function readJSONFromBlob(relativePath) {
+async function readJSONFromR2(relativePath) {
     try {
-        const blobPath = getBlobPath(relativePath);
-        // 使用 head() 替代 list()，head() 不计入 Advanced Operations
-        const blobInfo = await head(blobPath);
+        const key = getR2Key(relativePath);
+        const command = new GetObjectCommand({
+            Bucket: process.env.R2_BUCKET_NAME,
+            Key: key,
+        });
 
-        if (!blobInfo || !blobInfo.url) {
-            return null;
-        }
-
-        const response = await fetch(blobInfo.url);
-        if (!response.ok) {
-            return null;
-        }
-
-        return await response.json();
+        const response = await getR2Client().send(command);
+        const bodyString = await response.Body.transformToString();
+        return JSON.parse(bodyString);
     } catch (error) {
-        // head() 在文件不存在时会抛出 BlobNotFoundError
-        if (error.code === 'blob_not_found') {
+        // NoSuchKey 表示文件不存在
+        if (error.name === 'NoSuchKey' || error.$metadata?.httpStatusCode === 404) {
             return null;
         }
-        console.error(`Error reading from blob ${relativePath}:`, error);
+        console.error(`Error reading from R2 ${relativePath}:`, error);
         return null;
     }
 }
 
-async function writeJSONToBlob(relativePath, data) {
+async function writeJSONToR2(relativePath, data) {
     try {
-        const blobPath = getBlobPath(relativePath);
+        const key = getR2Key(relativePath);
         const content = JSON.stringify(data, null, 2);
 
-        await put(blobPath, content, {
-            access: 'public',
-            contentType: 'application/json',
-            addRandomSuffix: false, // 保持文件名固定
-            token: process.env.BLOB_READ_WRITE_TOKEN, // 显式传递 token
-            allowOverwrite: true, // 明确允许覆盖同名文件
+        const command = new PutObjectCommand({
+            Bucket: process.env.R2_BUCKET_NAME,
+            Key: key,
+            Body: content,
+            ContentType: 'application/json',
         });
+
+        await getR2Client().send(command);
     } catch (error) {
-        console.error(`Error writing to blob ${relativePath}:`, error);
+        console.error(`Error writing to R2 ${relativePath}:`, error);
         throw error;
     }
 }
 
-async function deleteFromBlob(relativePath) {
+async function deleteFromR2(relativePath) {
     try {
-        const blobPath = getBlobPath(relativePath);
-        // 使用 head() 获取 URL，避免 list()
-        const blobInfo = await head(blobPath);
-        if (blobInfo && blobInfo.url) {
-            await del(blobInfo.url);
-        }
+        const key = getR2Key(relativePath);
+        const command = new DeleteObjectCommand({
+            Bucket: process.env.R2_BUCKET_NAME,
+            Key: key,
+        });
+
+        await getR2Client().send(command);
     } catch (error) {
-        if (error.code === 'blob_not_found') {
-            return; // 文件不存在，无需删除
+        // 删除不存在的文件不报错
+        if (error.name === 'NoSuchKey' || error.$metadata?.httpStatusCode === 404) {
+            return;
         }
-        console.error(`Error deleting from blob ${relativePath}:`, error);
+        console.error(`Error deleting from R2 ${relativePath}:`, error);
     }
 }
 
-async function listFilesFromBlob(relativePath) {
+async function listFilesFromR2(relativePath) {
     try {
-        const prefix = getBlobPath(relativePath);
-        const { blobs } = await list({ prefix });
+        const prefix = getR2Key(relativePath);
+        const command = new ListObjectsV2Command({
+            Bucket: process.env.R2_BUCKET_NAME,
+            Prefix: prefix.endsWith('/') ? prefix : prefix + '/',
+        });
+
+        const response = await getR2Client().send(command);
+        const contents = response.Contents || [];
 
         // 只返回直接子文件，不包含子目录中的文件
-        const prefixLength = prefix.length;
+        const prefixLength = (prefix.endsWith('/') ? prefix : prefix + '/').length;
         const files = new Set();
 
-        for (const blob of blobs) {
-            const rest = blob.pathname.slice(prefixLength);
-            // 移除开头的斜杠
-            const cleanPath = rest.startsWith('/') ? rest.slice(1) : rest;
+        for (const item of contents) {
+            const rest = item.Key.slice(prefixLength);
             // 只取第一层
-            const firstPart = cleanPath.split('/')[0];
+            const firstPart = rest.split('/')[0];
             if (firstPart) {
                 // 解码文件名
                 try {
@@ -242,22 +264,26 @@ async function listFilesFromBlob(relativePath) {
 
         return Array.from(files);
     } catch (error) {
-        console.error(`Error listing from blob ${relativePath}:`, error);
+        console.error(`Error listing from R2 ${relativePath}:`, error);
         return [];
     }
 }
 
-async function existsInBlob(relativePath) {
+async function existsInR2(relativePath) {
     try {
-        const blobPath = getBlobPath(relativePath);
-        // 使用 head() 检查文件是否存在，避免 list()
-        await head(blobPath);
+        const key = getR2Key(relativePath);
+        const command = new HeadObjectCommand({
+            Bucket: process.env.R2_BUCKET_NAME,
+            Key: key,
+        });
+
+        await getR2Client().send(command);
         return true;
     } catch (error) {
-        if (error.code === 'blob_not_found') {
+        if (error.name === 'NotFound' || error.$metadata?.httpStatusCode === 404) {
             return false;
         }
-        console.error(`Error checking existence in blob ${relativePath}:`, error);
+        console.error(`Error checking existence in R2 ${relativePath}:`, error);
         return false;
     }
 }

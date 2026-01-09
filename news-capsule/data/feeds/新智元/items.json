@@ -10,13 +10,8 @@
       "sourceName": "新智元",
       "sourceLanguage": "zh",
       "id": "9b830b7dcd6e",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.856Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.290Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T15:18:13.381Z"
     },
     {
       "title": "MIT天才博士刚毕业，就被前OpenAI CTO抢走！年薪或300万起步",
@@ -27,13 +22,8 @@
       "sourceName": "新智元",
       "sourceLanguage": "zh",
       "id": "0f9c9ac59325",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.856Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.290Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T15:18:13.381Z"
     },
     {
       "title": "DeepMind发布SIMA 2！打通「感知-推理-行动-反思」闭环",
@@ -44,13 +34,8 @@
       "sourceName": "新智元",
       "sourceLanguage": "zh",
       "id": "f07fc2417543",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.856Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.290Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T15:18:13.381Z"
     },
     {
       "title": "Transformer已死？DeepMind正在押注另一条AGI路线",
@@ -61,13 +46,8 @@
       "sourceName": "新智元",
       "sourceLanguage": "zh",
       "id": "6a8ea4e0a5e4",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.856Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.290Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T15:18:13.381Z"
     },
     {
       "title": "谁说老实人赚不到钱？Claude用一张3500亿的支票打脸OpenAI",
@@ -78,13 +58,8 @@
       "sourceName": "新智元",
       "sourceLanguage": "zh",
       "id": "0830f104dd25",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.856Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.290Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T15:18:13.381Z"
     },
     {
       "title": "AI月产十亿行代码，暴增76%！程序员论坛炸锅：代码行数≠生产力！",
@@ -95,13 +70,8 @@
       "sourceName": "新智元",
       "sourceLanguage": "zh",
       "id": "ce7b533b5be7",
-      "status": "new",
-      "syncedAt": "2026-01-09T08:25:40.856Z",
-      "qualityFlags": {
-        "skipSummary": false,
-        "reasons": [],
-        "checkedAt": "2026-01-09T08:26:00.290Z"
-      }
+      "status": "pending",
+      "syncedAt": "2026-01-09T15:18:13.381Z"
     },
     {
       "title": "1人顶1个Infra团队！OpenAI前CTO新招，让大模型训练跌成白菜价",
@@ -257,7 +227,7 @@
       }
     }
   ],
-  "lastSync": "2026-01-09T08:25:40.856Z",
+  "lastSync": "2026-01-09T15:18:13.381Z",
   "totalItems": 15,
   "qualityCheckedAt": "2026-01-09T08:26:00.291Z"
 }
