@@ -190,7 +190,9 @@ async function writeJSONToBlob(relativePath, data) {
         await put(blobPath, content, {
             access: 'public',
             contentType: 'application/json',
-            addRandomSuffix: false,
+            addRandomSuffix: false, // 保持文件名固定
+            token: process.env.BLOB_READ_WRITE_TOKEN, // 显式传递 token
+            allowOverwrite: true, // 明确允许覆盖同名文件
         });
     } catch (error) {
         console.error(`Error writing to blob ${relativePath}:`, error);
