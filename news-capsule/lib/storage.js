@@ -32,15 +32,15 @@ function getBlobPath(relativePath) {
 
 /**
  * 读取 JSON 数据
- * 策略：在 Vercel 环境下，优先读取 Blob；如果 Blob 不存在，回退读取文件系统（初始数据）
  */
 export async function readJSON(relativePath) {
     if (isVercelEnvironment()) {
         const fromBlob = await readJSONFromBlob(relativePath);
         if (fromBlob !== null) {
+            console.log(`[Storage] Read from Blob: ${relativePath}`);
             return fromBlob;
         }
-        // Blob 中不存在，尝试读取本地文件（Layered Storage 模式）
+        console.log(`[Storage] Blob miss, reading from file: ${relativePath}`);
         return readJSONFromFile(relativePath);
     }
     return readJSONFromFile(relativePath);
@@ -48,9 +48,9 @@ export async function readJSON(relativePath) {
 
 /**
  * 写入 JSON 数据
- * 策略：Vercel 环境只写入 Blob，本地只写入文件系统
  */
 export async function writeJSON(relativePath, data) {
+    console.log(`[Storage] Writing to ${relativePath}, isVercel=${isVercelEnvironment()}`);
     if (isVercelEnvironment()) {
         return writeJSONToBlob(relativePath, data);
     }
@@ -59,9 +59,9 @@ export async function writeJSON(relativePath, data) {
 
 /**
  * 删除数据
- * 策略：Vercel 环境只从 Blob 删除
  */
 export async function deleteData(relativePath) {
+    console.log(`[Storage] Deleting ${relativePath}`);
     if (isVercelEnvironment()) {
         return deleteFromBlob(relativePath);
     }

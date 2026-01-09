@@ -38,8 +38,11 @@ export async function GET(request, { params }) {
 // 更新源（启用/禁用、修改信息）或更新条目状态
 export async function PATCH(request, { params }) {
     try {
-        const { id } = await params;
+        const awaitedParams = await params;
+        const { id } = awaitedParams;
         const body = await request.json();
+
+        console.log(`[API] PATCH source/${id}`, JSON.stringify(body));
 
         // 如果是更新条目状态
         if (body.itemId && body.status) {
