@@ -1,22 +1,19 @@
-import fs from 'fs';
-import path from 'path';
+/**
+ * 新闻数据读取模块
+ * 使用存储抽象层，支持本地文件和 Vercel Blob
+ */
 
-const DATA_DIR = path.join(process.cwd(), 'data', 'news');
+import { readJSON, listFiles } from './storage.js';
 
 /**
  * 获取指定日期的新闻数据
  * @param {string} date - 日期字符串，格式：YYYY-MM-DD
- * @returns {object|null} 新闻数据对象或null
+ * @returns {Promise<object|null>} 新闻数据对象或null
  */
-export function getNewsByDate(date) {
-    const filePath = path.join(DATA_DIR, `${date}.json`);
-
+export async function getNewsByDate(date) {
     try {
-        if (fs.existsSync(filePath)) {
-            const content = fs.readFileSync(filePath, 'utf-8');
-            return JSON.parse(content);
-        }
-        return null;
+        const data = await readJSON(`news/${date}.json`);
+        return data;
     } catch (error) {
         console.error(`Error reading news for ${date}:`, error);
         return null;
@@ -25,27 +22,28 @@ export function getNewsByDate(date) {
 
 /**
  * 获取今日新闻
- * @returns {object|null} 今日新闻数据
+ * @returns {Promise<object|null>} 今日新闻数据
  */
-export function getTodayNews() {
+export async function getTodayNews() {
     const today = new Date().toISOString().split('T')[0];
     return getNewsByDate(today);
 }
 
 /**
  * 获取最新的新闻（按日期倒序查找）
- * @returns {object|null} 最新新闻数据
+ * @returns {Promise<object|null>} 最新新闻数据
  */
-export function getLatestNews() {
+export async function getLatestNews() {
     try {
-        const files = fs.readdirSync(DATA_DIR)
+        const files = await listFiles('news');
+        const jsonFiles = files
             .filter(file => file.endsWith('.json'))
             .sort((a, b) => b.localeCompare(a)); // 倒序
 
-        if (files.length > 0) {
-            const latestFile = files[0];
-            const content = fs.readFileSync(path.join(DATA_DIR, latestFile), 'utf-8');
-            return JSON.parse(content);
+        if (jsonFiles.length > 0) {
+            const latestFile = jsonFiles[0];
+            const date = latestFile.replace('.json', '');
+            return getNewsByDate(date);
         }
         return null;
     } catch (error) {

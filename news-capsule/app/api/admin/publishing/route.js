@@ -4,7 +4,8 @@ import { getAllQueuedItems, batchUpdateItemsStatus } from '../../../../lib/feeds
 // GET: 获取所有待出版条目
 export async function GET() {
     try {
-        const items = getAllQueuedItems();
+        const items = await getAllQueuedItems();
+
 
         return NextResponse.json({
             success: true,
@@ -33,7 +34,7 @@ export async function POST(request) {
         }
 
         // 1. 获取待出版的条目详情
-        const allQueued = getAllQueuedItems();
+        const allQueued = await getAllQueuedItems();
         const itemIds = itemsWithLang.map(item => item.id);
         const itemsToPublish = allQueued.filter(item => itemIds.includes(item.id));
 
@@ -102,7 +103,7 @@ export async function POST(request) {
         }
 
         // 4. 更新条目状态为 published
-        const updateResult = batchUpdateItemsStatus(itemIds, 'published');
+        const updateResult = await batchUpdateItemsStatus(itemIds, 'published');
 
         return NextResponse.json({
             success: true,

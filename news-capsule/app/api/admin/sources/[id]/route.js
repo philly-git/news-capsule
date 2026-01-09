@@ -6,7 +6,7 @@ import { getSourceItems, updateItemStatus, batchUpdateItemStatus } from '../../.
 export async function GET(request, { params }) {
     try {
         const { id } = await params;
-        const source = getSourceById(id);
+        const source = await getSourceById(id);
 
         if (!source) {
             return NextResponse.json(
@@ -16,7 +16,7 @@ export async function GET(request, { params }) {
         }
 
         // 获取该源的所有条目
-        const feedData = getSourceItems(id);
+        const feedData = await getSourceItems(id);
 
         return NextResponse.json({
             success: true,
@@ -43,24 +43,24 @@ export async function PATCH(request, { params }) {
 
         // 如果是更新条目状态
         if (body.itemId && body.status) {
-            const item = updateItemStatus(id, body.itemId, body.status);
+            const item = await updateItemStatus(id, body.itemId, body.status);
             return NextResponse.json({ success: true, item });
         }
 
         // 如果是批量更新条目状态
         if (body.itemIds && body.status) {
-            const result = batchUpdateItemStatus(id, body.itemIds, body.status);
+            const result = await batchUpdateItemStatus(id, body.itemIds, body.status);
             return NextResponse.json({ success: true, ...result });
         }
 
         // 如果是切换启用/禁用
         if (body.toggle === true) {
-            const source = toggleSource(id);
+            const source = await toggleSource(id);
             return NextResponse.json({ success: true, source });
         }
 
         // 否则执行源信息更新
-        const source = updateSource(id, body);
+        const source = await updateSource(id, body);
         return NextResponse.json({ success: true, source });
 
     } catch (error) {
@@ -79,7 +79,7 @@ export async function DELETE(request, { params }) {
         const { searchParams } = new URL(request.url);
         const deleteData = searchParams.get('deleteData') === 'true';
 
-        const deleted = deleteSource(id);
+        const deleted = await deleteSource(id);
 
         // 如果选择删除数据，删除对应的 feeds 目录
         if (deleteData) {

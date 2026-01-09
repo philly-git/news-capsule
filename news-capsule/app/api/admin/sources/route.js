@@ -10,7 +10,7 @@ export async function GET(request) {
 
         // 如果指定了单个源，返回该源的详细信息（含条目）
         if (sourceId) {
-            const feedData = getSourceItems(sourceId);
+            const feedData = await getSourceItems(sourceId);
             return NextResponse.json({
                 success: true,
                 ...feedData
@@ -18,37 +18,40 @@ export async function GET(request) {
         }
 
         // 获取所有源配置
-        const allSources = getAllSources();
+        const allSources = await getAllSources();
 
         // 获取所有源的抓取统计
-        const feedsStats = getAllFeedsStats();
+        const feedsStats = await getAllFeedsStats();
 
         // 合并源配置和统计信息
-        const sources = allSources.map(source => ({
-            ...source,
-            stats: feedsStats[source.id] || {
-                totalItems: 0,
-                newCount: 0,
-                pendingCount: 0,
-                queuedCount: 0,
-                publishedCount: 0,
-                archivedCount: 0,
-                lastSync: null
-            },
-            // 如果请求带条目，返回条目列表
-            items: withItems ? getSourceItems(source.id).items : undefined
-        }));
+        const sourcesWithStats = [];
+        for (const source of allSources) {
+            const items = withItems ? (await getSourceItems(source.id)).items : undefined;
+            sourcesWithStats.push({
+                ...source,
+                stats: feedsStats[source.id] || {
+                    totalItems: 0,
+                    newCount: 0,
+                    pendingCount: 0,
+                    queuedCount: 0,
+                    publishedCount: 0,
+                    archivedCount: 0,
+                    lastSync: null
+                },
+                items
+            });
+        }
 
         // 统计总览（五种状态）
-        const totalNewItems = sources.reduce((sum, s) => sum + (s.stats.newCount || 0), 0);
-        const totalPendingItems = sources.reduce((sum, s) => sum + (s.stats.pendingCount || 0), 0);
-        const totalQueuedItems = sources.reduce((sum, s) => sum + (s.stats.queuedCount || 0), 0);
-        const totalPublishedItems = sources.reduce((sum, s) => sum + (s.stats.publishedCount || 0), 0);
-        const totalArchivedItems = sources.reduce((sum, s) => sum + (s.stats.archivedCount || 0), 0);
+        const totalNewItems = sourcesWithStats.reduce((sum, s) => sum + (s.stats.newCount || 0), 0);
+        const totalPendingItems = sourcesWithStats.reduce((sum, s) => sum + (s.stats.pendingCount || 0), 0);
+        const totalQueuedItems = sourcesWithStats.reduce((sum, s) => sum + (s.stats.queuedCount || 0), 0);
+        const totalPublishedItems = sourcesWithStats.reduce((sum, s) => sum + (s.stats.publishedCount || 0), 0);
+        const totalArchivedItems = sourcesWithStats.reduce((sum, s) => sum + (s.stats.archivedCount || 0), 0);
 
         return NextResponse.json({
-            sources,
-            totalSources: sources.length,
+            sources: sourcesWithStats,
+            totalSources: sourcesWithStats.length,
             totalNewItems,
             totalPendingItems,
             totalQueuedItems,
@@ -77,7 +80,7 @@ export async function POST(request) {
             );
         }
 
-        const newSource = addSource({ name, url, language, category });
+        const newSource = await addSource({ name, url, language, category });
 
         return NextResponse.json({
             success: true,

@@ -1,11 +1,76 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import styles from './admin.module.css';
 
 export default function AdminLayout({ children }) {
+    const router = useRouter();
     const pathname = usePathname();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [username, setUsername] = useState('');
+
+    // 登录页面不需要认证检查
+    const isLoginPage = pathname === '/admin/login';
+
+    useEffect(() => {
+        if (isLoginPage) {
+            setIsLoading(false);
+            return;
+        }
+
+        // 检查认证状态
+        const checkAuth = async () => {
+            try {
+                const res = await fetch('/api/auth/check');
+                const data = await res.json();
+
+                if (data.authenticated) {
+                    setIsAuthenticated(true);
+                    setUsername(data.username);
+                } else {
+                    router.push('/admin/login');
+                }
+            } catch (error) {
+                router.push('/admin/login');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        checkAuth();
+    }, [pathname, isLoginPage, router]);
+
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            router.push('/admin/login');
+            router.refresh();
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
+
+    // 登录页面直接渲染
+    if (isLoginPage) {
+        return <>{children}</>;
+    }
+
+    // 加载中
+    if (isLoading) {
+        return (
+            <div className={styles.loadingContainer}>
+                <div className={styles.loadingSpinner}>加载中...</div>
+            </div>
+        );
+    }
+
+    // 未认证（理论上此时已跳转，但作为保险）
+    if (!isAuthenticated) {
+        return null;
+    }
 
     const navItems = [
         { href: '/admin', label: '📰 编辑部', exact: true },
@@ -44,6 +109,15 @@ export default function AdminLayout({ children }) {
                         </Link>
                     ))}
                 </nav>
+                <div className={styles.sidebarFooter}>
+                    <div className={styles.userInfo}>
+                        <span className={styles.userIcon}>👤</span>
+                        <span className={styles.userName}>{username}</span>
+                    </div>
+                    <button onClick={handleLogout} className={styles.logoutBtn}>
+                        退出登录
+                    </button>
+                </div>
             </aside>
             <main className={styles.mainContent}>
                 {children}
@@ -51,3 +125,4 @@ export default function AdminLayout({ children }) {
         </div>
     );
 }
+

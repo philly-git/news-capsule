@@ -1,31 +1,18 @@
-import fs from 'fs';
-import path from 'path';
+/**
+ * 用户反馈模块
+ * 使用存储抽象层，支持本地文件和 Vercel Blob
+ */
 
-const FEEDBACK_FILE_PATH = path.join(process.cwd(), 'data', 'feedback.json');
+import { readJSON, writeJSON } from './storage.js';
 
-// Ensure the data directory exists
-const ensureDataDir = () => {
-    const dir = path.dirname(FEEDBACK_FILE_PATH);
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-};
+const FEEDBACK_PATH = 'feedback.json';
 
 export async function getFeedback() {
-    ensureDataDir();
-    if (!fs.existsSync(FEEDBACK_FILE_PATH)) {
-        return [];
-    }
-    const fileContent = fs.readFileSync(FEEDBACK_FILE_PATH, 'utf8');
-    try {
-        return JSON.parse(fileContent);
-    } catch (e) {
-        return [];
-    }
+    const data = await readJSON(FEEDBACK_PATH);
+    return data || [];
 }
 
 export async function saveFeedback(entry) {
-    ensureDataDir();
     const currentFeedback = await getFeedback();
 
     const newEntry = {
@@ -36,6 +23,6 @@ export async function saveFeedback(entry) {
 
     currentFeedback.unshift(newEntry); // Add new entry to the top
 
-    fs.writeFileSync(FEEDBACK_FILE_PATH, JSON.stringify(currentFeedback, null, 2), 'utf8');
+    await writeJSON(FEEDBACK_PATH, currentFeedback);
     return newEntry;
 }

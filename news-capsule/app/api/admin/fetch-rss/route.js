@@ -116,7 +116,7 @@ async function fetchSingleSource(source, timeWindowHours = 48) {
             });
 
         // 使用新的 feeds 模块按源存储
-        const result = addItemsToSource(source.id, items);
+        const result = await addItemsToSource(source.id, items);
 
         return {
             success: true,
@@ -146,8 +146,8 @@ export async function POST(request) {
         const validHours = [24, 48, 168].includes(timeWindowHours) ? timeWindowHours : 48;
 
         // 获取所有源（包括禁用的，但只抓取指定的）
-        const allSources = getAllSources();
-        const enabledSources = getEnabledSources();
+        const allSources = await getAllSources();
+        const enabledSources = await getEnabledSources();
 
         // 筛选要抓取的源
         let sourcesToFetch = enabledSources;
@@ -160,7 +160,7 @@ export async function POST(request) {
         }
 
         // 刷新前：将所有源的 new 状态转为 pending
-        const convertResult = convertNewToPending();
+        await convertNewToPending();
 
         // 并行抓取
         const results = await Promise.all(

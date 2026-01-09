@@ -1,8 +1,1 @@
-{
-    "crons": [
-        {
-            "path": "/api/generate-news?lang=zh",
-            "schedule": "0 0 * * *"
-        }
-    ]
-}
+{}

@@ -1,34 +1,27 @@
 /**
  * RSS 源管理模块
  * 统一管理所有 RSS 源的增删改查
+ * 使用存储抽象层，支持本地文件和 Vercel Blob
  */
 
-import fs from 'fs';
-import path from 'path';
+import { readJSON, writeJSON } from './storage.js';
 
-const SOURCES_FILE = path.join(process.cwd(), 'data', 'sources.json');
+const SOURCES_PATH = 'sources.json';
 
 /**
  * 读取源配置文件
  */
-function readSourcesFile() {
-    if (!fs.existsSync(SOURCES_FILE)) {
-        return { version: 1, updatedAt: null, sources: [] };
-    }
-    try {
-        return JSON.parse(fs.readFileSync(SOURCES_FILE, 'utf-8'));
-    } catch (e) {
-        console.error('Failed to read sources.json:', e);
-        return { version: 1, updatedAt: null, sources: [] };
-    }
+async function readSourcesFile() {
+    const data = await readJSON(SOURCES_PATH);
+    return data || { version: 1, updatedAt: null, sources: [] };
 }
 
 /**
  * 写入源配置文件
  */
-function writeSourcesFile(data) {
+async function writeSourcesFile(data) {
     data.updatedAt = new Date().toISOString();
-    fs.writeFileSync(SOURCES_FILE, JSON.stringify(data, null, 2));
+    await writeJSON(SOURCES_PATH, data);
 }
 
 /**
@@ -45,16 +38,16 @@ function generateId(name) {
 /**
  * 获取所有源
  */
-export function getAllSources() {
-    const data = readSourcesFile();
+export async function getAllSources() {
+    const data = await readSourcesFile();
     return data.sources;
 }
 
 /**
  * 获取启用的源（可选按语言筛选）
  */
-export function getEnabledSources(language = null) {
-    const sources = getAllSources().filter(s => s.enabled);
+export async function getEnabledSources(language = null) {
+    const sources = (await getAllSources()).filter(s => s.enabled);
     if (language) {
         return sources.filter(s => s.language === language);
     }
@@ -64,8 +57,8 @@ export function getEnabledSources(language = null) {
 /**
  * 获取按分类分组的源
  */
-export function getSourcesByCategory() {
-    const sources = getAllSources();
+export async function getSourcesByCategory() {
+    const sources = await getAllSources();
     const grouped = {};
     for (const source of sources) {
         const category = source.category || 'other';
@@ -80,15 +73,16 @@ export function getSourcesByCategory() {
 /**
  * 根据 ID 获取单个源
  */
-export function getSourceById(id) {
-    return getAllSources().find(s => s.id === id) || null;
+export async function getSourceById(id) {
+    const sources = await getAllSources();
+    return sources.find(s => s.id === id) || null;
 }
 
 /**
  * 添加新源
  */
-export function addSource({ name, url, language, category }) {
-    const data = readSourcesFile();
+export async function addSource({ name, url, language, category }) {
+    const data = await readSourcesFile();
 
     // 检查 URL 是否已存在
     if (data.sources.some(s => s.url === url)) {
@@ -114,7 +108,7 @@ export function addSource({ name, url, language, category }) {
     }
 
     data.sources.push(newSource);
-    writeSourcesFile(data);
+    await writeSourcesFile(data);
 
     return newSource;
 }
@@ -122,8 +116,8 @@ export function addSource({ name, url, language, category }) {
 /**
  * 更新源
  */
-export function updateSource(id, updates) {
-    const data = readSourcesFile();
+export async function updateSource(id, updates) {
+    const data = await readSourcesFile();
     const index = data.sources.findIndex(s => s.id === id);
 
     if (index === -1) {
@@ -138,15 +132,15 @@ export function updateSource(id, updates) {
         }
     }
 
-    writeSourcesFile(data);
+    await writeSourcesFile(data);
     return data.sources[index];
 }
 
 /**
  * 删除源
  */
-export function deleteSource(id) {
-    const data = readSourcesFile();
+export async function deleteSource(id) {
+    const data = await readSourcesFile();
     const index = data.sources.findIndex(s => s.id === id);
 
     if (index === -1) {
@@ -154,7 +148,7 @@ export function deleteSource(id) {
     }
 
     const deleted = data.sources.splice(index, 1)[0];
-    writeSourcesFile(data);
+    await writeSourcesFile(data);
 
     return deleted;
 }
@@ -162,8 +156,8 @@ export function deleteSource(id) {
 /**
  * 启用/禁用源
  */
-export function toggleSource(id) {
-    const data = readSourcesFile();
+export async function toggleSource(id) {
+    const data = await readSourcesFile();
     const source = data.sources.find(s => s.id === id);
 
     if (!source) {
@@ -171,7 +165,7 @@ export function toggleSource(id) {
     }
 
     source.enabled = !source.enabled;
-    writeSourcesFile(data);
+    await writeSourcesFile(data);
 
     return source;
 }

@@ -1,23 +1,13 @@
 /**
  * 按信息源存储的 Feed 管理模块
  * 每个源独立存储，保留 14 天历史
+ * 使用存储抽象层，支持本地文件和 Vercel Blob
  */
 
-import fs from 'fs';
-import path from 'path';
 import crypto from 'crypto';
+import { readJSON, writeJSON, listFiles } from './storage.js';
 
-const FEEDS_DIR = path.join(process.cwd(), 'data', 'feeds');
 const RETENTION_DAYS = 14;
-
-/**
- * 确保目录存在
- */
-function ensureDir(dirPath) {
-    if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-    }
-}
 
 /**
  * 生成条目唯一 ID（基于 URL）
@@ -27,44 +17,25 @@ function generateItemId(url) {
 }
 
 /**
- * 获取源的 feeds 目录
- */
-function getSourceFeedDir(sourceId) {
-    return path.join(FEEDS_DIR, sourceId);
-}
-
-/**
  * 获取源的 items.json 路径
  */
 function getItemsPath(sourceId) {
-    return path.join(getSourceFeedDir(sourceId), 'items.json');
+    return `feeds/${sourceId}/items.json`;
 }
 
 /**
  * 读取源的所有条目
  */
-export function getSourceItems(sourceId) {
-    const itemsPath = getItemsPath(sourceId);
-    if (!fs.existsSync(itemsPath)) {
-        return { sourceId, items: [], lastSync: null, totalItems: 0 };
-    }
-    try {
-        return JSON.parse(fs.readFileSync(itemsPath, 'utf-8'));
-    } catch (e) {
-        console.error(`Failed to read items for ${sourceId}:`, e);
-        return { sourceId, items: [], lastSync: null, totalItems: 0 };
-    }
+export async function getSourceItems(sourceId) {
+    const data = await readJSON(getItemsPath(sourceId));
+    return data || { sourceId, items: [], lastSync: null, totalItems: 0 };
 }
 
 /**
  * 保存源的条目
  */
-function saveSourceItems(sourceId, data) {
-    const feedDir = getSourceFeedDir(sourceId);
-    ensureDir(feedDir);
-
-    const itemsPath = getItemsPath(sourceId);
-    fs.writeFileSync(itemsPath, JSON.stringify(data, null, 2));
+async function saveSourceItems(sourceId, data) {
+    await writeJSON(getItemsPath(sourceId), data);
 }
 
 /**
@@ -89,8 +60,8 @@ function cleanExpiredItems(items) {
  * 添加新抓取的条目到源
  * 基于 URL 去重，只保留最新版本
  */
-export function addItemsToSource(sourceId, newItems) {
-    const data = getSourceItems(sourceId);
+export async function addItemsToSource(sourceId, newItems) {
+    const data = await getSourceItems(sourceId);
     const existingMap = new Map(data.items.map(item => [item.id, item]));
 
     let addedCount = 0;
@@ -133,7 +104,7 @@ export function addItemsToSource(sourceId, newItems) {
     data.lastSync = new Date().toISOString();
     data.totalItems = allItems.length;
 
-    saveSourceItems(sourceId, data);
+    await saveSourceItems(sourceId, data);
 
     return { addedCount, updatedCount, totalItems: allItems.length };
 }
@@ -141,8 +112,8 @@ export function addItemsToSource(sourceId, newItems) {
 /**
  * 更新条目状态
  */
-export function updateItemStatus(sourceId, itemId, status) {
-    const data = getSourceItems(sourceId);
+export async function updateItemStatus(sourceId, itemId, status) {
+    const data = await getSourceItems(sourceId);
     const item = data.items.find(i => i.id === itemId);
 
     if (!item) {
@@ -150,7 +121,7 @@ export function updateItemStatus(sourceId, itemId, status) {
     }
 
     item.status = status;
-    saveSourceItems(sourceId, data);
+    await saveSourceItems(sourceId, data);
 
     return item;
 }
@@ -158,8 +129,8 @@ export function updateItemStatus(sourceId, itemId, status) {
 /**
  * 批量更新条目状态
  */
-export function batchUpdateItemStatus(sourceId, itemIds, status) {
-    const data = getSourceItems(sourceId);
+export async function batchUpdateItemStatus(sourceId, itemIds, status) {
+    const data = await getSourceItems(sourceId);
     let updatedCount = 0;
 
     for (const itemId of itemIds) {
@@ -170,23 +141,28 @@ export function batchUpdateItemStatus(sourceId, itemIds, status) {
         }
     }
 
-    saveSourceItems(sourceId, data);
+    await saveSourceItems(sourceId, data);
     return { updatedCount };
+}
+
+/**
+ * 获取所有源目录
+ */
+async function getAllSourceDirs() {
+    const files = await listFiles('feeds');
+    // 只返回目录（排除非目录文件）
+    return files.filter(f => !f.includes('.'));
 }
 
 /**
  * 获取所有源的统计信息
  */
-export function getAllFeedsStats() {
-    ensureDir(FEEDS_DIR);
-
+export async function getAllFeedsStats() {
     const stats = {};
-    const dirs = fs.readdirSync(FEEDS_DIR).filter(d =>
-        fs.statSync(path.join(FEEDS_DIR, d)).isDirectory()
-    );
+    const dirs = await getAllSourceDirs();
 
     for (const sourceId of dirs) {
-        const data = getSourceItems(sourceId);
+        const data = await getSourceItems(sourceId);
         const newCount = data.items.filter(i => i.status === 'new').length;
         const pendingCount = data.items.filter(i => i.status === 'pending').length;
         const queuedCount = data.items.filter(i => i.status === 'queued').length;
@@ -210,17 +186,12 @@ export function getAllFeedsStats() {
 /**
  * 将所有源的 new 状态转为 pending（刷新前调用）
  */
-export function convertNewToPending() {
-    ensureDir(FEEDS_DIR);
-
-    const dirs = fs.readdirSync(FEEDS_DIR).filter(d =>
-        fs.statSync(path.join(FEEDS_DIR, d)).isDirectory()
-    );
-
+export async function convertNewToPending() {
+    const dirs = await getAllSourceDirs();
     let totalConverted = 0;
 
     for (const sourceId of dirs) {
-        const data = getSourceItems(sourceId);
+        const data = await getSourceItems(sourceId);
         let converted = 0;
 
         for (const item of data.items) {
@@ -231,7 +202,7 @@ export function convertNewToPending() {
         }
 
         if (converted > 0) {
-            saveSourceItems(sourceId, data);
+            await saveSourceItems(sourceId, data);
             totalConverted += converted;
         }
     }
@@ -242,8 +213,8 @@ export function convertNewToPending() {
 /**
  * 将单个源的 new 状态转为 pending
  */
-export function convertSourceNewToPending(sourceId) {
-    const data = getSourceItems(sourceId);
+export async function convertSourceNewToPending(sourceId) {
+    const data = await getSourceItems(sourceId);
     let converted = 0;
 
     for (const item of data.items) {
@@ -254,7 +225,7 @@ export function convertSourceNewToPending(sourceId) {
     }
 
     if (converted > 0) {
-        saveSourceItems(sourceId, data);
+        await saveSourceItems(sourceId, data);
     }
 
     return { converted };
@@ -263,16 +234,12 @@ export function convertSourceNewToPending(sourceId) {
 /**
  * 获取所有状态为 "new" 的条目（跨所有源）
  */
-export function getAllNewItems() {
-    ensureDir(FEEDS_DIR);
-
+export async function getAllNewItems() {
     const allNewItems = [];
-    const dirs = fs.readdirSync(FEEDS_DIR).filter(d =>
-        fs.statSync(path.join(FEEDS_DIR, d)).isDirectory()
-    );
+    const dirs = await getAllSourceDirs();
 
     for (const sourceId of dirs) {
-        const data = getSourceItems(sourceId);
+        const data = await getSourceItems(sourceId);
         const newItems = data.items
             .filter(i => i.status === 'new')
             .map(i => ({ ...i, sourceId }));
@@ -288,16 +255,12 @@ export function getAllNewItems() {
 /**
  * 获取所有状态为 "queued" 的条目（待出版，跨所有源）
  */
-export function getAllQueuedItems() {
-    ensureDir(FEEDS_DIR);
-
+export async function getAllQueuedItems() {
     const queuedItems = [];
-    const dirs = fs.readdirSync(FEEDS_DIR).filter(d =>
-        fs.statSync(path.join(FEEDS_DIR, d)).isDirectory()
-    );
+    const dirs = await getAllSourceDirs();
 
     for (const sourceId of dirs) {
-        const data = getSourceItems(sourceId);
+        const data = await getSourceItems(sourceId);
         const items = data.items
             .filter(i => i.status === 'queued')
             .map(i => ({ ...i, sourceId }));
@@ -313,19 +276,14 @@ export function getAllQueuedItems() {
 /**
  * 批量更新条目状态（跨所有源）
  */
-export function batchUpdateItemsStatus(itemIds, newStatus) {
-    ensureDir(FEEDS_DIR);
-
-    const dirs = fs.readdirSync(FEEDS_DIR).filter(d =>
-        fs.statSync(path.join(FEEDS_DIR, d)).isDirectory()
-    );
-
+export async function batchUpdateItemsStatus(itemIds, newStatus) {
+    const dirs = await getAllSourceDirs();
     let totalUpdated = 0;
     const itemIdSet = new Set(itemIds);
     const now = new Date().toISOString();
 
     for (const sourceId of dirs) {
-        const data = getSourceItems(sourceId);
+        const data = await getSourceItems(sourceId);
         let updated = 0;
 
         for (const item of data.items) {
@@ -339,7 +297,7 @@ export function batchUpdateItemsStatus(itemIds, newStatus) {
         }
 
         if (updated > 0) {
-            saveSourceItems(sourceId, data);
+            await saveSourceItems(sourceId, data);
             totalUpdated += updated;
         }
     }
