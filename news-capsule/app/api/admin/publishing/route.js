@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getAllQueuedItems, batchUpdateItemsStatus } from '../../../../lib/feeds.js';
+import { generateNewsFromItems } from '../../../../lib/news-generator.js';
 
 // GET: 获取所有待出版条目
 export async function GET() {
     try {
         const items = await getAllQueuedItems();
-
 
         return NextResponse.json({
             success: true,
@@ -63,54 +63,35 @@ export async function POST(request) {
 
         const date = publishDate || new Date().toISOString().split('T')[0];
 
-        // 获取 Base URL
-        let baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-        if (!baseUrl) {
-            if (process.env.VERCEL_URL) {
-                baseUrl = `https://${process.env.VERCEL_URL}`;
-            } else {
-                baseUrl = 'http://localhost:3000';
-            }
-        }
-
-        console.log(`[Publish] Base URL: ${baseUrl}`);
         console.log(`[Publish] Processing ${zhItems.length} ZH items and ${enItems.length} EN items`);
 
-        // 3. 分别调用生成 API（中文和英文）
+        // 3. 直接调用生成函数（无需 HTTP 请求，避开 Vercel 鉴权）
         let zhResult = null;
         let enResult = null;
 
         if (zhItems.length > 0) {
-            const zhRes = await fetch(`${baseUrl}/api/generate-news`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+            try {
+                zhResult = await generateNewsFromItems({
                     items: zhItems,
                     date,
                     language: 'zh'
-                })
-            });
-            if (zhRes.ok) {
-                zhResult = await zhRes.json();
-            } else {
-                console.error('Failed to generate zh news:', await zhRes.text());
+                });
+            } catch (error) {
+                console.error('Failed to generate zh news:', error);
+                throw error;
             }
         }
 
         if (enItems.length > 0) {
-            const enRes = await fetch(`${baseUrl}/api/generate-news`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+            try {
+                enResult = await generateNewsFromItems({
                     items: enItems,
                     date,
                     language: 'en'
-                })
-            });
-            if (enRes.ok) {
-                enResult = await enRes.json();
-            } else {
-                console.error('Failed to generate en news:', await enRes.text());
+                });
+            } catch (error) {
+                console.error('Failed to generate en news:', error);
+                throw error;
             }
         }
 
