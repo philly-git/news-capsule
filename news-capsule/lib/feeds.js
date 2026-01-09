@@ -158,11 +158,18 @@ async function getAllSourceDirs() {
  * 获取所有源的统计信息
  */
 export async function getAllFeedsStats() {
-    const stats = {};
     const dirs = await getAllSourceDirs();
 
-    for (const sourceId of dirs) {
-        const data = await getSourceItems(sourceId);
+    // 并行获取所有源的数据
+    const allData = await Promise.all(
+        dirs.map(async (sourceId) => {
+            const data = await getSourceItems(sourceId);
+            return { sourceId, data };
+        })
+    );
+
+    const stats = {};
+    for (const { sourceId, data } of allData) {
         const newCount = data.items.filter(i => i.status === 'new').length;
         const pendingCount = data.items.filter(i => i.status === 'pending').length;
         const queuedCount = data.items.filter(i => i.status === 'queued').length;

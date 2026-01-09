@@ -23,24 +23,24 @@ export async function GET(request) {
         // 获取所有源的抓取统计
         const feedsStats = await getAllFeedsStats();
 
-        // 合并源配置和统计信息
-        const sourcesWithStats = [];
-        for (const source of allSources) {
-            const items = withItems ? (await getSourceItems(source.id)).items : undefined;
-            sourcesWithStats.push({
-                ...source,
-                stats: feedsStats[source.id] || {
-                    totalItems: 0,
-                    newCount: 0,
-                    pendingCount: 0,
-                    queuedCount: 0,
-                    publishedCount: 0,
-                    archivedCount: 0,
-                    lastSync: null
-                },
-                items
-            });
-        }
+        // 合并源配置和统计信息（并行获取 items)
+        const itemsData = withItems
+            ? await Promise.all(allSources.map(s => getSourceItems(s.id)))
+            : [];
+
+        const sourcesWithStats = allSources.map((source, index) => ({
+            ...source,
+            stats: feedsStats[source.id] || {
+                totalItems: 0,
+                newCount: 0,
+                pendingCount: 0,
+                queuedCount: 0,
+                publishedCount: 0,
+                archivedCount: 0,
+                lastSync: null
+            },
+            items: withItems ? itemsData[index]?.items : undefined
+        }));
 
         // 统计总览（五种状态）
         const totalNewItems = sourcesWithStats.reduce((sum, s) => sum + (s.stats.newCount || 0), 0);
