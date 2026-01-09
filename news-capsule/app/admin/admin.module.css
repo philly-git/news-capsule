@@ -772,6 +772,35 @@
     align-items: center;
 }
 
+/* 操作按钮 */
+.actionBtn {
+    padding: 0.4rem 0.8rem;
+    background: #fff;
+    border: 1px solid #e3e2de;
+    border-radius: 6px;
+    color: #37352f;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 500;
+}
+
+.actionBtn:hover:not(:disabled) {
+    background: #f7f6f3;
+    border-color: #d0d0d0;
+    color: #2383e2;
+}
+
+.actionBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f5f5f5;
+    color: #999;
+}
+
 /* 时间窗口选择器 */
 .timeWindowSelect {
     padding: 0.5rem 0.75rem;

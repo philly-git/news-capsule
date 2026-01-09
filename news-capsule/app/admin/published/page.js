@@ -45,12 +45,18 @@ export default function PublishedPage() {
         }
     }, [selectedDate]);
 
-    // 重新生成单篇文章
-    const handleRegenerate = async (item) => {
-        if (regeneratingId) return;
-
-        setRegeneratingId(item.id);
-        setMessage(null);
+    // 核心 API 调用逻辑 - 不涉及 UI 状态
+    const regenerateItemApi = async (item) => {
+        // 预检查关键字段
+        if (!item.sourceId || !selectedDate || !language) {
+            console.error('Missing required fields for regeneration:', {
+                sourceId: item.sourceId,
+                date: selectedDate,
+                lang: language,
+                item
+            });
+            return { success: false, error: 'Missing required fields (check console)' };
+        }
 
         try {
             const res = await fetch('/api/admin/regenerate', {
@@ -64,30 +70,112 @@ export default function PublishedPage() {
                     language
                 })
             });
-
             const result = await res.json();
-
-            if (result.success) {
-                setMessage({
-                    type: 'success',
-                    text: `✅ 已重新生成: ${item.originalTitle?.slice(0, 40)}...`
-                });
-                // 刷新列表
-                fetchPublished(language, selectedDate);
-            } else {
-                setMessage({
-                    type: 'error',
-                    text: result.error || '重新生成失败'
-                });
-            }
+            return result;
         } catch (err) {
+            return { success: false, error: err.message };
+        }
+    };
+
+    // 重新生成单篇文章
+    const handleRegenerate = async (item) => {
+        // 如果正在批量生成，或者正在生成别的文章，则阻止
+        if (isRegeneratingAll || (regeneratingId && regeneratingId !== item.id)) return;
+
+        setRegeneratingId(item.id);
+        setMessage(null);
+
+        const result = await regenerateItemApi(item);
+
+        if (result.success) {
+            setMessage({
+                type: 'success',
+                text: `✅ 已重新生成: ${item.originalTitle?.slice(0, 40)}...`
+            });
+            await fetchPublished(language, selectedDate);
+        } else {
             setMessage({
                 type: 'error',
-                text: err.message
+                text: result.error || '重新生成失败'
             });
         }
 
         setRegeneratingId(null);
+    };
+
+    // 批量重新生成所有当前显示的文章
+    const [isRegeneratingAll, setIsRegeneratingAll] = useState(false);
+    const [progress, setProgress] = useState({ current: 0, total: 0 });
+    const [confirmBatch, setConfirmBatch] = useState(false);
+
+    // 自动重置确认状态
+    useEffect(() => {
+        let timer;
+        if (confirmBatch) {
+            timer = setTimeout(() => setConfirmBatch(false), 3000);
+        }
+        return () => clearTimeout(timer);
+    }, [confirmBatch]);
+
+    const handleRegenerateAll = async (e) => {
+        if (e) e.preventDefault();
+
+        if (!allItems.length || isRegeneratingAll) return;
+
+        // 第一步：进入确认状态
+        if (!confirmBatch) {
+            setConfirmBatch(true);
+            return;
+        }
+
+        // 第二步：执行
+        setConfirmBatch(false);
+        console.log('Starting batch regeneration...', { count: allItems.length, date: selectedDate });
+
+        setIsRegeneratingAll(true);
+        setProgress({ current: 0, total: allItems.length });
+        setMessage(null);
+
+        let successCount = 0;
+
+        try {
+            for (let i = 0; i < allItems.length; i++) {
+                const item = allItems[i];
+
+                // 更新进度状态
+                setProgress({ current: i + 1, total: allItems.length });
+                if (i % 5 === 0) console.log(`Processing ${i + 1}/${allItems.length}:`, item.originalTitle);
+
+                // 调用 API
+                const result = await regenerateItemApi(item);
+
+                if (result.success) {
+                    successCount++;
+                } else {
+                    console.error(`Failed to regenerate ${item.id}:`, result.error);
+                }
+
+                // 稍微停顿，避免请求过于密集
+                await new Promise(r => setTimeout(r, 500));
+            }
+
+            setMessage({
+                type: 'success',
+                text: `🎉 批量处理完成！成功生成 ${successCount}/${allItems.length} 篇。`
+            });
+        } catch (error) {
+            console.error('Batch regeneration error:', error);
+            setMessage({
+                type: 'error',
+                text: `批量处理中断: ${error.message}`
+            });
+        } finally {
+            console.log('Batch regeneration finished');
+            setIsRegeneratingAll(false);
+            setRegeneratingId(null);
+            // 最终刷新列表
+            await fetchPublished(language, selectedDate);
+        }
     };
 
     // 渲染评分
@@ -122,7 +210,13 @@ export default function PublishedPage() {
     const totalItems = data?.totalItems || 0;
 
     // 合并所有文章
-    const allItems = sources.flatMap(source => source.items || []);
+    const allItems = sources.flatMap(source =>
+        (source.items || []).map(item => ({
+            ...item,
+            sourceId: source.sourceId, // API 返回的是 sourceId，不是 id
+            sourceName: source.sourceName // API 返回的是 sourceName，不是 name
+        }))
+    );
 
     return (
         <div className={styles.container}>
@@ -191,6 +285,22 @@ export default function PublishedPage() {
                 <section className={styles.section}>
                     <div className={styles.sectionHeader}>
                         <h2>📋 文章列表</h2>
+                        <div className={styles.headerActions}>
+                            <button
+                                type="button"
+                                onClick={handleRegenerateAll}
+                                disabled={loading || isRegeneratingAll || allItems.length === 0}
+                                className={styles.actionBtn}
+                                style={confirmBatch ? { borderColor: '#e03e3e', color: '#e03e3e', background: '#fff5f5' } : {}}
+                                title="重新生成当前列表所有文章的摘要"
+                            >
+                                {isRegeneratingAll
+                                    ? `⏳ 处理中 (${progress.current}/${progress.total})`
+                                    : confirmBatch
+                                        ? '⚠️ 确认全部重生成？'
+                                        : '🔄 重新生成全部'}
+                            </button>
+                        </div>
                     </div>
 
                     {allItems.length === 0 ? (

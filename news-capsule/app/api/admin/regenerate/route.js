@@ -105,6 +105,7 @@ function updatePublishedItem(sourceId, date, lang, itemId, newData) {
             editorNote: newData.editorNote,
             keyPoints: newData.keyPoints,
             readOriginal: newData.readOriginal,
+            shortLabel: newData.shortLabel, // 导航标签
             regeneratedAt: new Date().toISOString()
         };
 

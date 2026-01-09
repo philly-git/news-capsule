@@ -6,22 +6,25 @@
   "items": [
     {
       "id": "bf90856ebb23",
-      "editorNote": "前Facebook高管Molly Graham勇于冒险参与手机项目，虽经历失败但实现职业“J曲线”成长，后成为多家亿级企业领导。",
+      "editorNote": "前Facebook高管Molly Graham勇敢转岗参与手机项目，虽产品失败但助其成长为多家亿级企业高管，体现“J曲线”职业路径价值。",
       "keyPoints": [
-        "25岁时Molly Graham从稳定HR岗位转向手机开发，尽管无相关经验",
-        "该项目失败导致职业短期下滑，但带来长期领导力提升",
-        "她提出“J-curve”职业路径理论，强调风险带来超额回报",
-        "Chamath Palihapitiya亲自邀请她参与手机项目并用白板画出J曲线"
+        "25岁时Graham从Facebook人力资源转向手机开发，虽无经验但接受挑战",
+        "手机项目最终失败，Facebook遭遇重大损失，但Graham个人能力大幅提升",
+        "她后任Quip首席运营官，参与750亿美元收购，及管理74亿美元的Chan Zuckerberg Initiative",
+        "“J曲线”理论强调职业风险带来的短期跌落与长期超额回报，适用于Meta、Alphabet等快节奏企业"
       ],
       "readOriginal": {
         "score": 1,
-        "reason": "原文包含Molly Graham对失败过程的细节描述和心理感受，以及她在播客和Substack上的详细阐述",
-        "whoShouldRead": "关注职业规划、领导力发展及风险管理的职场人士和管理者"
+        "reason": "原文包含Graham与Chamath Palihapitiya的具体对话细节及她的心路历程，补充了职业转型的心理与环境背景",
+        "whoShouldRead": "关注职业发展路径、企业文化及高管成长经验的HR、职业规划师及管理者"
       },
       "originalTitle": "A Facebook veteran took a big career risk that resulted in a 'giant failure' — but embracing a 'J-curve' career path paid off",
       "link": "https://www.businessinsider.com/molly-graham-j-shape-career-path-facebook-chamath-palihapitiya-2026-1",
       "pubDate": "2026-01-07T10:59:01.000Z",
-      "wordCount": 830
+      "wordCount": 830,
+      "shortLabel": "职业J曲线",
+      "regeneratedAt": "2026-01-09T05:56:24.171Z"
     }
-  ]
+  ],
+  "lastModified": "2026-01-09T05:56:24.171Z"
 }

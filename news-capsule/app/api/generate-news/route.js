@@ -301,6 +301,7 @@ export async function POST(request) {
                     editorNote: summary.editorNote,
                     keyPoints: summary.keyPoints,
                     readOriginal: summary.readOriginal,
+                    shortLabel: summary.shortLabel, // 导航标签
                     // 通用字段
                     originalTitle: item.title,
                     link: item.link,

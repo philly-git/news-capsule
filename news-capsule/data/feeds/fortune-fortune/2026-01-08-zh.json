@@ -6,22 +6,25 @@
   "items": [
     {
       "id": "818b7ff7e18c",
-      "editorNote": "Oxford Economics 研究指出 AI 并未引发大规模裁员，企业多借 AI 炒作掩盖常规裁员事实，旨在改善投资者形象。",
+      "editorNote": "Oxford Economics 研究表明，2025年美国AI相关裁员仅占总裁员4.5%，AI并未大规模替代劳动力，裁员更多是企业策略包装。",
       "keyPoints": [
-        "Oxford Economics 1 月 7 日报告称宏观数据不支持 AI 导致结构性失业的观点",
-        "企业利用 AI 裁员说法吸引投资者，掩盖过去过度招聘或需求疲软问题",
-        "Wharton 教授 Peter Cappelli 指出部分裁员为“虚假裁员”，实际未发生",
-        "招聘公司 Challenger, Gray & Christmas 的数据反映裁员现象与 AI 关联被夸大"
+        "2025年前11个月美国AI相关裁员约5.5万，占总裁员4.5%",
+        "因市场和经济条件导致的裁员达24.5万，是AI裁员的4倍以上",
+        "生产率增长放缓，未显示AI大规模替代劳动力的迹象",
+        "AI裁员更多是企业为投资者关系包装的“幻影裁员”策略"
       ],
       "readOriginal": {
-        "score": 1,
-        "reason": "原文包含 Peter Cappelli 采访逐字引述和 Oxford Economics 对数据的具体解读，补充裁员背后投资者关系策略细节",
-        "whoShouldRead": "关注 AI 对就业影响的经济学家、投资分析师及企业人力资源决策者"
+        "score": 2,
+        "reason": "原文包含Challenger裁员数据细节与时间线，Wharton教授Peter Cappelli采访实录，及生产率增长的具体经济分析",
+        "whoShouldRead": "关注AI对就业影响的经济学家、投资者关系管理者及劳动力市场分析师"
       },
       "originalTitle": "AI layoffs are looking more and more like corporate fiction that’s masking a darker reality, Oxford Economics suggests",
       "link": "https://fortune.com/2026/01/07/ai-layoffs-convenient-corporate-fiction-true-false-oxford-economics-productivity/",
       "pubDate": "Wed, 07 Jan 2026 21:09:54 +0000",
-      "wordCount": 776
+      "wordCount": 776,
+      "shortLabel": "AI裁员真相",
+      "regeneratedAt": "2026-01-09T05:56:20.144Z"
     }
-  ]
+  ],
+  "lastModified": "2026-01-09T05:56:20.144Z"
 }
