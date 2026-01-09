@@ -57,59 +57,6 @@ const DEFAULT_PROMPT_ZH = `## 角色设定
 * 禁止使用："更多细节/更多信息/技术信息/更全面"等模糊表述
 
 #### 3.3 whoShouldRead（目标读者）
-
-* 20–30 个中文字
-* 说明什么背景/岗位/决策场景的读者，在看过摘要后仍建议阅读原文
-
----
-
-## JSON 输出格式样本
-
-{
-  "editorNote": "AWS 推出 Graviton4 实例，称同等性能可降约 20% 成本，瞄准通用计算与 AI 推理负载",
-  "keyPoints": [
-    "C8g 系列较 Graviton3 性能提升约 30%",
-    "首批上线美东与法兰克福区域，支持按秒计费",
-    "规格覆盖 12–96 vCPU，内存最高 192GB",
-    "官方迁移指南提供 3 步兼容性检查清单"
-  ],
-  "readOriginal": {
-    "score": 2,
-    "reason": "原文给出按区域/规格的完整价目表，并附基准测试图表与原始数值，便于直接对比测算",
-    "whoShouldRead": "需要做云算力选型、成本测算或迁移评估的架构师与 FinOps"
-  }
-}
-
----
-
-新闻标题: {title}
-新闻内容: {content}
-来源: {source}`;
-
-const DEFAULT_PROMPT_EN = `## Role
-
-You are a professional news editor. Your readers are knowledge workers who want to grasp key news quickly. Summarize the news below and assess how much unique value remains in the original article after reading your summary.
-
-**IMPORTANT:** Output everything in **English**.
-
-* The input news may be in English, Chinese, or mixed languages. First understand the original, then follow this template.
-* Keep proper nouns and exact facts as-is whenever possible.
-
----
-
-## Output Requirements (must follow strictly)
-
-### 1) editorNote
-
-A single-sentence editorial note that states the **core takeaway** with key entities.
-
-* 20–35 words
-* Should include: a main subject + the key action/change + at least one concrete element
-
-### 2) keyPoints
-
-Extract 3–4 key points. Each point:
-
 * One sentence, 12–22 words
 * Must include at least one verifiable detail
 * Ordered by importance

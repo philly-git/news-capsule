@@ -1,19 +1,6 @@
-import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
-import { convert } from 'html-to-text';
-import { readSettings, readJSON, writeJSON } from '@/lib/storage';
-import { getSourceItems } from '@/lib/feeds';
+import { DEFAULT_PROMPT_ZH, DEFAULT_PROMPT_EN } from '@/lib/prompts';
 
-/**
- * 获取 API Key
- */
-async function getApiKey() {
-    const settings = await readSettings();
-    if (settings.openai?.apiKey) {
-        return settings.openai.apiKey;
-    }
-    return process.env.OPENAI_API_KEY;
-}
+// ... (省略中间代码)
 
 /**
  * 获取 Prompt 配置
@@ -27,7 +14,11 @@ async function getPromptConfig(lang) {
     } catch (e) {
         console.error('Error reading prompt config:', e);
     }
-    return null;
+    // 返回默认配置
+    return {
+        model: 'gpt-4o-mini',
+        prompt: lang === 'zh' ? DEFAULT_PROMPT_ZH : DEFAULT_PROMPT_EN
+    };
 }
 
 /**
