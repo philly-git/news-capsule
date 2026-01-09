@@ -9,7 +9,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { put, list, del } from '@vercel/blob';
+import { put, list, del, head } from '@vercel/blob';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 
@@ -158,25 +158,24 @@ function existsInFile(relativePath) {
 async function readJSONFromBlob(relativePath) {
     try {
         const blobPath = getBlobPath(relativePath);
-        const { blobs } = await list({ prefix: blobPath });
+        // 使用 head() 替代 list()，head() 不计入 Advanced Operations
+        const blobInfo = await head(blobPath);
 
-        if (blobs.length === 0) {
+        if (!blobInfo || !blobInfo.url) {
             return null;
         }
 
-        // 找到精确匹配的文件
-        const blob = blobs.find(b => b.pathname === blobPath);
-        if (!blob) {
-            return null;
-        }
-
-        const response = await fetch(blob.url);
+        const response = await fetch(blobInfo.url);
         if (!response.ok) {
             return null;
         }
 
         return await response.json();
     } catch (error) {
+        // head() 在文件不存在时会抛出 BlobNotFoundError
+        if (error.code === 'blob_not_found') {
+            return null;
+        }
         console.error(`Error reading from blob ${relativePath}:`, error);
         return null;
     }
@@ -203,13 +202,15 @@ async function writeJSONToBlob(relativePath, data) {
 async function deleteFromBlob(relativePath) {
     try {
         const blobPath = getBlobPath(relativePath);
-        const { blobs } = await list({ prefix: blobPath });
-
-        const blob = blobs.find(b => b.pathname === blobPath);
-        if (blob) {
-            await del(blob.url);
+        // 使用 head() 获取 URL，避免 list()
+        const blobInfo = await head(blobPath);
+        if (blobInfo && blobInfo.url) {
+            await del(blobInfo.url);
         }
     } catch (error) {
+        if (error.code === 'blob_not_found') {
+            return; // 文件不存在，无需删除
+        }
         console.error(`Error deleting from blob ${relativePath}:`, error);
     }
 }
@@ -249,9 +250,13 @@ async function listFilesFromBlob(relativePath) {
 async function existsInBlob(relativePath) {
     try {
         const blobPath = getBlobPath(relativePath);
-        const { blobs } = await list({ prefix: blobPath });
-        return blobs.some(b => b.pathname === blobPath);
+        // 使用 head() 检查文件是否存在，避免 list()
+        await head(blobPath);
+        return true;
     } catch (error) {
+        if (error.code === 'blob_not_found') {
+            return false;
+        }
         console.error(`Error checking existence in blob ${relativePath}:`, error);
         return false;
     }
