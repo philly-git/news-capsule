@@ -15,7 +15,8 @@ export default function NewsCardLab({ item, sourceName, language, index }) {
         originalTitle,
         link,
         pubDate,
-        wordCount
+        wordCount,
+        sourceLanguage // 文章源语言
     } = item;
 
     const t = {
@@ -26,7 +27,15 @@ export default function NewsCardLab({ item, sourceName, language, index }) {
         whoShouldRead: language === 'zh' ? '适合阅读人群' : 'Who Should Read'
     };
 
-    const estimatedReadTime = wordCount ? `${Math.ceil(wordCount / 300)} min` : null;
+    // 计算阅读时间（基于文章源语言，而非界面语言）
+    const calculateReadTime = (count, lang) => {
+        if (!count) return null;
+        const wordsPerMin = lang === 'en' ? 300 : 800;
+        return Math.max(1, Math.ceil(count / wordsPerMin));
+    };
+    // 优先使用文章源语言，回退到界面语言
+    const articleLanguage = sourceLanguage || language;
+    const estimatedReadTime = wordCount ? `${calculateReadTime(wordCount, articleLanguage)} min` : null;
 
     const formatPubDate = (dateStr) => {
         if (!dateStr) return '';
@@ -127,8 +136,8 @@ export default function NewsCardLab({ item, sourceName, language, index }) {
                                 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}
                             >
                                 📎 {language === 'zh'
-                                    ? `用 ${wordCount ? Math.ceil(wordCount / 300) : 1} 分钟阅读原文`
-                                    : `Read original in ${wordCount ? Math.ceil(wordCount / 300) : 1} min`}
+                                    ? `用 ${calculateReadTime(wordCount, articleLanguage) || 1} 分钟阅读原文`
+                                    : `Read original in ${calculateReadTime(wordCount, articleLanguage) || 1} min`}
                             </a>
                         </div>
                     )}

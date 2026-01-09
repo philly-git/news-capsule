@@ -15,7 +15,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-08T01:07:47.147Z"
+        "checkedAt": "2026-01-09T01:24:31.146Z"
       }
     },
     {
@@ -32,7 +32,7 @@
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-08T01:07:47.147Z"
+        "checkedAt": "2026-01-09T01:24:31.146Z"
       }
     },
     {
@@ -44,11 +44,11 @@
       "sourceLanguage": "zh",
       "id": "870885fe9081",
       "status": "pending",
-      "syncedAt": "2026-01-08T01:06:18.903Z",
+      "syncedAt": "2026-01-09T01:24:19.441Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-08T01:07:47.147Z"
+        "checkedAt": "2026-01-09T01:24:31.146Z"
       }
     },
     {
@@ -60,11 +60,11 @@
       "sourceLanguage": "zh",
       "id": "9e673250cbc5",
       "status": "pending",
-      "syncedAt": "2026-01-08T01:06:18.903Z",
+      "syncedAt": "2026-01-09T01:24:19.441Z",
       "qualityFlags": {
         "skipSummary": false,
         "reasons": [],
-        "checkedAt": "2026-01-08T01:07:47.147Z"
+        "checkedAt": "2026-01-09T01:24:31.146Z"
       }
     },
     {
@@ -82,7 +82,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-08T01:07:47.147Z"
+        "checkedAt": "2026-01-09T01:24:31.146Z"
       }
     },
     {
@@ -100,7 +100,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-08T01:07:47.147Z"
+        "checkedAt": "2026-01-09T01:24:31.146Z"
       }
     },
     {
@@ -118,7 +118,7 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-08T01:07:47.147Z"
+        "checkedAt": "2026-01-09T01:24:31.146Z"
       }
     },
     {
@@ -136,11 +136,65 @@
         "reasons": [
           "content_too_short"
         ],
-        "checkedAt": "2026-01-08T01:07:47.147Z"
+        "checkedAt": "2026-01-09T01:24:31.146Z"
+      }
+    },
+    {
+      "title": "商务部回应两用物项对日出口管制",
+      "link": "https://www.fortunechina.com/jingxuan/43496.htm",
+      "content": "0",
+      "wordCount": 1,
+      "sourceName": "财富中文网",
+      "sourceLanguage": "zh",
+      "id": "01324778605e",
+      "status": "archived",
+      "syncedAt": "2026-01-09T01:24:19.441Z",
+      "qualityFlags": {
+        "skipSummary": true,
+        "reasons": [
+          "content_too_short"
+        ],
+        "checkedAt": "2026-01-09T01:24:31.146Z"
+      }
+    },
+    {
+      "title": "霸王茶姬考虑在香港上市？公司回应",
+      "link": "https://www.fortunechina.com/jingxuan/43495.htm",
+      "content": "0",
+      "wordCount": 1,
+      "sourceName": "财富中文网",
+      "sourceLanguage": "zh",
+      "id": "f971141966c6",
+      "status": "archived",
+      "syncedAt": "2026-01-09T01:24:19.441Z",
+      "qualityFlags": {
+        "skipSummary": true,
+        "reasons": [
+          "content_too_short"
+        ],
+        "checkedAt": "2026-01-09T01:24:31.146Z"
+      }
+    },
+    {
+      "title": "“全球大模型第一股”智谱上市，盘中一度转跌破发",
+      "link": "https://www.fortunechina.com/jingxuan/43493.htm",
+      "content": "0",
+      "wordCount": 1,
+      "sourceName": "财富中文网",
+      "sourceLanguage": "zh",
+      "id": "fe422db108b8",
+      "status": "archived",
+      "syncedAt": "2026-01-09T01:24:19.441Z",
+      "qualityFlags": {
+        "skipSummary": true,
+        "reasons": [
+          "content_too_short"
+        ],
+        "checkedAt": "2026-01-09T01:24:31.146Z"
       }
     }
   ],
-  "lastSync": "2026-01-08T01:06:18.903Z",
-  "totalItems": 8,
-  "qualityCheckedAt": "2026-01-08T01:07:47.147Z"
+  "lastSync": "2026-01-09T01:24:19.441Z",
+  "totalItems": 11,
+  "qualityCheckedAt": "2026-01-09T01:24:31.146Z"
 }

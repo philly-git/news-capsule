@@ -157,7 +157,7 @@ async function filterNews(allNews) {
         const response = await openai.chat.completions.create({
             model: 'gpt-4o-mini',
             messages: [{ role: 'user', content: FILTER_PROMPT.replace('{news_list}', newsList) }],
-            temperature: 0.3,
+            temperature: 0.1,
         });
         const match = response.choices[0].message.content.match(/\[[\d,\s]+\]/);
         if (match) {
@@ -180,7 +180,7 @@ async function generateSummary(item, lang) {
         const response = await openai.chat.completions.create({
             model: config.model || 'gpt-4o-mini',
             messages: [{ role: 'user', content: prompt }],
-            temperature: 0.5,
+            temperature: 0.1,
             response_format: { type: 'json_object' }
         });
         return JSON.parse(response.choices[0].message.content);

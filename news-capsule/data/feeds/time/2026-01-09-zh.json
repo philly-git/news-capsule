@@ -1,0 +1,27 @@
+{
+  "sourceId": "time",
+  "date": "2026-01-09",
+  "language": "zh",
+  "publishedAt": "2026-01-09T01:27:20.847Z",
+  "items": [
+    {
+      "id": "89ea0029cc33",
+      "editorNote": "美国围绕委内瑞拉领导人拘捕行动展开复杂博弈，华盛顿内部对其性质及后续影响尚无定论。",
+      "keyPoints": [
+        "特朗普政府高层难以明确描述对委内瑞拉的具体行动性质",
+        "美国拘捕石油资源丰富国家领导人马杜罗，指控其涉毒犯罪",
+        "美国政界人士称此举非传统政权更替，而是行为改变要求",
+        "委内瑞拉盟友强烈谴责此举为区域干涉，联合国紧急讨论"
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "原文包含美国政界内部闭门讨论细节与马杜罗法庭发言的直接引用，补充了复杂政治语境",
+        "whoShouldRead": "关注美洲政治动态、国际法及外交政策的研究者和决策者"
+      },
+      "originalTitle": "A Colony? An Occupation? No One Knows What to Call Venezuela",
+      "link": "https://time.com/7344705/venezuela-trump-maduro-regime-change/",
+      "pubDate": "Thu, 08 Jan 2026 21:28:38 +0000",
+      "wordCount": 1350
+    }
+  ]
+}

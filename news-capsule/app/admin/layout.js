@@ -10,6 +10,7 @@ export default function AdminLayout({ children }) {
     const navItems = [
         { href: '/admin', label: '📰 编辑部', exact: true },
         { href: '/admin/publishing', label: '🏭 印刷厂', exact: true },
+        { href: '/admin/published', label: '📚 已出版内容', exact: true },
         { href: '/admin/sources/add', label: '➕ 添加信息源' },
         { href: '/admin/articles', label: '📄 文章内容', exact: true },
         { href: '/admin/prompt-debugger', label: '🧪 Prompt 调试' },

@@ -276,11 +276,11 @@ async function deduplicateByTitle(newsItems) {
  */
 function calculateReadTime(wordCount, language) {
     if (language === 'en') {
-        // 英文：约 200-250 词/分钟
-        return Math.max(1, Math.ceil(wordCount / 200));
+        // 英文：约 300 词/分钟
+        return Math.max(1, Math.ceil(wordCount / 300));
     } else {
-        // 中文：约 400-500 字/分钟
-        return Math.max(1, Math.ceil(wordCount / 400));
+        // 中文：约 800 字/分钟
+        return Math.max(1, Math.ceil(wordCount / 800));
     }
 }
 
@@ -303,7 +303,7 @@ async function generateSummary(newsItem, targetLanguage) {
         const response = await openai.chat.completions.create({
             model: config.model,
             messages: [{ role: 'user', content: prompt }],
-            temperature: 0.5,
+            temperature: 0.1,
             response_format: { type: 'json_object' }
         });
 

@@ -118,17 +118,30 @@ export default function UILabPage() {
     const sources = feedsData?.sources || [];
     const date = feedsData?.date || selectedDate || new Date().toISOString().split('T')[0];
 
-    const allNews = sources.flatMap(source =>
-        (source.items || []).map(item => ({
-            ...item,
-            sourceName: source.name,
-            sourceId: source.id
-        }))
-    ).sort((a, b) => {
-        const dateA = new Date(a.pubDate || 0);
-        const dateB = new Date(b.pubDate || 0);
-        return dateB - dateA;
-    });
+    // 按信息源分组排序：中文源在前，英文源在后，保持 sources.json 顺序
+    // 每个源内部按发布时间降序
+    const allNews = (() => {
+        // 先按语言和源顺序分组（API 已按 sources.json 顺序返回）
+        const zhSources = sources.filter(s => s.language === 'zh');
+        const enSources = sources.filter(s => s.language === 'en');
+        const orderedSources = [...zhSources, ...enSources];
+
+        // 展开所有新闻，保持分组顺序，组内按时间排序
+        return orderedSources.flatMap(source => {
+            const items = (source.items || []).map(item => ({
+                ...item,
+                sourceName: source.name,
+                sourceId: source.id,
+                sourceLanguage: source.language
+            }));
+            // 组内按发布时间降序
+            return items.sort((a, b) => {
+                const dateA = new Date(a.pubDate || 0);
+                const dateB = new Date(b.pubDate || 0);
+                return dateB - dateA;
+            });
+        });
+    })();
 
     const totalItems = allNews.length;
 

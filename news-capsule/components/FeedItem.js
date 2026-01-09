@@ -39,8 +39,13 @@ export default function FeedItem({ item, language }) {
     // 获取阅读推荐对象（兼容新旧格式）
     const readRec = readOriginal || readOriginalRecommendation;
 
-    // 计算阅读时间（如果没有提供）
-    const estimatedReadTime = readTime || (wordCount ? `${Math.ceil(wordCount / 300)} min` : null);
+    // 计算阅读时间（如果没有提供，区分中英文）
+    const calculateReadTime = (count, lang) => {
+        if (!count) return null;
+        const wordsPerMin = lang === 'en' ? 300 : 800;
+        return `${Math.max(1, Math.ceil(count / wordsPerMin))} min`;
+    };
+    const estimatedReadTime = readTime || calculateReadTime(wordCount, language);
 
     // 获取原文链接 - 兼容新旧格式
     const originalUrl = link || source?.url;

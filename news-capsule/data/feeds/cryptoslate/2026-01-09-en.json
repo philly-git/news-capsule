@@ -1,0 +1,27 @@
+{
+  "sourceId": "cryptoslate",
+  "date": "2026-01-09",
+  "language": "en",
+  "publishedAt": "2026-01-09T01:27:15.082Z",
+  "items": [
+    {
+      "id": "18a668830f2d",
+      "editorNote": "Chainalysis reports that in 2025, stablecoins accounted for 84% of $154 billion illicit crypto volume, overtaking Bitcoin as the primary dark web crime currency.",
+      "keyPoints": [
+        "Bitcoin's share of illicit crypto transactions fell sharply from 97% in 2016 to under 20% in 2022, continuing to decline through 2025.",
+        "The rise of stablecoins enables scalable money laundering operations by Chinese networks and sanctions evasion by North Korea, Russia, and Iran.",
+        "Illicit stablecoin transactions reached $154 billion in 2025, reflecting a shift toward dollar-pegged programmable currencies in the underground economy.",
+        "This trend signals a systemic risk as programmable dollar assets become the dominant medium for illicit finance, challenging regulatory controls."
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "The original article includes a detailed Chainalysis illicit activity chart from 2020–2025 and contextual analysis of nation-state involvement and laundering-as-a-service trends.",
+        "whoShouldRead": "Crypto compliance officers, financial crime analysts, and policymakers monitoring illicit finance and cryptocurrency regulation."
+      },
+      "originalTitle": "Stablecoins just replaced Bitcoin for crime on the dark web – and the reason why is a $154 billion nightmare",
+      "link": "https://cryptoslate.com/stablecoins-dominate-illicit-crypto-activities-eclipsing-bitcoin/",
+      "pubDate": "Thu, 08 Jan 2026 22:35:15 +0000",
+      "wordCount": 1117
+    }
+  ]
+}

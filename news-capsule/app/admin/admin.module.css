@@ -2047,3 +2047,72 @@
     align-items: center;
     gap: 0.5rem;
 }
+
+/* ========== 已出版内容页面 ========== */
+.successMessage {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 0.9rem;
+}
+
+.errorMessage {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #dc2626;
+    font-size: 0.9rem;
+}
+
+.scoreBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    color: #6b6b6b;
+}
+
+.itemLabel {
+    font-size: 0.75rem;
+    color: #6b6b6b;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.editorNote {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #37352f;
+}
+
+.keyPointsList {
+    margin: 0;
+    padding-left: 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.8;
+}
+
+.keyPointsList li {
+    margin-bottom: 0.25rem;
+}
+
+.reason {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #37352f;
+    line-height: 1.6;
+}
+
+.whoShouldRead {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.8rem;
+    color: #6b6b6b;
+}
+
+.regenerated {
+    border-left: 3px solid #8b5cf6;
+}

@@ -1,20 +1,11 @@
 {
   "version": 1,
-  "updatedAt": "2026-01-08T09:40:55.061Z",
+  "updatedAt": "2026-01-09T01:48:56.222Z",
   "sources": [
     {
       "id": "36kr",
       "name": "36氪",
       "url": "https://36kr.com/feed",
-      "language": "zh",
-      "category": "tech",
-      "enabled": true,
-      "addedAt": "2026-01-01T00:00:00Z"
-    },
-    {
-      "id": "huxiu",
-      "name": "虎嗅",
-      "url": "https://www.huxiu.com/rss/0.xml",
       "language": "zh",
       "category": "tech",
       "enabled": true,
@@ -31,7 +22,7 @@
     },
     {
       "id": "geekpark",
-      "name": "极客公园",
+      "name": "极客公园公众号",
       "url": "https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml",
       "language": "zh",
       "category": "tech",

@@ -29,8 +29,13 @@ export default function NewsCard({ item, sourceName, language }) {
         whoShouldRead: language === 'zh' ? '适合阅读人群' : 'Who Should Read'
     };
 
-    // 计算阅读时间
-    const estimatedReadTime = wordCount ? `${Math.ceil(wordCount / 300)} min` : null;
+    // 计算阅读时间（区分中英文）
+    const calculateReadTime = (count, lang) => {
+        if (!count) return null;
+        const wordsPerMin = lang === 'en' ? 300 : 800;
+        return `${Math.max(1, Math.ceil(count / wordsPerMin))} min`;
+    };
+    const estimatedReadTime = calculateReadTime(wordCount, language);
 
     // 格式化发布时间
     const formatPubDate = (dateStr) => {

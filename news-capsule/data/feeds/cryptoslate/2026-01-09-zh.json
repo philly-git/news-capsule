@@ -1,0 +1,27 @@
+{
+  "sourceId": "cryptoslate",
+  "date": "2026-01-09",
+  "language": "zh",
+  "publishedAt": "2026-01-09T01:27:10.513Z",
+  "items": [
+    {
+      "id": "18a668830f2d",
+      "editorNote": "2025年链上数据显示，稳定币占非法加密交易84%，取代比特币成为暗网犯罪首选，涉及金额达1540亿美元。",
+      "keyPoints": [
+        "2025年非法加密交易总额达1540亿美元，稳定币占比84%",
+        "比特币在非法交易中的份额从2016年的97%降至2025年不足20%",
+        "中国洗钱网络利用稳定币开展“洗钱即服务”业务规模化",
+        "朝鲜、俄罗斯、伊朗等国借助稳定币规避西方制裁和监管"
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "原文包含比特币与稳定币占比的年度变化图表及具体数据趋势，补充了洗钱服务和国家行为的背景分析",
+        "whoShouldRead": "关注加密货币监管、金融犯罪防控及国家安全的政策制定者和合规专家"
+      },
+      "originalTitle": "Stablecoins just replaced Bitcoin for crime on the dark web – and the reason why is a $154 billion nightmare",
+      "link": "https://cryptoslate.com/stablecoins-dominate-illicit-crypto-activities-eclipsing-bitcoin/",
+      "pubDate": "Thu, 08 Jan 2026 22:35:15 +0000",
+      "wordCount": 1117
+    }
+  ]
+}

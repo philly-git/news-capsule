@@ -35,6 +35,43 @@ function extractPlainText(html) {
     }).trim();
 }
 
+// 解码 HTML 实体（如 &mdash; &amp; &lt; &gt; 等）
+function decodeHtmlEntities(text) {
+    if (!text) return '';
+    const entities = {
+        '&amp;': '&',
+        '&lt;': '<',
+        '&gt;': '>',
+        '&quot;': '"',
+        '&#39;': "'",
+        '&apos;': "'",
+        '&mdash;': '\u2014',  // —
+        '&ndash;': '\u2013',  // –
+        '&nbsp;': ' ',
+        '&hellip;': '\u2026', // …
+        '&lsquo;': '\u2018',  // '
+        '&rsquo;': '\u2019',  // '
+        '&ldquo;': '\u201C',  // "
+        '&rdquo;': '\u201D',  // "
+        '&bull;': '\u2022',   // •
+        '&copy;': '\u00A9',   // ©
+        '&reg;': '\u00AE',    // ®
+        '&trade;': '\u2122'   // ™
+    };
+
+    // 先处理命名实体
+    let result = text;
+    for (const [entity, char] of Object.entries(entities)) {
+        result = result.split(entity).join(char);
+    }
+
+    // 处理数字实体（如 &#8212;）
+    result = result.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec));
+    result = result.replace(/&#x([0-9a-fA-F]+);/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)));
+
+    return result;
+}
+
 // 计算字数（英文返回单词数，中文返回字符数）
 function countWords(text, language = 'en') {
     if (!text) return 0;
@@ -68,7 +105,7 @@ async function fetchSingleSource(source, timeWindowHours = 48) {
             .map(item => {
                 const content = item['content:encoded'] || item.content || item.contentSnippet || item.description || '';
                 return {
-                    title: item.title,
+                    title: decodeHtmlEntities(item.title),
                     link: item.link,
                     content,
                     pubDate: item.pubDate || item.isoDate,

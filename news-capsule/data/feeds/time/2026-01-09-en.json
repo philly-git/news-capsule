@@ -1,0 +1,27 @@
+{
+  "sourceId": "time",
+  "date": "2026-01-09",
+  "language": "en",
+  "publishedAt": "2026-01-09T01:27:24.628Z",
+  "items": [
+    {
+      "id": "89ea0029cc33",
+      "editorNote": "The U.S. approach to Venezuela under Trump defies traditional labels, blending legal action against Nicolás Maduro with political pressure on his regime without a clear strategy.",
+      "keyPoints": [
+        "Trump’s administration seized Maduro to face drug charges in Manhattan but left his government’s other leaders largely untouched.",
+        "U.S. officials describe the effort as demanding behavior change, not regime change, causing confusion in Washington.",
+        "Venezuela’s allies condemn the U.S. action as interference, highlighting regional diplomatic tensions at the U.N.",
+        "Speaker Mike Johnson emphasized the distinction between regime change and behavioral demands after a closed-door briefing."
+      ],
+      "readOriginal": {
+        "score": 1,
+        "reason": "The original article contains nuanced quotes from U.S. officials and Venezuelan allies, plus context on Washington’s internal confusion and diplomatic reactions.",
+        "whoShouldRead": "Policy analysts and diplomats tracking U.S.-Venezuela relations and regional geopolitical dynamics."
+      },
+      "originalTitle": "A Colony? An Occupation? No One Knows What to Call Venezuela",
+      "link": "https://time.com/7344705/venezuela-trump-maduro-regime-change/",
+      "pubDate": "Thu, 08 Jan 2026 21:28:38 +0000",
+      "wordCount": 1350
+    }
+  ]
+}
