@@ -22,9 +22,12 @@ function isVercelEnvironment() {
 
 /**
  * 获取 Blob 存储路径前缀
+ * 对路径进行编码，处理中文文件名
  */
 function getBlobPath(relativePath) {
-    return `news-capsule/${relativePath}`;
+    // 保持斜杠不被编码，但编码其他特殊字符
+    const encodedPath = relativePath.split('/').map(encodeURIComponent).join('/');
+    return `news-capsule/${encodedPath}`;
 }
 
 /**
@@ -225,7 +228,12 @@ async function listFilesFromBlob(relativePath) {
             // 只取第一层
             const firstPart = cleanPath.split('/')[0];
             if (firstPart) {
-                files.add(firstPart);
+                // 解码文件名
+                try {
+                    files.add(decodeURIComponent(firstPart));
+                } catch (e) {
+                    files.add(firstPart);
+                }
             }
         }
 
