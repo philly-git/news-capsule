@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import NewsCardLab from '@/components/NewsCardLab';
 import SubscribeModal from '@/components/SubscribeModal';
 import Footer from '@/components/Footer';
@@ -9,10 +10,12 @@ import Footer from '@/components/Footer';
  * 新闻胶囊首页
  * 整合 Logo + 日期 + 日期选择器到一个固定的顶栏
  */
-export default function HomePage() {
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const initialLang = searchParams.get('lang') === 'en' ? 'en' : 'zh';
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [feedsData, setFeedsData] = useState(null);
-  const [language, setLanguage] = useState('zh');
+  const [language, setLanguage] = useState(initialLang);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
   const [availableDates, setAvailableDates] = useState([]);
@@ -414,5 +417,13 @@ export default function HomePage() {
         language={language}
       />
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense>
+      <HomeContent />
+    </Suspense>
   );
 }

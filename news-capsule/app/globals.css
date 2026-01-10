@@ -1607,6 +1607,8 @@ p {
    =========================================== */
 
 .lab-theme-minimal {
+  background-color: #fafaf9;
+  min-height: 100vh;
   --bg-primary: #FEFEFE;
   --bg-secondary: #F5F5F5;
   --bg-hover: #EEEEEE;
@@ -1620,7 +1622,7 @@ p {
 }
 
 .lab-theme-minimal .lab-sticky-header {
-  background: #FEFEFE;
+  background: #fafaf9;
   border-bottom-color: #E5E5E5;
 }
 
