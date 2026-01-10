@@ -11,7 +11,6 @@ import Footer from '@/components/Footer';
  */
 export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [subscriberCount, setSubscriberCount] = useState(0);
   const [feedsData, setFeedsData] = useState(null);
   const [language, setLanguage] = useState('zh');
   const [loading, setLoading] = useState(true);
@@ -69,12 +68,7 @@ export default function HomePage() {
     }
   }, [selectedDate]);
 
-  useEffect(() => {
-    fetch('/api/subscribe')
-      .then(res => res.json())
-      .then(data => setSubscriberCount(data.count))
-      .catch(console.error);
-  }, []);
+
 
   // 格式化日期
   const formatDate = (dateStr, lang) => {
@@ -408,7 +402,6 @@ export default function HomePage() {
       <SubscribeModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        subscriberCount={subscriberCount}
         language={language}
       />
     </div>

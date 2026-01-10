@@ -2,27 +2,27 @@
 
 import { useState } from 'react';
 
-export default function SubscribeModal({ isOpen, onClose, subscriberCount = 0, language = 'zh' }) {
+export default function SubscribeModal({ isOpen, onClose, language = 'zh' }) {
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState('idle');
     const [message, setMessage] = useState('');
 
+    // ===== 文案配置区域 =====
     const t = {
-        title: language === 'zh' ? '📬 订阅每日科技速递' : '📬 Subscribe to Daily Tech Digest',
+        title: language === 'zh' ? '📬 感谢你的订阅' : '📬 Thank you for subscribing',
         description: language === 'zh'
-            ? '每天早8点，将今日要闻发送到您的邮箱'
-            : 'Get top tech stories delivered daily at 8am',
+            ? '你将在第一时间收到新闻胶囊的更新'
+            : 'You will receive the latest news capsule updates in real-time',
         placeholder: language === 'zh' ? '请输入邮箱地址' : 'Enter your email',
         submit: language === 'zh' ? '确认订阅' : 'Subscribe',
         submitting: language === 'zh' ? '提交中...' : 'Submitting...',
         success: language === 'zh'
-            ? '订阅成功！我们会在每天早8点发送科技要闻。'
-            : 'Subscribed! You will receive daily tech news at 8am.',
+            ? '订阅成功！请查收你的邮箱进行确认'
+            : 'Subscribed! Please check your email for confirmation.',
         invalidEmail: language === 'zh' ? '请输入有效的邮箱地址' : 'Please enter a valid email',
         error: language === 'zh' ? '订阅失败，请稍后重试' : 'Subscription failed, please try again',
-        subscribers: language === 'zh' ? '位读者订阅' : 'subscribers',
-        alreadySubscribed: language === 'zh' ? '已有' : '',
     };
+    // ===== 文案配置结束 =====
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -46,7 +46,7 @@ export default function SubscribeModal({ isOpen, onClose, subscriberCount = 0, l
 
             if (response.ok) {
                 setStatus('success');
-                setMessage(t.success);
+                setMessage(data.message || t.success);
                 setEmail('');
             } else {
                 setStatus('error');
@@ -123,13 +123,8 @@ export default function SubscribeModal({ isOpen, onClose, subscriberCount = 0, l
                         </button>
                     </form>
                 )}
-
-                {subscriberCount > 0 && (
-                    <p className="modal-footer">
-                        {t.alreadySubscribed} {subscriberCount.toLocaleString()} {t.subscribers}
-                    </p>
-                )}
             </div>
         </div>
     );
 }
+
