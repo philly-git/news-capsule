@@ -29,53 +29,79 @@
 
 ## 2. 功能规格
 
-### 2.1 首页 - 按源分组展示
+### 2.1 首页 - 极简阅读体验
 
 #### 页面结构
 ```
 ┌─────────────────────────────────────────────┐
-│  💊 新闻胶囊                    [订阅更新]   │
+│  [Logo]  1月5日·周日  [◀][📅][▶]  [EN]      │  ← 固定顶栏
 ├─────────────────────────────────────────────┤
-│  📅 2026年1月5日 · 12 条资讯    [日期选择]   │
+│  [≡] 内容目录 (12)                          │  ← 可折叠
+│  ├── 01. Apple发布Vision Pro 2...           │
+│  ├── 02. Google推出AI新功能...              │
+│  └── ...                                    │
 ├─────────────────────────────────────────────┤
+│  No. 01                                     │
+│  ┌─────────────────────────────────────┐    │
+│  │ The Verge                           │    │
+│  │                                     │    │
+│  │ Apple发布Vision Pro 2               │    │
+│  │ 售价降至2499美元                     │    │
+│  │                                     │    │
+│  │ 编辑概要                            │    │
+│  │ 苹果今日发布第二代Vision Pro...      │    │
+│  │                                     │    │
+│  │ • 要点1：重量减轻40%                 │    │
+│  │ • 要点2：新增空间视频录制             │    │
+│  │ • 要点3：...                        │    │
+│  │                                     │    │
+│  │ ┌─────────────────────────────────┐ │    │
+│  │ │ 原文剩余营养  🍎🍎⚪              │ │    │
+│  │ │ 原文包含详细技术规格和时间表...    │ │    │
+│  │ │ 适合：产品经理、开发者            │ │    │
+│  │ │                                  │ │    │
+│  │ │ 用 5 分钟阅读原文 →               │ │    │
+│  │ └─────────────────────────────────┘ │    │
+│  └─────────────────────────────────────┘    │
 │                                             │
-│  ▼ The Verge (5)                            │
-│  ├── [新闻卡片 1]                           │
-│  ├── [新闻卡片 2]                           │
-│  └── [新闻卡片 3...]                        │
-│                                             │
-│  ▶ 极客公园 (7) [折叠状态]                   │
-│                                             │
+│  No. 02 ...                                 │
 ├─────────────────────────────────────────────┤
-│  ✅ 更新完毕                                 │
+│  喜欢新闻胶囊？ [订阅]                       │
+├─────────────────────────────────────────────┤
+│  意见反馈：xxx@email.com                    │
 └─────────────────────────────────────────────┘
 ```
 
-#### 新闻卡片设计
+#### 新闻卡片设计（NewsCardLab）
 每张卡片包含：
-- **标题**：一句话概括事件（15-30字）
-- **摘要**：核心要点的完整描述（100-200字）
-- **阅读原文推荐**：1-5分评分 + 推荐理由
+- **原始标题**：信息源的原始标题
+- **编辑概要**（editorNote）：一句话概括事件（30-50字）
+- **关键要点**（keyPoints）：3-4条核心信息
+- **阅读原文评估**（readOriginal）：
+  - 营养值：0-3 个苹果图标（🍎）
+  - 理由：为什么值得/不值得读原文
+  - 适合人群：什么读者应该阅读原文
 - **阅读时长**：预估原文阅读时间
-- **来源**：原始信息来源链接
+- **来源链接**：跳转原文
 
-```
-┌─────────────────────────────────────────────┐
-│ Apple发布Vision Pro 2，售价降至2499美元     │
-│                                             │
-│ 苹果公司今日发布了第二代 Vision Pro 头显，  │
-│ 重量减轻40%，新增空间视频录制功能...         │
-│                                             │
-│ ⭐⭐⭐⭐ 推荐阅读原文                        │
-│ 原文包含详细的技术规格和发布时间表           │
-│                                             │
-│ 📎 来源：Apple Newsroom · 5分钟阅读         │
-└─────────────────────────────────────────────┘
-```
+#### 阅读原文营养值说明
 
-### 2.2 订阅弹窗
+| 分数 | 图标 | 含义                    |
+| ---- | ---- | ----------------------- |
+| 3    | 🍎🍎🍎  | 不可替代的一手/独家材料 |
+| 2    | 🍎🍎⚪  | 高密度参考资料          |
+| 1    | 🍎⚪⚪  | 关键语境补充            |
+| 0    | ⚪⚪⚪  | 摘要已覆盖核心信息      |
 
-点击「订阅更新」按钮后显示模态框：
+### 2.2 信息源分组展示
+
+- 中文源在前，英文源在后
+- 每个源内部按发布时间降序
+- 保持 sources.json 中的顺序
+
+### 2.3 订阅弹窗
+
+点击「订阅」按钮后显示模态框：
 ```
 ┌─────────────────────────────────────────────┐
 │           📬 订阅每日科技速递                │
@@ -95,11 +121,27 @@
 > [!NOTE]
 > MVP阶段仅收集邮箱，暂不发送邮件。
 
-### 2.3 管理后台 (/admin)
+### 2.4 反馈系统
 
-- 信息源管理：添加、编辑、启用/禁用 RSS 源
-- 同步状态监控：查看各源的最后同步时间和文章数量
-- 手动触发生成：可手动执行新闻生成流程
+- 底部显示「意见反馈」链接
+- 点击后弹出反馈表单
+- 反馈内容存储到 `data/feedback.json`
+- Admin 可在后台查看和管理反馈
+
+### 2.5 管理后台 (/admin)
+
+完整的内容管理系统，包含以下模块：
+
+| 模块   | 路径                     | 功能                               |
+| ------ | ------------------------ | ---------------------------------- |
+| 编辑部 | `/admin`                 | 工作台总览，按状态管理新闻条目     |
+| 信息源 | `/admin/sources`         | 信息源 CRUD，分组、排序、启用/禁用 |
+| 已发布 | `/admin/published`       | 查看已发布内容，批量重新生成       |
+| Prompt | `/admin/prompt-debugger` | Prompt 调试和测试                  |
+| 设置   | `/admin/settings`        | 系统配置                           |
+| 反馈   | `/admin/feedback`        | 用户反馈管理                       |
+
+> 详见 [Admin PRD](./admin-prd.md)
 
 ---
 
@@ -113,7 +155,7 @@
 | **样式**     | Vanilla CSS + CSS Variables | 轻量、无依赖、易于Agent理解和修改         |
 | **AI 摘要**  | OpenAI GPT-4o-mini          | 筛选、摘要生成、去重                      |
 | **正文提取** | html-to-text                | 从 HTML 提取干净纯文本                    |
-| **数据存储** | JSON文件（按源分组）        | 便于维护和扩展                            |
+| **数据存储** | Cloudflare R2 / JSON文件    | 云端使用R2，本地开发使用文件系统          |
 | **部署**     | Vercel                      | 自动部署、Cron定时任务                    |
 
 ### 3.2 项目结构
@@ -122,34 +164,37 @@
 news-capsule/
 ├── app/
 │   ├── layout.js          # 全局布局
-│   ├── page.js            # 首页 (按源分组展示)
+│   ├── page.js            # 首页 (极简文学风格)
 │   ├── globals.css        # 全局样式
-│   ├── admin/             # 管理后台
+│   ├── admin/             # 管理后台 (8个子页面)
 │   └── api/
-│       ├── feeds/route.js # ⭐ 主要 API
-│       ├── dates/route.js # 可用日期
-│       └── subscribe/     # 订阅API
+│       ├── feeds/         # ⭐ 主要 API
+│       ├── dates/         # 可用日期
+│       ├── subscribe/     # 订阅API
+│       ├── feedback/      # 反馈API
+│       ├── auth/          # 认证API
+│       └── admin/         # Admin API
 ├── components/
 │   ├── Header.js          # 顶部导航
-│   ├── SourceGroup.js     # ⭐ 信息源分组组件
-│   ├── NewsCard.js        # 新闻卡片组件
+│   ├── NewsCardLab.js     # ⭐ 新闻卡片（极简风格）
 │   ├── DatePicker.js      # 日期选择器
 │   ├── Footer.js          # 底部
-│   └── SubscribeModal.js  # 订阅弹窗
+│   ├── SubscribeModal.js  # 订阅弹窗
+│   └── FeedbackModal.js   # 反馈弹窗
+├── lib/
+│   ├── storage.js         # ⭐ 存储抽象层 (R2/文件系统)
+│   ├── prompts.js         # ⭐ Prompt 统一管理
+│   ├── auth.js            # 认证逻辑
+│   └── ...
 ├── scripts/
 │   ├── generate-news.js   # ⭐ 新闻生成脚本
-│   └── config.js          # Prompt 配置
+│   └── config.js          # 配置
 ├── data/
 │   ├── sources.json       # ⭐ 信息源配置
 │   ├── feeds/             # ⭐ 按源分组的数据
-│   │   └── {sourceId}/
-│   │       ├── items.json           # RSS 原始数据
-│   │       └── {date}-{lang}.json   # AI 处理后的摘要
-│   └── subscribers.json   # 订阅者邮箱列表
-├── public/
-│   └── favicon.ico
-├── package.json
-└── README.md
+│   ├── subscribers.json   # 订阅者列表
+│   └── feedback.json      # 用户反馈
+└── docs/                  # 文档
 ```
 
 ### 3.3 数据结构
@@ -165,9 +210,23 @@ news-capsule/
       "url": "https://www.theverge.com/rss/index.xml",
       "language": "en",
       "category": "tech",
-      "enabled": true
+      "enabled": true,
+      "addedAt": "2026-01-01T00:00:00Z"
     }
   ]
+}
+```
+
+#### AI 摘要输出格式
+```json
+{
+  "editorNote": "编辑概要，30-50字",
+  "keyPoints": ["要点1", "要点2", "要点3"],
+  "readOriginal": {
+    "score": 2,
+    "reason": "原文包含详细技术实现细节",
+    "whoShouldRead": "需要动手实现的开发者"
+  }
 }
 ```
 
@@ -183,32 +242,23 @@ news-capsule/
   "items": [
     {
       "id": "the-verge-1736064000000-0",
-      "title": "Apple发布Vision Pro 2，售价降至2499美元",
-      "summary": "苹果公司今日发布了第二代 Vision Pro...",
-      "readOriginalRecommendation": {
-        "score": 4,
-        "reason": "原文包含详细的技术规格"
+      "originalTitle": "Apple announces Vision Pro 2...",
+      "editorNote": "苹果今日发布第二代Vision Pro...",
+      "keyPoints": ["要点1", "要点2", "要点3"],
+      "readOriginal": {
+        "score": 2,
+        "reason": "原文包含详细技术规格",
+        "whoShouldRead": "产品经理、开发者"
       },
       "readTime": "5 分钟",
+      "wordCount": 1200,
       "source": {
         "name": "The Verge",
-        "url": "https://...",
-        "language": "en"
+        "url": "https://..."
       },
-      "originalTitle": "Apple announces Vision Pro 2...",
-      "pubDate": "2026-01-05T..."
-    }
-  ]
-}
-```
-
-#### 订阅者数据 (`data/subscribers.json`)
-```json
-{
-  "subscribers": [
-    {
-      "email": "user@example.com",
-      "subscribedAt": "2026-01-02T10:30:00+08:00"
+      "pubDate": "2026-01-05T...",
+      "status": "published",
+      "publishedAt": "2026-01-05T10:00:00Z"
     }
   ]
 }
@@ -218,18 +268,18 @@ news-capsule/
 
 ## 4. 页面设计规范
 
-### 4.1 设计风格（Notion风格）
+### 4.1 设计风格（极简文学风）
 - **极简克制**：无多余装饰，突出内容本身
 - **清晰层次**：通过留白和字重区分信息层级
 - **舒适阅读**：大字号、高对比度、充足行距
-- **浅色为主**：干净明亮，降低视觉负担
-- **扁平设计**：无渐变、无阴影、简洁边框
+- **报纸质感**：序号标注、等宽字体细节
+- **扁平设计**：无渐变、简洁边框
 
 ### 4.2 色彩系统
 
 ```css
 :root {
-  /* 背景 - Notion风格浅色 */
+  /* 背景 */
   --bg-primary: #ffffff;
   --bg-secondary: #f7f6f3;
   --bg-hover: #efefef;
@@ -261,7 +311,7 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
 ### 5.1 信息源配置
 
-信息源通过 `data/sources.json` 统一管理，可通过 Admin 面板 (`/admin`) 配置：
+信息源通过 `data/sources.json` 统一管理，可通过 Admin 面板 (`/admin/sources`) 配置：
 
 **英文来源**
 - The Verge
@@ -279,15 +329,15 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
 ```mermaid
 graph LR
-    A[读取 sources.json] --> B[加载本地缓存/RSS]
+    A[读取 sources.json] --> B[Admin 后台拓取 RSS]
     B --> C[数据标准化]
-    C --> D[AI 标题去重]
+    C --> D[人工挑选条目]
     D --> E[AI 生成摘要]
     E --> F[按源保存 JSON]
 ```
 
 > [!NOTE]
-> 该流程可由 Vercel Cron 每日自动触发，或通过 Admin 面板手动执行
+> 新闻的挑选和发布通过 Admin 后台手动操作
 
 ---
 
@@ -295,7 +345,7 @@ graph LR
 
 ### Phase 1: 静态原型 ✅
 - [x] 项目初始化 (Next.js)
-- [x] 设计系统 (Notion风格 CSS Variables)
+- [x] 设计系统 (CSS Variables)
 - [x] Header/NewsCard/Footer组件
 - [x] 首页布局和订阅弹窗
 
@@ -316,6 +366,15 @@ graph LR
 - [x] Vercel部署配置
 - [x] 环境变量配置
 
+### Phase 5: 功能扩展 ✅
+- [x] R2 云存储迁移（替代 Vercel Blob）
+- [x] Admin 后台扩展（8个子页面）
+- [x] 首页 UI 升级（极简文学风格）
+- [x] Prompt 统一管理
+- [x] 认证系统
+- [x] 用户反馈系统
+- [x] 新输出格式（editorNote/keyPoints/readOriginal）
+
 ---
 
 ## 7. 验证计划
@@ -328,8 +387,9 @@ npm run dev
 # 验证项目
 # 1. 访问 http://localhost:3000 检查首页渲染
 # 2. 确认按源分组的新闻卡片正确显示
-# 3. 点击"订阅更新"按钮，验证弹窗显示
+# 3. 点击"订阅"按钮，验证弹窗显示
 # 4. 测试日期切换和语言切换功能
+# 5. 测试内容目录导航功能
 ```
 
 ### 7.2 浏览器兼容性
@@ -344,8 +404,9 @@ npm run dev
 
 - ✅ **产品名称**：新闻胶囊
 - ✅ **展示方式**：按信息源分组
-- ✅ **设计风格**：Notion风格
-- ✅ **数据存储**：按源分组的 JSON 文件
+- ✅ **设计风格**：极简文学风
+- ✅ **数据存储**：Cloudflare R2 (云端) / JSON文件 (本地)
+- ✅ **AI 输出格式**：editorNote + keyPoints + readOriginal
 
 ---
 

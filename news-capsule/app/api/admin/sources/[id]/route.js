@@ -44,6 +44,18 @@ export async function PATCH(request, { params }) {
 
         console.log(`[API] PATCH source/${id}`, JSON.stringify(body));
 
+        // 如果是重置源（清空所有同步的新闻）
+        if (body.reset === true) {
+            const { saveSourceItems } = await import('../../../../../lib/feeds.js');
+            await saveSourceItems(id, {
+                sourceId: id,
+                items: [],
+                lastSync: null,
+                totalItems: 0
+            });
+            return NextResponse.json({ success: true, message: '源已重置' });
+        }
+
         // 如果是更新条目状态
         if (body.itemId && body.status) {
             const item = await updateItemStatus(id, body.itemId, body.status);

@@ -14,6 +14,7 @@ export default function PublishedPage() {
     const [regeneratingId, setRegeneratingId] = useState(null);
     const [message, setMessage] = useState(null);
     const [expandedItem, setExpandedItem] = useState(null);
+    const [deleteConfirm, setDeleteConfirm] = useState(null); // { sourceId, itemId, title }
 
     // 获取已出版内容
     const fetchPublished = async (lang, date) => {
@@ -205,6 +206,29 @@ export default function PublishedPage() {
         });
     };
 
+    // 删除已发布文章
+    const handleDeleteItem = async () => {
+        if (!deleteConfirm) return;
+
+        try {
+            const res = await fetch(
+                `/api/admin/published/${deleteConfirm.sourceId}?date=${selectedDate}&lang=${language}&itemId=${deleteConfirm.itemId}`,
+                { method: 'DELETE' }
+            );
+            const result = await res.json();
+
+            if (result.success) {
+                setMessage({ type: 'success', text: `✅ 已删除: ${deleteConfirm.title?.slice(0, 30)}...` });
+                setDeleteConfirm(null);
+                await fetchPublished(language, selectedDate);
+            } else {
+                setMessage({ type: 'error', text: result.error || '删除失败' });
+            }
+        } catch (err) {
+            setMessage({ type: 'error', text: '删除失败: ' + err.message });
+        }
+    };
+
     const availableDates = data?.availableDates || [];
     const sources = data?.sources || [];
     const totalItems = data?.totalItems || 0;
@@ -333,6 +357,20 @@ export default function PublishedPage() {
                                                 >
                                                     {regeneratingId === item.id ? '...' : '🔄'}
                                                 </button>
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setDeleteConfirm({
+                                                            sourceId: item.sourceId,
+                                                            itemId: item.id,
+                                                            title: item.originalTitle
+                                                        });
+                                                    }}
+                                                    className={styles.deleteBtn}
+                                                    title="删除文章"
+                                                >
+                                                    🗑
+                                                </button>
                                                 <span className={styles.expandIcon}>
                                                     {expandedItem === item.id ? '▼' : '▶'}
                                                 </span>
@@ -424,6 +462,31 @@ export default function PublishedPage() {
                         </div>
                     )}
                 </section>
+            )}
+
+            {/* 删除确认模态框 */}
+            {deleteConfirm && (
+                <div className={styles.modal}>
+                    <div className={styles.modalContent}>
+                        <h3>确认删除</h3>
+                        <p>确定要删除「{deleteConfirm.title?.slice(0, 50)}...」吗？</p>
+                        <p className={styles.modalWarning}>此操作不可撤销</p>
+                        <div className={styles.modalActions}>
+                            <button
+                                onClick={() => setDeleteConfirm(null)}
+                                className={styles.cancelBtn}
+                            >
+                                取消
+                            </button>
+                            <button
+                                onClick={handleDeleteItem}
+                                className={styles.dangerBtn}
+                            >
+                                确认删除
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

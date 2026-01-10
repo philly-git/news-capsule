@@ -7,9 +7,9 @@
 │                              新闻胶囊系统架构                                │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│   ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐         │
-│   │  Admin 面板     │    │   Vercel Cron   │    │  RSS 信息源     │         │
-│   │  /admin         │    │   定时触发       │    │  (sources.json) │         │
+│   ┌─────────────────┐                           ┌─────────────────┐         │
+│   │  Admin 面板     │                           │  RSS 信息源     │         │
+│   │  /admin/*       │                           │  (sources.json) │         │
 │   └────────┬────────┘    └────────┬────────┘    └────────┬────────┘         │
 │            │                      │                      │                  │
 │            ▼                      ▼                      ▼                  │
@@ -18,26 +18,21 @@
 │   │   ├── 读取 sources.json 获取启用的信息源                              │   │
 │   │   ├── 从本地缓存或 RSS 获取新闻                                       │   │
 │   │   ├── 数据标准化 (HTML→纯文本, 计算字数)                              │   │
-│   │   ├── GPT-4o-mini 标题去重                                           │   │
 │   │   └── GPT-4o-mini 生成摘要                                           │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                    │                                        │
 │                                    ▼                                        │
 │   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │                          data/ (数据存储)                            │   │
-│   │   ├── sources.json     统一信息源配置                                │   │
-│   │   └── feeds/           按源分组的数据                                │   │
-│   │       ├── {sourceId}/                                                │   │
-│   │       │   ├── items.json              原始 RSS+正文                  │   │
-│   │       │   └── {date}-{lang}.json      AI 处理后的摘要                │   │
-│   │       └── ...                                                        │   │
+│   │                      存储抽象层 (lib/storage.js)                     │   │
+│   │   ├── 本地开发：文件系统 (data/)                                     │   │
+│   │   └── 云端部署：Cloudflare R2 (S3 兼容 API)                          │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                    │                                        │
 │                                    ▼                                        │
 │   ┌─────────────────────────────────────────────────────────────────────┐   │
 │   │                       Next.js 前端 + API                             │   │
 │   │   ├── /              首页 (按源分组展示新闻)                          │   │
-│   │   ├── /admin         管理后台 (信息源管理)                            │   │
+│   │   ├── /admin/*       管理后台 (8个子页面)                             │   │
 │   │   └── /api/*         REST API                                        │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                                                             │
@@ -48,7 +43,7 @@
 
 ## 数据流详解
 
-### 新闻生成流程 (`generate-news.js`)
+### 新闻生成流程
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -70,11 +65,6 @@
 │  │                 │  • 统一数据格式                                         │
 │  └────────┬────────┘                                                         │
 │           ▼                                                                  │
-│  ┌─────────────────┐                                                         │
-│  │ 3. 标题去重     │  deduplicateByTitle()                                   │
-│  │                 │  • GPT-4o-mini 识别报道同一事件的条目                    │
-│  │                 │  • 保留信息更丰富的一条                                  │
-│  └────────┬────────┘                                                         │
 │           ▼                                                                  │
 │  ┌─────────────────┐                                                         │
 │  │ 4. 摘要生成     │  processNewsBySource() + generateSummary()              │
@@ -82,10 +72,9 @@
 │  │  按源分组处理 ───┼──► 为每条新闻调用 GPT-4o-mini                           │
 │  │                 │                                                         │
 │  │  输出格式：     │                                                         │
-│  │  • title        │  一句话标题 (15-30字)                                   │
-│  │  • summary      │  核心要点描述 (100-200字)                               │
-│  │  • readOriginal │  阅读原文推荐 (1-5分 + 理由)                            │
-│  │    Recommendation│                                                        │
+│  │  • editorNote   │  编辑概要 (30-50字)                                     │
+│  │  • keyPoints    │  关键要点 (3-4条)                                       │
+│  │  • readOriginal │  阅读原文评估 (score/reason/whoShouldRead)              │
 │  └────────┬────────┘                                                         │
 │           ▼                                                                  │
 │  ┌─────────────────┐                                                         │
@@ -103,8 +92,8 @@
       │
       ▼
 ┌─────────────┐      ┌─────────────┐      ┌─────────────────────────┐
-│  page.js    │ ───► │ /api/feeds  │ ───► │ data/feeds/{sourceId}/  │
-│  (首页)     │      │  route.js   │      │   {date}-{lang}.json    │
+│  page.js    │ ───► │ /api/feeds  │ ───► │ 存储层 (R2/本地文件)     │
+│  (首页)     │      │  route.js   │      │ data/feeds/{sourceId}/  │
 └─────────────┘      └─────────────┘      └─────────────────────────┘
       │
       ├── 语言切换 (lang=zh/en) → 重新请求对应语言 JSON
@@ -114,9 +103,9 @@
       ▼
 ┌─────────────────────────────────────────┐
 │  按「信息源」分组展示                     │
-│  ├── SourceGroup (可展开/折叠)           │
-│  │   └── NewsCard (单条新闻)             │
-│  └── ...                                 │
+│  ├── 内容目录 (可折叠)                   │
+│  ├── NewsCardLab (极简文学风格卡片)       │
+│  └── 底部订阅提示                        │
 └─────────────────────────────────────────┘
 ```
 
@@ -129,43 +118,69 @@ news-capsule/
 ├── app/                          # Next.js App Router
 │   ├── page.js                   # 首页（按源分组展示新闻）
 │   ├── layout.js                 # 全局布局
-│   ├── globals.css               # 全局样式（Notion 风格）
+│   ├── globals.css               # 全局样式（极简文学风格）
+│   ├── ui-lab/                   # UI 实验室
 │   ├── admin/                    # 管理后台
-│   │   ├── page.js
-│   │   └── admin.module.css
+│   │   ├── layout.js             # Admin 布局 + 侧边栏
+│   │   ├── page.js               # 编辑部工作台
+│   │   ├── login/                # 登录页
+│   │   ├── sources/              # 信息源管理
+│   │   ├── published/            # 已发布内容
+│   │   ├── publishing/           # 发布工作台
+│   │   ├── prompt-debugger/      # Prompt 调试器
+│   │   ├── settings/             # 系统设置
+│   │   ├── feedback/             # 用户反馈
+│   │   └── articles/             # 文章详情
 │   └── api/                      # API 路由
 │       ├── feeds/route.js        # ⭐ 主要 API：获取按源分组的新闻
 │       ├── dates/route.js        # 获取可用日期列表
-│       ├── news/route.js         # 兼容旧格式
-│       ├── generate-news/route.js # Cron 触发（简化版）
-│       └── subscribe/route.js    # 邮箱订阅
+│       ├── subscribe/route.js    # 邮箱订阅
+│       ├── feedback/route.js     # 用户反馈
+│       ├── generate-news/route.js # Cron 触发
+│       ├── auth/                 # 认证相关
+│       │   ├── login/route.js
+│       │   ├── logout/route.js
+│       │   └── verify/route.js
+│       └── admin/                # Admin API
+│           ├── sources/          # 信息源 CRUD
+│           ├── published/        # 已发布内容
+│           ├── regenerate/       # 重新生成摘要
+│           ├── prompt-config/    # Prompt 配置
+│           └── ...
 │
 ├── components/                   # React 组件
-│   ├── Header.js                 # 顶部导航 + 语言切换
-│   ├── SourceGroup.js            # ⭐ 信息源分组组件（可折叠）
-│   ├── NewsCard.js               # 新闻卡片
+│   ├── Header.js                 # 顶部导航
+│   ├── NewsCardLab.js            # ⭐ 新闻卡片（极简风格）
+│   ├── NewsCard.js               # 新闻卡片（经典样式）
 │   ├── DatePicker.js             # 日期选择器
 │   ├── SubscribeModal.js         # 订阅弹窗
-│   └── Footer.js                 # 底部
+│   ├── FeedbackModal.js          # 反馈弹窗
+│   ├── Footer.js                 # 底部
+│   └── ...
+│
+├── lib/                          # 工具库
+│   ├── storage.js                # ⭐ 存储抽象层 (R2/本地文件)
+│   ├── prompts.js                # ⭐ Prompt 统一管理
+│   ├── auth.js                   # 认证逻辑
+│   ├── feeds.js                  # Feed 处理
+│   ├── sources.js                # 信息源管理
+│   ├── news-generator.js         # 新闻生成器
+│   └── qualityFilter.js          # 质量过滤
 │
 ├── scripts/                      # 脚本（核心逻辑）
 │   ├── generate-news.js          # ⭐ 新闻生成主脚本
-│   └── config.js                 # Prompt 配置
+│   └── config.js                 # 配置
 │
-├── data/                         # 数据存储
+├── data/                         # 本地数据存储
 │   ├── sources.json              # ⭐ 统一信息源配置
-│   ├── feeds/                    # ⭐ 按源分组的数据
-│   │   ├── the-verge/
-│   │   │   ├── items.json        # RSS 原始数据（含完整正文）
-│   │   │   └── 2026-01-05-zh.json # AI 处理后的摘要
-│   │   ├── geekpark/
-│   │   │   ├── items.json
-│   │   │   └── 2026-01-05-zh.json
-│   │   └── ...
-│   ├── news/                     # 旧格式（保留兼容）
-│   └── subscribers.json          # 订阅者列表
+│   ├── settings.json             # 系统设置
+│   ├── subscribers.json          # 订阅者列表
+│   ├── feedback.json             # 用户反馈
+│   └── feeds/                    # ⭐ 按源分组的数据
+│       └── {sourceId}/
+│           ├── items.json        # RSS 原始数据
+│           └── {date}-{lang}.json # AI 处理后的摘要
 │
-├── lib/                          # 工具函数
 ├── vercel.json                   # Cron 配置
 └── env.example                   # 环境变量模板
 ```
@@ -174,33 +189,137 @@ news-capsule/
 
 ## 技术栈
 
-| 层级     | 技术                 | 版本 |
-| -------- | -------------------- | ---- |
-| 前端框架 | Next.js (App Router) | 16.x |
-| React    | React                | 19.x |
-| AI 摘要  | OpenAI GPT-4o-mini   | -    |
-| 正文提取 | html-to-text         | -    |
-| DOM 解析 | jsdom                | 27.x |
-| RSS 解析 | rss-parser           | 3.x  |
-| 部署     | Vercel               | -    |
+| 层级     | 技术                    | 说明                             |
+| -------- | ----------------------- | -------------------------------- |
+| 前端框架 | Next.js 16 (App Router) | React 19                         |
+| AI 摘要  | OpenAI GPT-4o-mini      | 筛选、摘要生成、去重             |
+| 正文提取 | html-to-text            | HTML → 纯文本                    |
+| DOM 解析 | jsdom                   | 富文本处理                       |
+| RSS 解析 | rss-parser              | RSS/Atom 源解析                  |
+| 云端存储 | Cloudflare R2           | S3 兼容，通过 @aws-sdk/client-s3 |
+| 本地存储 | 文件系统 (JSON)         | 开发环境使用                     |
+| 部署     | Vercel                  | 自动部署、Cron 定时任务          |
+
+---
+
+## 存储层架构
+
+### 环境检测策略
+
+```javascript
+// lib/storage.js
+
+// 云端环境：配置了 R2 环境变量
+isCloudEnvironment() → R2_ACCOUNT_ID && R2_ACCESS_KEY_ID
+
+// 本地环境：使用文件系统
+// 混合策略：云端环境同时读取 R2 和本地文件
+```
+
+### 操作函数
+
+| 函数                    | 本地          | 云端                         |
+| ----------------------- | ------------- | ---------------------------- |
+| `readJSON(path)`        | fs.readFile   | R2.GetObject → fallback 本地 |
+| `writeJSON(path, data)` | fs.writeFile  | R2.PutObject                 |
+| `deleteData(path)`      | fs.unlink     | R2.DeleteObject              |
+| `listFiles(path)`       | fs.readdir    | R2.ListObjects + 本地合并    |
+| `exists(path)`          | fs.existsSync | R2.HeadObject ∪ 本地         |
 
 ---
 
 ## API 端点
 
-| 端点                 | 方法 | 说明                                                 |
-| -------------------- | ---- | ---------------------------------------------------- |
-| `/api/feeds`         | GET  | ⭐ 主要 API，获取按源分组的新闻，参数: `date`, `lang` |
-| `/api/dates`         | GET  | 获取可用日期列表，参数: `lang`                       |
-| `/api/news`          | GET  | 兼容旧格式，参数: `date`, `lang`                     |
-| `/api/subscribe`     | POST | 邮箱订阅                                             |
-| `/api/generate-news` | GET  | Cron 触发新闻生成                                    |
+### 公开 API
+
+| 端点                 | 方法     | 说明                                |
+| -------------------- | -------- | ----------------------------------- |
+| `/api/feeds`         | GET      | 获取按源分组的新闻 (`date`, `lang`) |
+| `/api/dates`         | GET      | 获取可用日期列表 (`lang`)           |
+| `/api/subscribe`     | GET/POST | 订阅者统计/新增订阅                 |
+| `/api/feedback`      | POST     | 提交用户反馈                        |
+| `/api/generate-news` | GET      | Cron 触发新闻生成                   |
+
+### 认证 API
+
+| 端点               | 方法 | 说明         |
+| ------------------ | ---- | ------------ |
+| `/api/auth/login`  | POST | Admin 登录   |
+| `/api/auth/logout` | POST | 退出登录     |
+| `/api/auth/verify` | GET  | 验证登录状态 |
+
+### Admin API
+
+| 端点                       | 方法                | 说明           |
+| -------------------------- | ------------------- | -------------- |
+| `/api/admin/sources`       | GET/POST/PUT/DELETE | 信息源 CRUD    |
+| `/api/admin/published`     | GET                 | 获取已发布内容 |
+| `/api/admin/regenerate`    | POST                | 重新生成摘要   |
+| `/api/admin/prompt-config` | GET/POST            | Prompt 配置    |
+| `/api/admin/articles`      | GET                 | 获取文章详情   |
+| `/api/admin/fetch-rss`     | POST                | 手动抓取 RSS   |
 
 ---
 
 ## 数据格式
 
-### 信息源配置 (`data/sources.json`)
+### AI 输出格式 (摘要)
+
+```json
+{
+  "editorNote": "编辑概要，30-50字，包含主体+动作+关键要素",
+  "keyPoints": [
+    "要点1：15-30字，包含可核查信息",
+    "要点2：...",
+    "要点3：..."
+  ],
+  "readOriginal": {
+    "score": 2,  // 0-3 分 (0=无增量, 3=不可替代)
+    "reason": "原文包含详细技术实现细节和完整代码示例",
+    "whoShouldRead": "需要动手实现的开发者"
+  }
+}
+```
+
+### 新闻数据 (`{date}-{lang}.json`)
+
+```json
+{
+  "date": "2026-01-05",
+  "language": "zh",
+  "source": {
+    "id": "the-verge",
+    "name": "The Verge",
+    "language": "en"
+  },
+  "items": [
+    {
+      "id": "the-verge-1736064000000-0",
+      "originalTitle": "Original English Title",
+      "editorNote": "编辑概要...",
+      "keyPoints": ["要点1", "要点2", "要点3"],
+      "readOriginal": {
+        "score": 2,
+        "reason": "原文包含...",
+        "whoShouldRead": "..."
+      },
+      "readTime": "5 分钟",
+      "wordCount": 1200,
+      "source": {
+        "name": "The Verge",
+        "url": "https://...",
+        "language": "en"
+      },
+      "pubDate": "2026-01-05T...",
+      "status": "published",
+      "publishedAt": "2026-01-05T10:00:00Z"
+    }
+  ],
+  "generatedAt": "2026-01-05T08:30:00.000Z"
+}
+```
+
+### 信息源配置 (`sources.json`)
 
 ```json
 {
@@ -215,73 +334,8 @@ news-capsule/
       "category": "tech",
       "enabled": true,
       "addedAt": "2026-01-01T00:00:00Z"
-    },
-    {
-      "id": "geekpark",
-      "name": "极客公园",
-      "url": "https://wechat2rss.xlab.app/feed/xxx.xml",
-      "language": "zh",
-      "category": "tech",
-      "enabled": true,
-      "addedAt": "2026-01-04T14:22:23.110Z"
     }
   ]
-}
-```
-
-### RSS 原始数据 (`data/feeds/{sourceId}/items.json`)
-
-```json
-{
-  "source": {
-    "id": "the-verge",
-    "name": "The Verge",
-    "url": "https://www.theverge.com/rss/index.xml"
-  },
-  "lastSyncAt": "2026-01-05T08:00:00.000Z",
-  "items": [
-    {
-      "title": "原始标题",
-      "link": "https://...",
-      "pubDate": "2026-01-05T...",
-      "content": "<p>完整 HTML 正文...</p>",
-      "wordCount": 1200
-    }
-  ]
-}
-```
-
-### AI 处理后的新闻 (`data/feeds/{sourceId}/{date}-{lang}.json`)
-
-```json
-{
-  "date": "2026-01-05",
-  "language": "zh",
-  "source": {
-    "id": "the-verge",
-    "name": "The Verge",
-    "language": "en"
-  },
-  "items": [
-    {
-      "id": "the-verge-1736064000000-0",
-      "title": "一句话标题",
-      "summary": "核心要点的完整描述，包含关键信息...",
-      "readOriginalRecommendation": {
-        "score": 4,
-        "reason": "原文包含详细的技术实现细节"
-      },
-      "readTime": "5 分钟",
-      "source": {
-        "name": "The Verge",
-        "url": "https://...",
-        "language": "en"
-      },
-      "originalTitle": "Original English Title",
-      "pubDate": "2026-01-05T..."
-    }
-  ],
-  "generatedAt": "2026-01-05T08:30:00.000Z"
 }
 ```
 
@@ -296,12 +350,6 @@ news-capsule/
       "id": "the-verge",
       "name": "The Verge",
       "language": "en",
-      "items": [...]
-    },
-    {
-      "id": "geekpark",
-      "name": "极客公园",
-      "language": "zh",
       "items": [...]
     }
   ],

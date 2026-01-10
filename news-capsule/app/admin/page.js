@@ -14,6 +14,7 @@ export default function AdminPage() {
     const [loadingItems, setLoadingItems] = useState({});
     const [deleteConfirm, setDeleteConfirm] = useState(null); // { id, name }
     const [editSource, setEditSource] = useState(null); // { id, name, url, originalUrl, urlTested, urlValid }
+    const [resetConfirm, setResetConfirm] = useState(null); // { id, name }
     const [testingUrl, setTestingUrl] = useState(false);
     const [urlTestResult, setUrlTestResult] = useState(null); // { success, message, feedInfo }
 
@@ -233,6 +234,39 @@ export default function AdminPage() {
     // 删除源 - 显示确认模态框
     function handleDelete(sourceId, sourceName) {
         setDeleteConfirm({ id: sourceId, name: sourceName, deleteData: false });
+    }
+
+    // 重置源 - 显示确认模态框
+    function handleReset(sourceId, sourceName) {
+        setResetConfirm({ id: sourceId, name: sourceName });
+    }
+
+    // 确认重置
+    async function confirmReset() {
+        if (!resetConfirm) return;
+
+        try {
+            const res = await fetch(`/api/admin/sources/${resetConfirm.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reset: true })
+            });
+            const json = await res.json();
+            if (json.success) {
+                setResetConfirm(null);
+                // 清除缓存的条目
+                setSourceItems(prev => {
+                    const newState = { ...prev };
+                    delete newState[resetConfirm.id];
+                    return newState;
+                });
+                await fetchSources();
+            } else {
+                alert('重置失败：' + (json.error || '未知错误'));
+            }
+        } catch (error) {
+            alert('重置失败：' + error.message);
+        }
     }
 
     // 确认删除
@@ -631,6 +665,13 @@ export default function AdminPage() {
                                                     {fetchingSource === source.name ? '...' : '🔄'}
                                                 </button>
                                                 <button
+                                                    onClick={(e) => { e.stopPropagation(); handleReset(source.id, source.name); }}
+                                                    className={styles.resetBtn}
+                                                    title="重置（清空所有同步的新闻）"
+                                                >
+                                                    🧹
+                                                </button>
+                                                <button
                                                     onClick={(e) => { e.stopPropagation(); handleDelete(source.id, source.name); }}
                                                     className={styles.deleteBtn}
                                                     title="删除"
@@ -849,6 +890,33 @@ export default function AdminPage() {
                             );
                         })()}
                     </section>
+
+                    {/* 重置确认模态框 */}
+                    {resetConfirm && (
+                        <div className={styles.modal}>
+                            <div className={styles.modalContent}>
+                                <h3>确认重置</h3>
+                                <p>确定要重置「{resetConfirm.name}」吗？</p>
+                                <p className={styles.modalInfo}>
+                                    这将清空所有同步的新闻和状态，但不会影响已发布的内容。
+                                </p>
+                                <div className={styles.modalActions}>
+                                    <button
+                                        onClick={() => setResetConfirm(null)}
+                                        className={styles.cancelBtn}
+                                    >
+                                        取消
+                                    </button>
+                                    <button
+                                        onClick={confirmReset}
+                                        className={styles.warningBtn}
+                                    >
+                                        确认重置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* 删除确认模态框 */}
                     {deleteConfirm && (
