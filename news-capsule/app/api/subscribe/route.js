@@ -1,26 +1,12 @@
 import { NextResponse } from 'next/server';
-import { readJSON, writeJSON } from '@/lib/storage';
 
 const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY;
 const BUTTONDOWN_API_URL = 'https://api.buttondown.email/v1/subscribers';
 
-async function getSubscribers() {
-    try {
-        const data = await readJSON('subscribers.json');
-        return data || { subscribers: [], count: 0 };
-    } catch (error) {
-        return { subscribers: [], count: 0 };
-    }
-}
-
-async function saveSubscribers(data) {
-    await writeJSON('subscribers.json', data);
-}
-
 async function addToButtondown(email) {
     if (!BUTTONDOWN_API_KEY) {
-        console.warn('BUTTONDOWN_API_KEY not configured, skipping Buttondown');
-        return { success: true, skipped: true };
+        console.warn('BUTTONDOWN_API_KEY not configured');
+        return { success: false, error: 'API key not configured' };
     }
 
     try {
@@ -39,12 +25,10 @@ async function addToButtondown(email) {
 
         const errorData = await response.json().catch(() => ({}));
 
-        // 处理各种错误情况
         if (errorData.code === 'email_already_exists') {
             return { success: false, alreadyExists: true };
         }
 
-        // 被防火墙阻止（通常是无效或一次性邮箱）
         if (errorData.code === 'subscriber_blocked') {
             return { success: false, blocked: true };
         }
@@ -54,6 +38,30 @@ async function addToButtondown(email) {
     } catch (error) {
         console.error('Buttondown API fetch error:', error);
         return { success: false, error: error.message };
+    }
+}
+
+async function getSubscriberCount() {
+    if (!BUTTONDOWN_API_KEY) {
+        return 0;
+    }
+
+    try {
+        // 使用 page_size=1 只获取最少数据，但仍能得到 count
+        const response = await fetch(`${BUTTONDOWN_API_URL}?page_size=1`, {
+            headers: {
+                'Authorization': `Token ${BUTTONDOWN_API_KEY}`,
+            },
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data.count || 0;
+        }
+        return 0;
+    } catch (error) {
+        console.error('Failed to get subscriber count:', error);
+        return 0;
     }
 }
 
@@ -70,32 +78,19 @@ export async function POST(request) {
             );
         }
 
-        // 添加到 Buttondown
         const buttondownResult = await addToButtondown(email);
 
-        // 如果 Buttondown 说已存在，可能是：
-        // 1. 用户之前订阅过且还在
-        // 2. 用户取消后重新订阅
-        // 无论哪种情况，都视为"已订阅"，给用户友好提示
+        // 已经订阅过，返回友好提示
         if (!buttondownResult.success && buttondownResult.alreadyExists) {
-            // 确保本地记录也同步
-            const data = await getSubscribers();
-            if (!data.subscribers.some(sub => sub.email === email)) {
-                data.subscribers.push({
-                    email,
-                    subscribedAt: new Date().toISOString(),
-                    note: 'synced from buttondown',
-                });
-                data.count = data.subscribers.length;
-                await saveSubscribers(data);
-            }
+            const count = await getSubscriberCount();
             return NextResponse.json({
                 success: true,
                 message: '您已订阅，感谢关注！',
-                count: data.count,
+                count,
             });
         }
 
+        // 邮箱被防火墙拦截
         if (!buttondownResult.success && buttondownResult.blocked) {
             return NextResponse.json(
                 { error: '该邮箱地址无法使用，请使用常规邮箱' },
@@ -103,28 +98,20 @@ export async function POST(request) {
             );
         }
 
-        if (!buttondownResult.success && !buttondownResult.skipped) {
+        // 其他错误
+        if (!buttondownResult.success) {
             return NextResponse.json(
                 { error: '订阅失败，请稍后重试' },
                 { status: 500 }
             );
         }
 
-        // 同时保存到本地（作为备份）
-        const data = await getSubscribers();
-        if (!data.subscribers.some(sub => sub.email === email)) {
-            data.subscribers.push({
-                email,
-                subscribedAt: new Date().toISOString(),
-            });
-            data.count = data.subscribers.length;
-            await saveSubscribers(data);
-        }
-
+        // 订阅成功
+        const count = await getSubscriberCount();
         return NextResponse.json({
             success: true,
             message: '订阅成功',
-            count: data.count,
+            count,
         });
     } catch (error) {
         console.error('Subscribe error:', error);
@@ -136,6 +123,6 @@ export async function POST(request) {
 }
 
 export async function GET() {
-    const data = await getSubscribers();
-    return NextResponse.json({ count: data.count });
+    const count = await getSubscriberCount();
+    return NextResponse.json({ count });
 }
