@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY;
 const BUTTONDOWN_API_URL = 'https://api.buttondown.email/v1/subscribers';
 
-async function addToButtondown(email) {
+async function addToButtondown(email, language = 'zh') {
     if (!BUTTONDOWN_API_KEY) {
         console.warn('BUTTONDOWN_API_KEY not configured');
         return { success: false, error: 'API key not configured' };
@@ -16,7 +16,10 @@ async function addToButtondown(email) {
                 'Authorization': `Token ${BUTTONDOWN_API_KEY}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email_address: email }),
+            body: JSON.stringify({
+                email_address: email,
+                metadata: { language }  // 存储用户的语言偏好
+            }),
         });
 
         if (response.ok) {
@@ -67,7 +70,7 @@ async function getSubscriberCount() {
 
 export async function POST(request) {
     try {
-        const { email } = await request.json();
+        const { email, language = 'zh' } = await request.json();
 
         // 验证邮箱格式
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,7 +81,7 @@ export async function POST(request) {
             );
         }
 
-        const buttondownResult = await addToButtondown(email);
+        const buttondownResult = await addToButtondown(email, language);
 
         // 已经订阅过，返回友好提示
         if (!buttondownResult.success && buttondownResult.alreadyExists) {

@@ -39,7 +39,7 @@ export default function SubscribeModal({ isOpen, onClose, language = 'zh' }) {
             const response = await fetch('/api/subscribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ email, language }),  // 传递语言偏好
             });
 
             const data = await response.json();
