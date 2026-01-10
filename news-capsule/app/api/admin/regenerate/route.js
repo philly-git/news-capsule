@@ -5,7 +5,18 @@ import { readSettings, readJSON, writeJSON } from '@/lib/storage';
 import { getSourceItems } from '@/lib/feeds';
 import { DEFAULT_PROMPT_ZH, DEFAULT_PROMPT_EN } from '@/lib/prompts.js';
 
-// ... (省略中间代码)
+/**
+ * 获取 API Key
+ */
+async function getApiKey() {
+    try {
+        const settings = await readSettings();
+        return settings?.apiKeys?.openai || process.env.OPENAI_API_KEY;
+    } catch (e) {
+        console.error('Error reading API key:', e);
+        return process.env.OPENAI_API_KEY;
+    }
+}
 
 /**
  * 获取 Prompt 配置
