@@ -16,6 +16,10 @@ export default function PublishedPage() {
     const [expandedItem, setExpandedItem] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState(null); // { sourceId, itemId, title }
 
+    // Newsletter 相关状态
+    const [newsletterPreview, setNewsletterPreview] = useState(null);
+    const [isSendingNewsletter, setIsSendingNewsletter] = useState(false);
+
     // 获取已出版内容
     const fetchPublished = async (lang, date) => {
         setLoading(true);
@@ -229,6 +233,58 @@ export default function PublishedPage() {
         }
     };
 
+    // 预览 Newsletter
+    const handlePreviewNewsletter = async () => {
+        if (!selectedDate) return;
+
+        try {
+            const res = await fetch(`/api/admin/send-newsletter?date=${selectedDate}&lang=${language}`);
+            const result = await res.json();
+
+            if (res.ok) {
+                setNewsletterPreview(result);
+            } else {
+                setMessage({ type: 'error', text: result.error || '预览失败' });
+            }
+        } catch (err) {
+            setMessage({ type: 'error', text: '预览失败: ' + err.message });
+        }
+    };
+
+    // 发送 Newsletter
+    const handleSendNewsletter = async (sendNow = false) => {
+        if (!selectedDate || isSendingNewsletter) return;
+
+        setIsSendingNewsletter(true);
+
+        try {
+            const res = await fetch('/api/admin/send-newsletter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    date: selectedDate,
+                    lang: language,
+                    sendNow
+                })
+            });
+            const result = await res.json();
+
+            if (res.ok) {
+                setMessage({
+                    type: 'success',
+                    text: result.message + (sendNow ? '' : ' (请到 Buttondown 后台确认)')
+                });
+                setNewsletterPreview(null);
+            } else {
+                setMessage({ type: 'error', text: result.error || '发送失败' });
+            }
+        } catch (err) {
+            setMessage({ type: 'error', text: '发送失败: ' + err.message });
+        } finally {
+            setIsSendingNewsletter(false);
+        }
+    };
+
     const availableDates = data?.availableDates || [];
     const sources = data?.sources || [];
     const totalItems = data?.totalItems || 0;
@@ -292,6 +348,16 @@ export default function PublishedPage() {
                                 <option key={d} value={d}>{d}</option>
                             ))}
                         </select>
+                    </div>
+                    <div className={styles.filterGroup} style={{ marginLeft: 'auto' }}>
+                        <button
+                            onClick={handlePreviewNewsletter}
+                            disabled={!selectedDate || totalItems === 0}
+                            className={styles.actionBtn}
+                            title="预览并发送邮件通知给订阅者"
+                        >
+                            📧 发送邮件通知
+                        </button>
                     </div>
                 </div>
             </section>
@@ -483,6 +549,70 @@ export default function PublishedPage() {
                                 className={styles.dangerBtn}
                             >
                                 确认删除
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Newsletter 预览模态框 */}
+            {newsletterPreview && (
+                <div className={styles.modal}>
+                    <div className={styles.modalContent} style={{ maxWidth: '600px' }}>
+                        <h3>📧 邮件预览</h3>
+
+                        <div style={{ marginBottom: '16px' }}>
+                            <strong>主题：</strong>
+                            <div style={{
+                                background: '#f5f5f5',
+                                padding: '8px 12px',
+                                borderRadius: '4px',
+                                marginTop: '4px'
+                            }}>
+                                {newsletterPreview.subject}
+                            </div>
+                        </div>
+
+                        <div style={{ marginBottom: '16px' }}>
+                            <strong>内容预览（{newsletterPreview.itemCount} 篇文章）：</strong>
+                            <div style={{
+                                background: '#f5f5f5',
+                                padding: '12px',
+                                borderRadius: '4px',
+                                marginTop: '4px',
+                                maxHeight: '300px',
+                                overflowY: 'auto',
+                                whiteSpace: 'pre-wrap',
+                                fontSize: '0.875rem',
+                                lineHeight: '1.6'
+                            }}>
+                                {newsletterPreview.body}
+                            </div>
+                        </div>
+
+                        <div className={styles.modalActions}>
+                            <button
+                                onClick={() => setNewsletterPreview(null)}
+                                className={styles.cancelBtn}
+                            >
+                                取消
+                            </button>
+                            <button
+                                onClick={() => handleSendNewsletter(false)}
+                                disabled={isSendingNewsletter}
+                                className={styles.actionBtn}
+                                title="在 Buttondown 后台创建草稿，手动确认后发送"
+                            >
+                                {isSendingNewsletter ? '处理中...' : '📝 创建草稿'}
+                            </button>
+                            <button
+                                onClick={() => handleSendNewsletter(true)}
+                                disabled={isSendingNewsletter}
+                                className={styles.dangerBtn}
+                                style={{ background: '#2563eb' }}
+                                title="立即发送给所有订阅者"
+                            >
+                                {isSendingNewsletter ? '发送中...' : '🚀 立即发送'}
                             </button>
                         </div>
                     </div>
