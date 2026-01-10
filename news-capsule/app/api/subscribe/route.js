@@ -73,11 +73,27 @@ export async function POST(request) {
         // 添加到 Buttondown
         const buttondownResult = await addToButtondown(email);
 
+        // 如果 Buttondown 说已存在，可能是：
+        // 1. 用户之前订阅过且还在
+        // 2. 用户取消后重新订阅
+        // 无论哪种情况，都视为"已订阅"，给用户友好提示
         if (!buttondownResult.success && buttondownResult.alreadyExists) {
-            return NextResponse.json(
-                { error: '该邮箱已订阅' },
-                { status: 400 }
-            );
+            // 确保本地记录也同步
+            const data = await getSubscribers();
+            if (!data.subscribers.some(sub => sub.email === email)) {
+                data.subscribers.push({
+                    email,
+                    subscribedAt: new Date().toISOString(),
+                    note: 'synced from buttondown',
+                });
+                data.count = data.subscribers.length;
+                await saveSubscribers(data);
+            }
+            return NextResponse.json({
+                success: true,
+                message: '您已订阅，感谢关注！',
+                count: data.count,
+            });
         }
 
         if (!buttondownResult.success && buttondownResult.blocked) {
