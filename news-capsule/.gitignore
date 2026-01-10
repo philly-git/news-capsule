@@ -40,6 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# data
-data/subscribers.json
-data/raw/
+# data - 本地与线上数据隔离，线上使用 Cloudflare R2
+data/
