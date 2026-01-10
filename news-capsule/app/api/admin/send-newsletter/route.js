@@ -75,10 +75,25 @@ function generateEmailContent(date, items, lang) {
 
 /**
  * 发送邮件到 Buttondown
+ * @param {string} subject - 邮件主题
+ * @param {string} body - 邮件内容
+ * @param {string} status - 状态：'draft' 或 'sent'
+ * @param {string} lang - 目标语言：'zh' 或 'en'
  */
-async function sendToButtondown(subject, body, status = 'draft') {
+async function sendToButtondown(subject, body, status = 'draft', lang = null) {
     if (!BUTTONDOWN_API_KEY) {
         throw new Error('BUTTONDOWN_API_KEY not configured');
+    }
+
+    const emailData = {
+        subject,
+        body,
+        status,
+    };
+
+    // 如果指定了语言，使用 included_tags 筛选
+    if (lang) {
+        emailData.included_tags = [`lang-${lang}`];
     }
 
     const response = await fetch('https://api.buttondown.email/v1/emails', {
@@ -87,11 +102,7 @@ async function sendToButtondown(subject, body, status = 'draft') {
             'Authorization': `Token ${BUTTONDOWN_API_KEY}`,
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            subject,
-            body,
-            status, // 'draft' 或 'sent'
-        }),
+        body: JSON.stringify(emailData),
     });
 
     if (!response.ok) {
@@ -139,19 +150,24 @@ export async function POST(request) {
 
         const body = generateEmailContent(date, items, lang);
 
-        // 发送到 Buttondown
+        // 发送到 Buttondown（只发给对应语言偏好的订阅者）
         const result = await sendToButtondown(
             subject,
             body,
-            sendNow ? 'sent' : 'draft'
+            sendNow ? 'sent' : 'draft',
+            lang  // 传递语言，用于筛选订阅者
         );
 
+        const langLabel = lang === 'zh' ? '中文' : 'English';
         return NextResponse.json({
             success: true,
-            message: sendNow ? '邮件已发送' : '邮件草稿已创建，请到 Buttondown 后台确认发送',
+            message: sendNow
+                ? `邮件已发送给 ${langLabel} 订阅者`
+                : `邮件草稿已创建（目标：${langLabel} 订阅者），请到 Buttondown 后台确认发送`,
             emailId: result.id,
             subject,
             itemCount: items.length,
+            targetLanguage: lang,
         });
 
     } catch (error) {

@@ -573,6 +573,16 @@ export default function PublishedPage() {
                             </div>
                         </div>
 
+                        <div style={{
+                            marginBottom: '16px',
+                            padding: '8px 12px',
+                            background: '#e8f4fd',
+                            borderRadius: '4px',
+                            fontSize: '0.875rem'
+                        }}>
+                            📌 目标订阅者：<strong>{language === 'zh' ? '中文' : 'English'}</strong> 偏好用户
+                        </div>
+
                         <div style={{ marginBottom: '16px' }}>
                             <strong>内容预览（{newsletterPreview.itemCount} 篇文章）：</strong>
                             <div style={{

@@ -18,7 +18,8 @@ async function addToButtondown(email, language = 'zh') {
             },
             body: JSON.stringify({
                 email_address: email,
-                metadata: { language }  // 存储用户的语言偏好
+                metadata: { language },  // 存储用户的语言偏好
+                tags: [`lang-${language}`]  // 添加语言标签，用于筛选发送
             }),
         });
 
