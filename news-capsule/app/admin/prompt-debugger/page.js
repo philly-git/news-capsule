@@ -110,6 +110,60 @@ News title: {title}
 News content: {content}
 Source: {source}`;
 
+const DEFAULT_PROMPT_EN = `## Role
+
+You are a professional news editor. Summarize the news below and assess how much unique value remains in the original article after reading your summary.
+
+**IMPORTANT:** Output everything in **English**.
+
+---
+
+## Output Requirements
+
+### 1) editorNote
+A single-sentence editorial note with key entities (20–35 words)
+
+### 2) keyPoints
+Extract 3–4 key points (12–22 words each, include verifiable details)
+
+### 3) readOriginal
+#### score (0-3)
+* 3: Irreplaceable primary/exclusive material
+* 2: Dense reference material
+* 1: Key nuance and boundaries
+* 0: Little to no incremental value
+
+#### reason
+20–35 words, name concrete artifacts the original contains
+
+#### whoShouldRead
+12–20 words, specify reader background/role
+
+---
+
+## JSON Output Example
+
+{
+  "editorNote": "AWS launched new Graviton4 instances, claiming about 20% lower cost at similar performance for general compute and AI inference.",
+  "keyPoints": [
+    "The C8g line targets a roughly 30% performance gain over Graviton3.",
+    "Initial availability includes us-east-1 and eu-central-1, with per-second billing.",
+    "Instance sizes span 12–96 vCPUs and up to 192GB memory.",
+    "An official migration guide includes a three-step compatibility checklist."
+  ],
+  "readOriginal": {
+    "score": 2,
+    "reason": "The original includes a region-by-region price table and benchmark charts with underlying numbers.",
+    "whoShouldRead": "Cloud architects and FinOps teams doing instance selection or cost modeling."
+  }
+}
+
+---
+
+News title: {title}
+News content: {content}
+Source: {source}`;
+
 export default function PromptDebuggerPage() {
     // 数据状态
     const [sources, setSources] = useState([]);
