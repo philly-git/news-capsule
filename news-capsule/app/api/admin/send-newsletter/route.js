@@ -75,7 +75,7 @@ function generateEmailContent(date, items, lang) {
  * 发送邮件到 Buttondown
  * @param {string} subject - 邮件主题
  * @param {string} body - 邮件内容
- * @param {string} status - 状态：'draft' 或 'sent'
+ * @param {string} status - 状态：'draft' 或 'about_to_send'
  * @param {string} lang - 目标语言：'zh' 或 'en'
  */
 async function sendToButtondown(subject, body, status = 'draft', lang = null) {
@@ -152,7 +152,7 @@ export async function POST(request) {
         const result = await sendToButtondown(
             subject,
             body,
-            sendNow ? 'sent' : 'draft',
+            sendNow ? 'about_to_send' : 'draft', // 'sent' 不被支持，必须使用 'about_to_send'
             lang  // 传递语言，用于筛选订阅者
         );
 
