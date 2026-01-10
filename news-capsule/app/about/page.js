@@ -102,6 +102,7 @@ function AboutContent() {
 
                     <div style={{ fontSize: '1rem', lineHeight: '1.7', color: '#4a4a4a' }}>
                         <p style={{ marginBottom: '16px' }}>{texts.section1.p1}</p>
+                        <p style={{ marginBottom: '16px' }}>{texts.section1.p2}</p>
                         <p style={{ marginBottom: '16px' }}>{texts.section1.p3}</p>
                         <p style={{ marginBottom: '16px' }}>{texts.section1.p4}</p>
                     </div>
