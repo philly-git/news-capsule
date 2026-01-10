@@ -47,9 +47,9 @@ function generateEmailContent(date, items, lang) {
 
     // 标题区域
     if (isZh) {
-        content += `今日精选了 **${items.length}** 条科技要闻：\n\n`;
+        content += `新闻胶囊更新了 **${items.length}** 条内容，快来看看吧：\n\n`;
     } else {
-        content += `Today's selection of **${items.length}** tech stories:\n\n`;
+        content += `News Capsule updated with **${items.length}** new stories, check them out:\n\n`;
     }
 
     // 文章标题列表
@@ -63,11 +63,9 @@ function generateEmailContent(date, items, lang) {
     // CTA 按钮
     const readMoreUrl = `${SITE_URL}?date=${date}&lang=${lang}`;
     if (isZh) {
-        content += `👉 [点击阅读完整内容](${readMoreUrl})\n\n`;
-        content += `*新闻胶囊 - 像吞服胶囊一样简单*`;
+        content += `👉 [点击阅读完整内容](${readMoreUrl})`;
     } else {
-        content += `👉 [Read the full digest](${readMoreUrl})\n\n`;
-        content += `*News Capsule - Get news as simple as taking a capsule*`;
+        content += `👉 [Read the full digest](${readMoreUrl})`;
     }
 
     return content;
