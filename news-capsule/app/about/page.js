@@ -31,8 +31,11 @@ function AboutContent() {
         feed_section: {
             title: isEn ? 'Make News Capsule More Nutritious' : '让新闻胶囊变得更有营养',
             p1: isEn ?
-                'Summarizing article content requires the Large Language Model to "read" the full text. However, most RSS feeds only provide titles rather than the full content, which limits the number of sources I can currently include. If you have high-quality RSS feeds, please share them with us.' :
-                '因为总结文章内容需要让大模型‘阅读’文章全文，而大多数rss源只能提供新闻的标题而非全文，因此当前我能找到的rss源较少，如果你有优质的rss源，欢迎分享给我们'
+                'Most RSS feeds only provide titles rather than the full content, which limits the number of sources I can currently include. If you have high-quality RSS feeds, please share them with us.' :
+                '大多数rss源只能提供新闻的标题而非全文，因此当前我能找到的rss源较少，如果你有优质的rss源，欢迎分享给我们',
+            p2: isEn ?
+                'Since the combination of prompts and Large Language Models we use may not achieve the optimal level of summarization and recommendation, if you are unsatisfied with any of our results, please feel free to provide feedback.' :
+                '由于我们使用的prompt和大模型组合并不能达到总结和推荐的最佳水准，所以如果你对一些我们产出的结果感到不满意，欢迎反馈给我们'
         },
         section2: {
             title: isEn ? 'About the Author' : '关于作者',
@@ -121,6 +124,7 @@ function AboutContent() {
 
                     <div style={{ fontSize: '1rem', lineHeight: '1.7', color: '#4a4a4a' }}>
                         <p style={{ marginBottom: '16px' }}>{texts.feed_section.p1}</p>
+                        <p style={{ marginBottom: '16px' }}>{texts.feed_section.p2}</p>
                     </div>
                 </section>
 
