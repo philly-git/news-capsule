@@ -68,6 +68,15 @@ export default function HomePage() {
     }
   }, [selectedDate]);
 
+  // 动态更新网页标题
+  useEffect(() => {
+    if (language === 'zh') {
+      document.title = "新闻胶囊 - AI时代的新闻阅读方式";
+    } else {
+      document.title = "News Capsule - News Reading in the AI Era";
+    }
+  }, [language]);
+
 
 
   // 格式化日期
