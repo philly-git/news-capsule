@@ -1600,6 +1600,46 @@ p {
   }
 }
 
+/* 极窄屏幕（微信浏览器等）优化 */
+@media (max-width: 380px) {
+  .lab-header-container {
+    flex-wrap: wrap;
+    padding: var(--space-xs) var(--space-sm);
+    gap: var(--space-xs);
+  }
+
+  .lab-header-left {
+    flex: 1;
+    min-width: 100%;
+    justify-content: space-between;
+  }
+
+  /* 极窄屏幕隐藏分隔线 */
+  .lab-header-divider {
+    display: none;
+  }
+
+  .lab-header-right {
+    flex: 1;
+    min-width: 100%;
+    justify-content: center;
+    padding-top: 4px;
+    border-top: 1px solid var(--border-divider);
+  }
+
+  .lab-logo img {
+    height: 24px !important;
+  }
+
+  .lab-date-info {
+    font-size: 0.75rem;
+  }
+
+  .lab-main {
+    padding-top: 85px;
+  }
+}
+
 
 
 /* ===========================================

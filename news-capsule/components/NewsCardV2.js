@@ -78,7 +78,14 @@ export default function NewsCardV2({ item, sourceName, language }) {
 
     const formatPubDate = (dateStr) => {
         if (!dateStr) return '';
-        const date = new Date(dateStr);
+        // 兼容 Safari/iOS: 如果是 YYYY-MM-DD 格式，添加时间部分
+        let normalizedDateStr = dateStr;
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            normalizedDateStr = dateStr + 'T00:00:00';
+        }
+        const date = new Date(normalizedDateStr);
+        // 检查日期是否有效
+        if (isNaN(date.getTime())) return '';
         if (language === 'zh') {
             return `${date.getMonth() + 1}月${date.getDate()}日 ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
         }

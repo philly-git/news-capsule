@@ -185,16 +185,27 @@ function HomeContent() {
               {language === 'zh' ? (
                 <img
                   src="/news-capsule-logo-cn2.svg"
-                  alt="News Capsule Logo"
+                  alt="新闻胶囊"
                   style={{ height: '32px', width: 'auto' }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'inline';
+                  }}
                 />
               ) : (
                 <img
                   src="/news-capsule-logo-en.svg"
-                  alt="News Capsule Logo"
+                  alt="News Capsule"
                   style={{ height: '32px', width: 'auto' }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'inline';
+                  }}
                 />
               )}
+              <span className="lab-logo-fallback" style={{ display: 'none', fontWeight: 700, fontSize: '1.125rem' }}>
+                {language === 'zh' ? '💊 新闻胶囊' : '💊 News Capsule'}
+              </span>
             </div>
             <div className="lab-header-divider"></div>
             <div className="lab-date-info">
